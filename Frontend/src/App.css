@@ -121,7 +121,7 @@ main { width: 100%; margin-top: 90px; }
 .movie-meta-tags span { background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 4px; font-size: 0.9rem; font-weight: 600; color: #eee; }
 .rating-tag i { color: #f5c518; margin-right: 5px; }
 .description-block { margin-bottom: 25px; color: #ddd; }
-.plot { font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;}
+.plot { font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;}
 .credits p { font-size: 0.95rem; margin-bottom: 5px; color: #aaa; }
 .credits strong { color: white; }
 .info-buttons { display: flex; gap: 15px; position: relative; z-index: 100; }
