@@ -13,7 +13,8 @@ import Sidebar from './components/Sidebar';
 import AdminDashboard from './components/AdminDashboard';
 import ReviewsSidebar from './components/ReviewsSidebar'; 
 import Kereses from './pages/Kereses';
-import Adatlap from './pages/Adatlap'; // <-- ÚJ: Adatlap importálása
+import Adatlap from './pages/Adatlap'; 
+import Top50Oldal from './pages/Top50Oldal'; // <-- ÚJ IMPORT
 
 import './App.css'; 
 
@@ -131,9 +132,8 @@ function App() {
 
                   if (res.ok) {
                       const data = await res.json();
-                      setUser(data.user); // Visszaállítjuk a user statet
+                      setUser(data.user); 
                   } else {
-                      // Ha a token lejárt vagy érvénytelen, kitöröljük
                       localStorage.removeItem('token');
                       setUser(null);
                   }
@@ -346,14 +346,67 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/kereses" element={<Kereses />} />
             
-            {/* --- ÚJ ÚTVONALAK AZ ADATLAPHOZ --- */}
+            {/* --- ADATLAP ÚTVONALAK --- */}
             <Route path="/film/:id" element={
-                <Adatlap type="film" openStreaming={openStreaming} openTrailer={openTrailer} />
+                <Adatlap 
+                    type="film" 
+                    openStreaming={openStreaming} 
+                    openTrailer={openTrailer}
+                    user={user}
+                    onAddToFav={handleAddToFav}
+                    onRemoveFromFav={handleRemoveFromFav}
+                    onAddToList={handleAddToMyList}
+                    onRemoveFromList={handleRemoveFromList}
+                    onOpenReviews={openReviews}
+                    interactionUpdate={interactionUpdate}
+                />
             } />
             <Route path="/sorozat/:id" element={
-                <Adatlap type="sorozat" openStreaming={openStreaming} openTrailer={openTrailer} />
+                <Adatlap 
+                    type="sorozat" 
+                    openStreaming={openStreaming} 
+                    openTrailer={openTrailer}
+                    user={user}
+                    onAddToFav={handleAddToFav}
+                    onRemoveFromFav={handleRemoveFromFav}
+                    onAddToList={handleAddToMyList}
+                    onRemoveFromList={handleRemoveFromList}
+                    onOpenReviews={openReviews}
+                    interactionUpdate={interactionUpdate}
+                />
             } />
-            {/* ---------------------------------- */}
+            
+            {/* --- TOP 50 ÚTVONALAK --- */}
+            <Route path="/top-50-filmek" element={
+                <Top50Oldal 
+                    type="film" 
+                    user={user} 
+                    openTrailer={openTrailer} 
+                    openStreaming={openStreaming} 
+                    openInfo={openInfo} 
+                    handleAddToFav={handleAddToFav} 
+                    handleRemoveFromFav={handleRemoveFromFav} 
+                    handleAddToMyList={handleAddToMyList} 
+                    handleRemoveFromList={handleRemoveFromList} 
+                    openReviews={openReviews} 
+                    interactionUpdate={interactionUpdate} 
+                />
+            } />
+            <Route path="/top-50-sorozatok" element={
+                <Top50Oldal 
+                    type="sorozat" 
+                    user={user} 
+                    openTrailer={openTrailer} 
+                    openStreaming={openStreaming} 
+                    openInfo={openInfo} 
+                    handleAddToFav={handleAddToFav} 
+                    handleRemoveFromFav={handleRemoveFromFav} 
+                    handleAddToMyList={handleAddToMyList} 
+                    handleRemoveFromList={handleRemoveFromList} 
+                    openReviews={openReviews} 
+                    interactionUpdate={interactionUpdate} 
+                />
+            } />
             
         </Routes>
 

@@ -93,7 +93,6 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // JAVÍTÁS: Vizsgáljuk meg, van-e egyáltalán mit megjeleníteni a legördülőben
   const hasHistory = searchValue.trim() === '' && searchHistory.length > 0;
   const hasResults = searchResults.length > 0;
   const showDropdown = isInputFocused && searchActive && (hasHistory || hasResults);
@@ -105,9 +104,10 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
             <Link to="/" className="logo-link"><div className="logo"><img src={logoImg} alt="MoziPont Logo" /></div></Link>
             <ul className="nav-links">
                 <li><Link to="/">Kezdőlap</Link></li>
-                <li><a href="#series">Sorozatok</a></li>
-                <li><a href="#movies">Filmek</a></li>
-                <li><a href="#list">Saját lista</a></li>
+                {/* ÚJ LINKEK ITT */}
+                <li><Link to="/top-50-filmek">Top 50 Film</Link></li>
+                <li><Link to="/top-50-sorozatok">Top 50 Sorozat</Link></li>
+                
             </ul>
         </div>
 
@@ -125,7 +125,6 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
                     onFocus={() => setIsInputFocused(true)}
                 />
                 
-                {/* JAVÍTÁS: Csak akkor rajzolja ki a dobozt, ha tényleg van benne adat */}
                 {showDropdown && (
                     <div className="search-dropdown-modern">
                         {hasHistory ? (

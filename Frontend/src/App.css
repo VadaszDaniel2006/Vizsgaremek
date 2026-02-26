@@ -343,7 +343,7 @@ main { width: 100%; margin-top: 90px; }
     top: 60px; 
     right: 0;
     width: 320px;
-    max-height: 450px; /* Görgetés engedélyezése */
+    max-height: 450px;
     background: #0f152b; 
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -353,7 +353,6 @@ main { width: 100%; margin-top: 90px; }
     overflow-x: hidden;
 }
 
-/* Egyedi görgetősáv a menühöz */
 .search-dropdown-modern::-webkit-scrollbar { width: 6px; }
 .search-dropdown-modern::-webkit-scrollbar-track { background: transparent; }
 .search-dropdown-modern::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
@@ -364,11 +363,10 @@ main { width: 100%; margin-top: 90px; }
     text-transform: uppercase; font-weight: bold; border-bottom: 1px solid #222;
 }
 
-/* A legördülő menü elemeinek balra igazítása */
 .dropdown-item {
     display: flex; 
     align-items: center; 
-    justify-content: flex-start; /* Itt volt a javítás (space-between helyett) */
+    justify-content: flex-start;
     padding: 12px 15px; 
     cursor: pointer; 
     transition: 0.2s;
@@ -384,11 +382,10 @@ main { width: 100%; margin-top: 90px; }
     color: #888; 
     padding: 5px; 
     transition: 0.2s; 
-    margin-left: auto; /* Ez tolja ki a törlés gombot a jobb szélre! */
+    margin-left: auto;
 }
 .delete-btn:hover { color: #ff4d4d; transform: scale(1.2); }
 
-/* Kép méretezése, hogy ne nyomódjon össze */
 .results-section img { 
     width: 45px; 
     height: 65px; 
@@ -398,7 +395,6 @@ main { width: 100%; margin-top: 90px; }
     flex-shrink: 0;
 }
 
-/* Szöveges rész formázása */
 .item-info { 
     display: flex; 
     flex-direction: column; 
@@ -432,7 +428,6 @@ main { width: 100%; margin-top: 90px; }
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-
     will-change: transform, box-shadow, border-color;
     backface-visibility: hidden;
 }
@@ -471,7 +466,6 @@ main { width: 100%; margin-top: 90px; }
     position: absolute; top: -10%; left: -10%; width: 120%; height: 120%;
     background-size: cover; background-position: center;
     filter: blur(40px) brightness(0.25); z-index: 0;
-
     transform: translateZ(0); 
     will-change: transform, filter;
 }
@@ -496,17 +490,71 @@ main { width: 100%; margin-top: 90px; }
 .adatlap-director { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; }
 .adatlap-director strong { color: white; margin-right: 5px; }
 
-.adatlap-actions { display: flex; gap: 20px; align-items: center; }
+/* --- ADATLAP GOMBOK HERO-STÍLUSÚ ELRENDEZÉSE --- */
+.adatlap-actions { 
+    display: flex; 
+    gap: 20px; 
+    align-items: center; 
+    width: 100%;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.action-group-primary {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.action-group-secondary {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-left: 2px solid rgba(255,255,255,0.1);
+    padding-left: 20px;
+}
+
+/* Kerek gombok általános beállítása */
+.btn-circle-action {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1); 
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 1.2rem; 
+    cursor: pointer;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    transition: 0.3s; 
+    backdrop-filter: blur(5px);
+}
+
+.btn-circle-action:hover { background: rgba(255,255,255,0.25); border-color: white; transform: scale(1.1); }
+.btn-circle-action.active { color: #00e676; border-color: #00e676; background-color: rgba(0, 230, 118, 0.1); }
+
+/* EXTRA NAGY MÉRET AZ ADATLAPHOZ */
+.btn-main-action.large {
+    padding: 18px 45px; 
+    font-size: 1.3rem; 
+}
+.btn-circle-action.large {
+    width: 65px; 
+    height: 65px; 
+    font-size: 1.5rem;
+}
+
 .btn-main-action {
     background: var(--primary); color: white; padding: 15px 35px; border-radius: 8px; border: none;
-    font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px;
+    font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 12px;
     transition: 0.3s; box-shadow: 0 5px 20px rgba(62, 80, 255, 0.4);
 }
 .btn-main-action:hover { background: #2c3bb7; transform: translateY(-3px); }
 
 .btn-secondary-action {
-    background: rgba(255,255,255,0.1); color: white; padding: 15px 35px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; font-weight: bold; cursor: pointer;
+    background: rgba(255,255,255,0.1); color: white; padding: 15px 30px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2); font-size: 1.1rem; font-weight: bold; cursor: pointer;
     display: flex; align-items: center; gap: 10px; transition: 0.3s; backdrop-filter: blur(5px);
 }
 .btn-secondary-action:hover { background: rgba(255,255,255,0.2); border-color: white; }
@@ -514,12 +562,139 @@ main { width: 100%; margin-top: 90px; }
 .btn-back-solid {
     background: #232d4b; color: white; padding: 15px 25px; border-radius: 8px;
     border: 1px solid #3e50ff; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; gap: 10px; transition: 0.3s; margin-left: auto;
+    display: flex; align-items: center; gap: 10px; transition: 0.3s; 
 }
 .btn-back-solid:hover { background: var(--primary); box-shadow: 0 5px 15px rgba(62, 80, 255, 0.4); }
 
+@media (max-width: 1100px) {
+    .action-group-secondary { border-left: none; padding-left: 0; }
+}
 @media (max-width: 900px) {
     .adatlap-wrapper { flex-direction: column; align-items: center; text-align: center; }
-    .adatlap-actions { justify-content: center; flex-wrap: wrap; }
-    .btn-back-solid { margin-left: 0; }
+    .adatlap-actions { justify-content: center; flex-direction: column; gap: 20px; }
+}
+
+/* ====================================================== */
+/* --- ÚJ: TOP 50 ELEGÁNS LISTA NÉZET --- */
+/* ====================================================== */
+.top50-container-wide {
+    padding: 120px 4% 60px 4%;
+    min-height: 100vh;
+    background-color: var(--dark);
+    color: var(--light);
+}
+
+.top50-title-modern {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: white;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+}
+
+.top50-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.top50-list-item {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.top50-list-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--primary);
+    transform: translateX(10px);
+    box-shadow: -5px 10px 30px rgba(0,0,0,0.5);
+}
+
+.top50-rank-column {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #555;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.top50-list-item:hover .top50-rank-column { color: #fbbf24; }
+
+.top50-poster-wide {
+    width: 140px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.top50-details-column {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.top50-details-column h2 {
+    font-size: 1.6rem;
+    margin: 0 0 10px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.top50-details-column h2:hover { color: var(--primary); }
+
+.top50-meta-row {
+    display: flex;
+    gap: 20px;
+    color: #aaa;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    align-items: center;
+}
+.top50-meta-row .rating i { color: #fbbf24; margin-right: 5px; }
+.top50-meta-row .rating { color: white; font-weight: bold; }
+.top50-meta-row .genre { border: 1px solid rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.85rem;}
+
+.top50-desc-text {
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.top50-action-row {
+    margin-top: auto;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-main-action.small { padding: 8px 20px; font-size: 1rem; }
+.btn-secondary-action.small { padding: 8px 20px; font-size: 1rem; }
+.top50-icons-group { display: flex; gap: 10px; margin-left: 10px; }
+.btn-circle-action.small { width: 40px; height: 40px; font-size: 1rem; }
+
+@media (max-width: 768px) {
+    .top50-list-item { flex-direction: column; }
+    .top50-rank-column { width: 100%; height: 40px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .top50-poster-wide { width: 100%; height: 250px; object-position: center 20%; }
+    .top50-action-row { flex-wrap: wrap; }
 }
