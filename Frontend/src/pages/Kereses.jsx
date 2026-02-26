@@ -7,6 +7,11 @@ export default function Kereses() {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // === GÖRGETÉS JAVÍTÁSA ===
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [query]); // A [query] miatt minden új keresésnél felugrik a tetejére
+
     useEffect(() => {
         const fetchResults = async () => {
             setLoading(true);

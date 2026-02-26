@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: db:3306
--- Létrehozás ideje: 2026. Feb 23. 20:49
+-- Létrehozás ideje: 2026. Feb 26. 21:29
 -- Kiszolgáló verziója: 8.4.8
 -- PHP verzió: 8.3.30
 
@@ -68,7 +68,13 @@ INSERT INTO `custom_list_items` (`id`, `list_id`, `film_id`, `sorozat_id`, `adde
 (26, 5, 9, NULL, '2026-02-02 15:45:05'),
 (27, 5, 2, NULL, '2026-02-02 15:45:17'),
 (28, 5, 7, NULL, '2026-02-02 15:45:26'),
-(29, 5, 6, NULL, '2026-02-02 15:47:01');
+(29, 5, 6, NULL, '2026-02-02 15:47:01'),
+(45, 6, 9, NULL, '2026-02-23 20:53:05'),
+(46, 6, 1, NULL, '2026-02-23 21:01:21'),
+(47, 6, 3, NULL, '2026-02-23 21:01:22'),
+(48, 6, 10, NULL, '2026-02-26 17:05:24'),
+(50, 6, NULL, 110, '2026-02-26 17:46:47'),
+(51, 6, 7, NULL, '2026-02-26 18:29:23');
 
 -- --------------------------------------------------------
 
@@ -97,16 +103,16 @@ CREATE TABLE `filmek` (
 
 INSERT INTO `filmek` (`id`, `cim`, `leiras`, `poszter_url`, `elozetes_url`, `megjelenes_ev`, `hossz_perc`, `rating`, `rendezo_id`, `kategoria_id`, `created_at`, `alap_rating`) VALUES
 (1, 'Dune: Part Two', 'Paul Atreides egyesíti erőit Chani-val és a fremenekkel, miközben bosszút áll azokon, akik elpusztították a családját.', 'https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', 'Way9Dexny3w', 2024, 166, 8.8, 1, 'action', '2026-01-28 18:01:57', 8.8),
-(2, 'Oppenheimer', 'J. Robert Oppenheimer fizikus története, aki a Manhattan Terv keretében az atombomba kifejlesztésén dolgozott.', 'https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 'uYPbbksJxIg', 2023, 180, 9.3, 2, 'biography', '2026-01-28 18:01:57', 8.6),
-(3, 'Top Gun: Maverick', 'Harminc év szolgálat után Pete \'Maverick\' Mitchell visszatér, hogy kiképezzen egy különleges egységet.', 'https://image.tmdb.org/t/p/original/62HCnUTziyWcpDaBO2i1DX17ljH.jpg', 'giXco2jaZ_4', 2022, 130, 9.2, 3, 'action', '2026-01-28 18:01:57', 8.3),
+(2, 'Oppenheimer', 'J. Robert Oppenheimer fizikus története, aki a Manhattan Terv keretében az atombomba kifejlesztésén dolgozott.', 'https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 'uYPbbksJxIg', 2023, 180, 8.6, 2, 'biography', '2026-01-28 18:01:57', 8.6),
+(3, 'Top Gun: Maverick', 'Harminc év szolgálat után Pete \'Maverick\' Mitchell visszatér, hogy kiképezzen egy különleges egységet.', 'https://image.tmdb.org/t/p/original/62HCnUTziyWcpDaBO2i1DX17ljH.jpg', 'giXco2jaZ_4', 2022, 130, 8.3, 3, 'action', '2026-01-28 18:01:57', 8.3),
 (4, 'The Batman', 'Amikor Rébusz, a szadista sorozatgyilkos elkezd politikai figurákat gyilkolni, Batman kénytelen a Gotham alvilágában nyomozni.', 'https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg', 'mqqft2x_Aa4', 2022, 176, 7.8, 4, 'action', '2026-01-28 18:01:57', 7.8),
 (5, 'Inception', 'Egy tolvaj, aki álommegosztó technológián keresztül lop titkokat, megkapja a feladatot, hogy ültessen el egy ötletet egy vezérigazgató elméjébe.', 'https://image.tmdb.org/t/p/original/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', 'YoHD9XEInc0', 2010, 148, 8.8, 2, 'scifi', '2026-01-28 18:01:57', 8.8),
-(6, 'Interstellar', 'Egy csapat felfedező féreglyukon keresztül utazik az űrben, hogy biztosítsák az emberiség túlélését.', 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10543523_p_v8_as.jpg', 'zSWdZVtXT7E', 2014, 169, 8.7, 2, 'scifi', '2026-01-28 18:01:57', 8.7),
-(7, 'Avatar: The Way of Water', 'Jake Sully és Neytiri mindent megtesznek, hogy együtt tartsák családjukat, amikor új fenyegetés üti fel a fejét.', 'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_.jpg', 'd9MyW72ELq0', 2022, 192, 7.6, 5, 'scifi', '2026-01-28 18:01:57', 7.6),
+(6, 'Interstellar', 'Egy csapat felfedező féreglyukon keresztül utazik az űrben, hogy biztosítsák az emberiség túlélését.', 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10543523_p_v8_as.jpg', 'zSWdZVtXT7E', 2014, 169, 9.3, 2, 'scifi', '2026-01-28 18:01:57', 8.7),
+(7, 'Avatar: The Way of Water', 'Jake Sully és Neytiri mindent megtesznek, hogy együtt tartsák családjukat, amikor új fenyegetés üti fel a fejét.', 'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_.jpg', 'd9MyW72ELq0', 2022, 192, 8.8, 5, 'scifi', '2026-01-28 18:01:57', 7.6),
 (8, 'Spider-Man: No Way Home', 'Pókember kiléte lelepleződik, ezért Doctor Strange segítségét kéri, de a varázslat balul sül el.', 'https://image.tmdb.org/t/p/original/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg', 'JfVOs4VSpmA', 2021, 148, 8.2, 6, 'action', '2026-01-28 18:01:57', 8.2),
-(9, 'Deadpool & Wolverine', 'A fásult Wade Wilson kénytelen újra jelmezt húzni, amikor egy új fenyegetés nemcsak a világát, hanem az egész univerzumot veszélyezteti.', 'https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', '73_1biulkYk', 2024, 128, 9.0, 7, 'action', '2026-01-28 18:01:57', 8.0),
+(9, 'Deadpool & Wolverine', 'A fásult Wade Wilson kénytelen újra jelmezt húzni, amikor egy új fenyegetés nemcsak a világát, hanem az egész univerzumot veszélyezteti.', 'https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', '73_1biulkYk', 2024, 128, 8.0, 7, 'action', '2026-01-28 18:01:57', 8.0),
 (10, 'Gladiator II', 'Évekkel Maximus halála után Lucius kénytelen belépni a Colosseumba, miután otthonát elfoglalják a zsarnok császárok.', 'https://m.media-amazon.com/images/M/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_.jpg', 'IIerkFJEcuU', 2024, 148, 8.0, 8, 'action', '2026-01-28 18:01:57', 8.0),
-(11, 'Black Panther: Wakanda Forever', 'Wakanda vezetői küzdenek nemzetük védelméért a beavatkozó világhatalmakkal szemben T\'Challa király halála után.', 'https://image.tmdb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg', '_Z3QKkl1WyM', 2022, 161, 7.3, 9, 'action', '2026-01-28 18:01:57', 7.3),
+(11, 'Black Panther: Wakanda Forever', 'Wakanda vezetői küzdenek nemzetük védelméért a beavatkozó világhatalmakkal szemben T\'Challa király halála után.', 'https://image.tmdb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg', '_Z3QKkl1WyM', 2022, 161, 8.7, 9, 'action', '2026-01-28 18:01:57', 7.3),
 (12, 'Avengers: Endgame', 'A Bosszúállók megmaradt tagjainak újra össze kell állniuk, hogy visszafordítsák Thanos tetteit és helyreállítsák az univerzum egyensúlyát.', 'https://image.tmdb.org/t/p/original/or06FN3Dka5tukK1e9sl16pB3iy.jpg', 'TcMBFSGVi1c', 2019, 181, 8.4, 10, 'action', '2026-01-28 18:01:57', 8.4);
 
 -- --------------------------------------------------------
@@ -159,7 +165,11 @@ CREATE TABLE `kedvencek` (
 
 INSERT INTO `kedvencek` (`id`, `user_id`, `film_id`, `sorozat_id`, `added_at`) VALUES
 (13, 15, 10, NULL, '2026-01-30 13:06:40'),
-(28, 15, NULL, 106, '2026-02-01 21:03:08');
+(28, 15, NULL, 106, '2026-02-01 21:03:08'),
+(53, 16, 10, NULL, '2026-02-26 17:05:07'),
+(56, 16, NULL, 110, '2026-02-26 17:46:48'),
+(57, 16, 9, NULL, '2026-02-26 18:28:51'),
+(58, 16, 7, NULL, '2026-02-26 18:29:24');
 
 -- --------------------------------------------------------
 
@@ -331,11 +341,12 @@ CREATE TABLE `reviews` (
 
 INSERT INTO `reviews` (`id`, `user_id`, `film_id`, `sorozat_id`, `rating`, `comment`, `created_at`) VALUES
 (11, 15, NULL, 106, 3, 'nagyon gyengfe volt eredet történetként', '2026-02-01 21:03:03'),
-(14, 16, 3, NULL, 10, 'nagyon jó film, elképesztő látványvilággat. Zs-nek csak ajánlani tudom', '2026-02-01 21:30:27'),
 (18, 15, 10, NULL, 8, 'asdfsfs', '2026-02-02 15:00:55'),
-(27, 16, 9, NULL, 10, 'adad', '2026-02-21 11:40:39'),
-(28, 16, 2, NULL, 10, 'nagyon jó film, csak ajánlani tudom', '2026-02-23 20:44:41'),
-(30, 16, NULL, 112, 10, 'ez igen', '2026-02-23 20:45:52');
+(30, 16, NULL, 112, 10, 'ez igen', '2026-02-23 20:45:52'),
+(34, 16, 11, NULL, 10, 'ez igen', '2026-02-26 18:29:53'),
+(35, 16, 7, NULL, 10, 'wow', '2026-02-26 18:54:44'),
+(36, 16, NULL, 106, 8, 'egész jó', '2026-02-26 20:28:21'),
+(37, 16, 6, NULL, 10, 'elképestő kép világ', '2026-02-26 21:27:44');
 
 -- --------------------------------------------------------
 
@@ -390,7 +401,7 @@ INSERT INTO `sorozatok` (`id`, `cim`, `leiras`, `poszter_url`, `elozetes_url`, `
 (103, 'The Mandalorian', 'Egy magányos fejvadász kalandjai a galaxis külső peremén, távol az Új Köztársaság hatáskörétől.', 'https://image.tmdb.org/t/p/original/eU1i6eHXlzMOlEq0ku1Rzq7Y4wA.jpg', 'aOC8E8z_ifw', 2019, '', 3, 40, 8.7, 13, 'scifi', '2026-01-28 18:01:57', 8.7),
 (104, 'The Last of Us', 'Egy edzett túlélőnek ki kell csempésznie egy 14 éves lányt egy elnyomó karanténzónából.', 'https://image.tmdb.org/t/p/original/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg', 'uLtkt8BonwM', 2023, '', 1, 50, 8.8, 14, 'drama', '2026-01-28 18:01:57', 8.8),
 (105, 'Wednesday', 'Wednesday Addams a Nevermore Akadémián töltött évei alatt próbálja uralni képességeit és megoldani egy rejtélyt.', 'https://image.tmdb.org/t/p/original/9PFonBhy4cQy7Jz20NpMygczOkv.jpg', '03u4xyj0TH4', 2022, '', 1, 45, 8.1, 15, 'comedy', '2026-01-28 18:01:57', 8.1),
-(106, 'House of the Dragon', 'A Targaryen-ház története 200 évvel a Trónok harca eseményei előtt.', 'https://static.posters.cz/image/1300/143695.jpg', 'DotnJ7tTA34', 2022, '', 2, 60, 5.8, 16, 'fantasy', '2026-01-28 18:01:57', 8.5),
+(106, 'House of the Dragon', 'A Targaryen-ház története 200 évvel a Trónok harca eseményei előtt.', 'https://static.posters.cz/image/1300/143695.jpg', 'DotnJ7tTA34', 2022, '', 2, 60, 6.5, 16, 'fantasy', '2026-01-28 18:01:57', 8.5),
 (107, 'Arcane', 'A testvérek, Vi és Powder a gazdag Piltover és a földalatti Zaun közötti konfliktus ellentétes oldalára kerülnek.', 'https://image.tmdb.org/t/p/original/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg', 'fXmAurh012s', 2021, '', 1, 40, 9.0, 17, 'animation', '2026-01-28 18:01:57', 9.0),
 (108, 'The Boys', 'Egy csapat önbíráskodó elindul, hogy leleplezze a szuperhősöket, akik visszaélnek szupererejükkel.', 'https://m.media-amazon.com/images/M/MV5BMGRlZDE2ZGEtZTU5Mi00ODdkLWFmMTEtY2UwMmViNWNmZjczXkEyXkFqcGc@._V1_.jpg', 'Fv0leN8TmR8', 2019, '', 4, 60, 8.7, 18, 'action', '2026-01-28 18:01:57', 8.7),
 (109, 'Game of Thrones', 'Kilenc nemesi család küzd Westeros földjének uralmáért, miközben egy ősi ellenség tér vissza évezredek óta tartó álmából.', 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'KPLWWIOCOOQ', 2011, '2019', 8, 55, 9.2, 19, 'fantasy', '2026-01-28 18:01:57', 9.2),
@@ -610,7 +621,7 @@ ALTER TABLE `custom_lists`
 -- AUTO_INCREMENT a táblához `custom_list_items`
 --
 ALTER TABLE `custom_list_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT a táblához `filmek`
@@ -622,7 +633,7 @@ ALTER TABLE `filmek`
 -- AUTO_INCREMENT a táblához `kedvencek`
 --
 ALTER TABLE `kedvencek`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT a táblához `media_orszagok`
@@ -658,7 +669,7 @@ ALTER TABLE `rendezok`
 -- AUTO_INCREMENT a táblához `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT a táblához `search_history`

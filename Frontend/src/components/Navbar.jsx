@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'; 
 import logoImg from '../logo.png'; 
 import ProfilDropdown from './ProfilDropdown';
 
@@ -15,9 +15,30 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
   });
 
   const navigate = useNavigate();
+  const location = useLocation(); 
   const searchRef = useRef(null); 
 
-  const toggleSearch = () => {
+  // === GLOBÁLIS GÖRDÍTÉS: MINDEN OLDALVÁLTÁSKOR A TETEJÉRE UGORJON ===
+  // Mivel a Navbar mindenhol ott van, ez minden oldalra kattintásnál működni fog!
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  // =================================================================
+
+  // === FELFEJLESZTETT GÖRDÍTÉS: CSAK A KEZDŐLAPON ANIMÁL ===
+  const handleHomeClick = (e) => {
+    if (location.pathname === '/') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+  // ========================================================
+
+  const toggleSearch = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (searchActive) {
       setSearchActive(false);
       setIsInputFocused(false);
@@ -25,7 +46,7 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
       setSearchResults([]);
     } else {
       setSearchActive(true);
-      setTimeout(() => setIsInputFocused(true), 100);
+      setIsInputFocused(false);
     }
   };
 
@@ -101,13 +122,15 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
     <nav className={scrolled ? 'scrolled' : ''}>
       <div className="nav-container">
         <div className="nav-left">
-            <Link to="/" className="logo-link"><div className="logo"><img src={logoImg} alt="MoziPont Logo" /></div></Link>
+            <Link to="/" className="logo-link" onClick={handleHomeClick}>
+                <div className="logo logo-animate">
+                    <img src={logoImg} alt="MoziPont Logo" />
+                </div>
+            </Link>
             <ul className="nav-links">
-                <li><Link to="/">Kezdőlap</Link></li>
-                {/* ÚJ LINKEK ITT */}
-                <li><Link to="/top-50-filmek">Top 50 Film</Link></li>
-                <li><Link to="/top-50-sorozatok">Top 50 Sorozat</Link></li>
-                
+                <li><NavLink to="/" end onClick={handleHomeClick}>Kezdőlap</NavLink></li>
+                <li><NavLink to="/top-50-filmek">Top 50 Film</NavLink></li>
+                <li><NavLink to="/top-50-sorozatok">Top 50 Sorozat</NavLink></li>
             </ul>
         </div>
 
@@ -122,7 +145,7 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     onKeyDown={handleKeyDown} 
-                    onFocus={() => setIsInputFocused(true)}
+                    onFocus={() => setIsInputFocused(true)} 
                 />
                 
                 {showDropdown && (

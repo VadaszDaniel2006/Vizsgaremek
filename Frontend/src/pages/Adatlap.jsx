@@ -9,6 +9,12 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
     
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
 
+    // === EZ A RÉSZ OLDJA MEG AZ OLDAL ALJÁRA GÖRGETÉSI HIBÁT ===
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [id]);
+    // ==========================================================
+
     useEffect(() => {
         const fetchItemData = async () => {
             // Kivettük a setLoading(true)-t a sima frissítéshez

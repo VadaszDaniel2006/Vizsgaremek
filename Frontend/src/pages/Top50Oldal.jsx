@@ -90,9 +90,13 @@ export default function Top50Oldal({ type, user, openStreaming, openTrailer, ope
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // === GÖRGETÉS JAVÍTÁSA ===
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [type]); // A [type] miatt akkor is felgörget, ha a "Top 50 Film"-ről átváltasz a "Top 50 Sorozat"-ra
+
     useEffect(() => {
         const fetchTop50 = async () => {
-            // Kivettük a setLoading(true)-t a sima frissítéshez
             try {
                 const endpoint = type === 'film' ? 'filmek' : 'sorozatok'; 
                 const res = await fetch(`http://localhost:5000/api/${endpoint}/top50`);
@@ -104,7 +108,7 @@ export default function Top50Oldal({ type, user, openStreaming, openTrailer, ope
             finally { setLoading(false); }
         };
         fetchTop50();
-    }, [type, interactionUpdate]); // <-- LÉNYEGES VÁLTOZÁS ITT!
+    }, [type, interactionUpdate]);
 
     if (loading) return <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}><h2>Betöltés...</h2></div>;
 
