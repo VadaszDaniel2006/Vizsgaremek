@@ -11,7 +11,7 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
 
     useEffect(() => {
         const fetchItemData = async () => {
-            setLoading(true);
+            // Kivettük a setLoading(true)-t a sima frissítéshez
             try {
                 const endpoint = type === 'film' ? 'filmek' : 'sorozatok';
                 const res = await fetch(`http://localhost:5000/api/${endpoint}`);
@@ -21,7 +21,7 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
             finally { setLoading(false); }
         };
         fetchItemData();
-    }, [id, type]);
+    }, [id, type, interactionUpdate]); // <-- LÉNYEGES VÁLTOZÁS ITT!
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -81,37 +81,13 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
                     <p className="adatlap-plot">{item.leiras}</p>
                     <p className="adatlap-director"><strong>Rendező:</strong> {item.rendezo}</p>
                     
-                    {/* ÚJ: HERO-STÍLUSÚ, NAGY GOMB ELRENDEZÉS */}
                     <div className="adatlap-actions">
                         
-                        {/* 1. FŐ CSOPORT: Megnézem + Ikonok (NAGY MÉRETBEN) */}
-                        <div className="action-group-primary">
-                            <button className="btn-main-action large" onClick={() => openStreaming(item)}>
+                        <div className="actions-left">
+                            <button className="btn-main-action" onClick={() => openStreaming(item)}>
                                 <i className="fas fa-play"></i> Megnézem
                             </button>
                             
-                            {user && (
-                                <>
-                                    <button 
-                                        className={`btn-circle-action large ${status.favorite ? 'active' : ''}`} 
-                                        onClick={toggleFav}
-                                        title="Kedvencek"
-                                    >
-                                        <i className="fas fa-heart"></i>
-                                    </button>
-                                    <button 
-                                        className={`btn-circle-action large ${status.listed ? 'active' : ''}`} 
-                                        onClick={toggleList}
-                                        title="Saját lista"
-                                    >
-                                        <i className="fas fa-plus"></i>
-                                    </button>
-                                </>
-                            )}
-                        </div>
-
-                        {/* 2. MÁSODLAGOS CSOPORT: Előzetes + Vélemények */}
-                        <div className="action-group-secondary">
                             {item.elozetes_url && (
                                 <button className="btn-secondary-action" onClick={() => openTrailer(item.elozetes_url, item.cim)}>
                                     <i className="fas fa-film"></i> Előzetes
@@ -125,16 +101,35 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
                             >
                                 <i className="fas fa-comment-alt"></i> Vélemények
                             </button>
+
+                            {user && (
+                                <>
+                                    <div className="icon-separator"></div>
+                                    <button 
+                                        className={`btn-circle-action ${status.favorite ? 'active' : ''}`} 
+                                        onClick={toggleFav}
+                                        title="Kedvencek"
+                                    >
+                                        <i className="fas fa-heart"></i>
+                                    </button>
+                                    <button 
+                                        className={`btn-circle-action ${status.listed ? 'active' : ''}`} 
+                                        onClick={toggleList}
+                                        title="Saját lista"
+                                    >
+                                        <i className="fas fa-plus"></i>
+                                    </button>
+                                </>
+                            )}
                         </div>
 
-                        {/* 3. Vissza gomb a jobb szélre */}
-                        <div style={{ flexGrow: 1 }}></div>
+                        <div className="actions-right">
+                            <button className="btn-back-solid" onClick={() => navigate(-1)}>
+                                <i className="fas fa-arrow-left"></i> Vissza
+                            </button>
+                        </div>
 
-                        <button className="btn-back-solid" onClick={() => navigate(-1)}>
-                            <i className="fas fa-arrow-left"></i> Vissza
-                        </button>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -14,7 +14,7 @@ import AdminDashboard from './components/AdminDashboard';
 import ReviewsSidebar from './components/ReviewsSidebar'; 
 import Kereses from './pages/Kereses';
 import Adatlap from './pages/Adatlap'; 
-import Top50Oldal from './pages/Top50Oldal'; // <-- ÚJ IMPORT
+import Top50Oldal from './pages/Top50Oldal';
 
 import './App.css'; 
 
@@ -151,7 +151,12 @@ function App() {
   useEffect(() => { window.onscroll = () => setScrolled(window.pageYOffset > 50); return () => (window.onscroll = null); }, []);
 
   const showNotification = (message, type = 'success') => { setToast({ message, type }); };
-  const handleReviewChange = () => { fetchAllData(); };
+  
+  // --- JAVÍTVA: AZ ÉRTÉKELÉS LEADÁSAKOR FRISSÍT MINDENT ÉS NEM VILLOG ---
+  const handleReviewChange = () => { 
+      fetchAllData(); 
+      setInteractionUpdate(prev => prev + 1); 
+  };
 
   const fetchSidebarData = async (type) => {
       if (!user) return;
@@ -381,14 +386,13 @@ function App() {
                 <Top50Oldal 
                     type="film" 
                     user={user} 
-                    openTrailer={openTrailer} 
                     openStreaming={openStreaming} 
-                    openInfo={openInfo} 
+                    openTrailer={openTrailer}
+                    openReviews={openReviews}
                     handleAddToFav={handleAddToFav} 
                     handleRemoveFromFav={handleRemoveFromFav} 
                     handleAddToMyList={handleAddToMyList} 
                     handleRemoveFromList={handleRemoveFromList} 
-                    openReviews={openReviews} 
                     interactionUpdate={interactionUpdate} 
                 />
             } />
@@ -396,14 +400,13 @@ function App() {
                 <Top50Oldal 
                     type="sorozat" 
                     user={user} 
-                    openTrailer={openTrailer} 
                     openStreaming={openStreaming} 
-                    openInfo={openInfo} 
+                    openTrailer={openTrailer}
+                    openReviews={openReviews}
                     handleAddToFav={handleAddToFav} 
                     handleRemoveFromFav={handleRemoveFromFav} 
                     handleAddToMyList={handleAddToMyList} 
                     handleRemoveFromList={handleRemoveFromList} 
-                    openReviews={openReviews} 
                     interactionUpdate={interactionUpdate} 
                 />
             } />

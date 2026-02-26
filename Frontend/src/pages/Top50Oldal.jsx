@@ -52,19 +52,16 @@ const Top50ListItem = ({ item, index, type, user, openStreaming, openTrailer, op
                 <p className="top50-desc-text">{item.leiras}</p>
                 
                 <div className="top50-action-row">
-                    {/* MEGNÉZÉM GOMB */}
                     <button className="btn-main-action small" onClick={() => openStreaming(item)}>
                         <i className="fas fa-play"></i> Megnézem
                     </button>
                     
-                    {/* ELŐZETES GOMB */}
                     {item.elozetes_url && (
                         <button className="btn-secondary-action small" onClick={() => openTrailer(item.elozetes_url, item.cim)}>
                             <i className="fas fa-film"></i> Előzetes
                         </button>
                     )}
 
-                    {/* ÚJ: VÉLEMÉNYEK GOMB */}
                     <button 
                         className="btn-secondary-action small" 
                         onClick={() => openReviews(item)}
@@ -73,7 +70,6 @@ const Top50ListItem = ({ item, index, type, user, openStreaming, openTrailer, op
                         <i className="fas fa-comment-alt"></i> Vélemények
                     </button>
                     
-                    {/* INTERAKCIÓK (SZÍV, PLUSZ) */}
                     {user && (
                         <div className="top50-icons-group">
                             <button className={`btn-circle-action small ${status.favorite ? 'active' : ''}`} onClick={toggleFav}>
@@ -96,7 +92,7 @@ export default function Top50Oldal({ type, user, openStreaming, openTrailer, ope
 
     useEffect(() => {
         const fetchTop50 = async () => {
-            setLoading(true);
+            // Kivettük a setLoading(true)-t a sima frissítéshez
             try {
                 const endpoint = type === 'film' ? 'filmek' : 'sorozatok'; 
                 const res = await fetch(`http://localhost:5000/api/${endpoint}/top50`);
@@ -108,7 +104,7 @@ export default function Top50Oldal({ type, user, openStreaming, openTrailer, ope
             finally { setLoading(false); }
         };
         fetchTop50();
-    }, [type]);
+    }, [type, interactionUpdate]); // <-- LÉNYEGES VÁLTOZÁS ITT!
 
     if (loading) return <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}><h2>Betöltés...</h2></div>;
 

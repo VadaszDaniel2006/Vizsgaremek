@@ -490,31 +490,62 @@ main { width: 100%; margin-top: 90px; }
 .adatlap-director { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; }
 .adatlap-director strong { color: white; margin-right: 5px; }
 
-/* --- ADATLAP GOMBOK HERO-STÍLUSÚ ELRENDEZÉSE --- */
+/* --- ADATLAP GOMBOK: TÖKÉLETES, EGYVONALAS ELRENDEZÉS --- */
 .adatlap-actions { 
     display: flex; 
-    gap: 20px; 
+    justify-content: space-between; /* Kilöki a Vissza gombot a szélre */
     align-items: center; 
     width: 100%;
     margin-top: 30px;
+    gap: 20px;
+    flex-wrap: wrap; 
+}
+
+.actions-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
-.action-group-primary {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+.actions-right {
+    margin-left: auto;
 }
 
-.action-group-secondary {
+
+/* FIX MAGASSÁG MINDEN GOMBNAK, HOGY TÖKÉLETES VONALBAN LEGYENEK */
+.btn-main-action, .btn-secondary-action, .btn-back-solid {
+    height: 50px; 
     display: flex;
-    gap: 15px;
     align-items: center;
-    border-left: 2px solid rgba(255,255,255,0.1);
-    padding-left: 20px;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    gap: 10px;
 }
 
-/* Kerek gombok általános beállítása */
+.btn-main-action {
+    background: var(--primary);
+    color: white;
+    padding: 0 35px;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: 0 5px 20px rgba(62, 80, 255, 0.4);
+}
+.btn-main-action:hover { background: #2c3bb7; transform: translateY(-3px); }
+
+.btn-secondary-action {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0 25px;
+    font-size: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+.btn-secondary-action:hover { background: rgba(255, 255, 255, 0.2); border-color: white; }
+
 .btn-circle-action {
     width: 50px; 
     height: 50px; 
@@ -530,48 +561,32 @@ main { width: 100%; margin-top: 90px; }
     transition: 0.3s; 
     backdrop-filter: blur(5px);
 }
-
 .btn-circle-action:hover { background: rgba(255,255,255,0.25); border-color: white; transform: scale(1.1); }
 .btn-circle-action.active { color: #00e676; border-color: #00e676; background-color: rgba(0, 230, 118, 0.1); }
 
-/* EXTRA NAGY MÉRET AZ ADATLAPHOZ */
-.btn-main-action.large {
-    padding: 18px 45px; 
-    font-size: 1.3rem; 
+.icon-separator {
+    width: 2px;
+    height: 30px;
+    background: rgba(255,255,255,0.1);
+    margin: 0 5px;
 }
-.btn-circle-action.large {
-    width: 65px; 
-    height: 65px; 
-    font-size: 1.5rem;
-}
-
-.btn-main-action {
-    background: var(--primary); color: white; padding: 15px 35px; border-radius: 8px; border: none;
-    font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 12px;
-    transition: 0.3s; box-shadow: 0 5px 20px rgba(62, 80, 255, 0.4);
-}
-.btn-main-action:hover { background: #2c3bb7; transform: translateY(-3px); }
-
-.btn-secondary-action {
-    background: rgba(255,255,255,0.1); color: white; padding: 15px 30px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2); font-size: 1.1rem; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; gap: 10px; transition: 0.3s; backdrop-filter: blur(5px);
-}
-.btn-secondary-action:hover { background: rgba(255,255,255,0.2); border-color: white; }
 
 .btn-back-solid {
-    background: #232d4b; color: white; padding: 15px 25px; border-radius: 8px;
-    border: 1px solid #3e50ff; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; gap: 10px; transition: 0.3s; 
+    background: #232d4b;
+    color: white;
+    padding: 0 25px;
+    border: 1px solid #3e50ff;
+    font-size: 1rem;
 }
 .btn-back-solid:hover { background: var(--primary); box-shadow: 0 5px 15px rgba(62, 80, 255, 0.4); }
 
-@media (max-width: 1100px) {
-    .action-group-secondary { border-left: none; padding-left: 0; }
-}
 @media (max-width: 900px) {
     .adatlap-wrapper { flex-direction: column; align-items: center; text-align: center; }
-    .adatlap-actions { justify-content: center; flex-direction: column; gap: 20px; }
+    .adatlap-actions { justify-content: center; }
+    .actions-left { justify-content: center; }
+    .icon-separator { display: none; }
+
+    .actions-right { margin-left: 0; }
 }
 
 /* ====================================================== */
@@ -687,8 +702,8 @@ main { width: 100%; margin-top: 90px; }
     align-items: center;
 }
 
-.btn-main-action.small { padding: 8px 20px; font-size: 1rem; }
-.btn-secondary-action.small { padding: 8px 20px; font-size: 1rem; }
+.btn-main-action.small { padding: 0 20px; font-size: 1rem; height: 40px; }
+.btn-secondary-action.small { padding: 0 20px; font-size: 1rem; height: 40px; }
 .top50-icons-group { display: flex; gap: 10px; margin-left: 10px; }
 .btn-circle-action.small { width: 40px; height: 40px; font-size: 1rem; }
 
