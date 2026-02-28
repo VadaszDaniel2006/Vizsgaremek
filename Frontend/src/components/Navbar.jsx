@@ -18,21 +18,20 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
   const location = useLocation(); 
   const searchRef = useRef(null); 
 
-  // === GLOBÁLIS GÖRDÍTÉS: MINDEN OLDALVÁLTÁSKOR A TETEJÉRE UGORJON ===
-  // Mivel a Navbar mindenhol ott van, ez minden oldalra kattintásnál működni fog!
+  // Globális görgetés: minden normál oldalváltáskor a tetejére ugrik
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
-  // =================================================================
 
-  // === FELFEJLESZTETT GÖRDÍTÉS: CSAK A KEZDŐLAPON ANIMÁL ===
-  const handleHomeClick = (e) => {
-    if (location.pathname === '/') {
+  // === ÁLTALÁNOS GÖRDÍTŐ FÜGGVÉNY ===
+  // Ezt használjuk minden navbar linknél. Ha már ott vagyunk, felgörget finoman!
+  const handleNavLinkClick = (path, e) => {
+    if (location.pathname === path) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-  // ========================================================
+  // ==================================
 
   const toggleSearch = (e) => {
     if (e) {
@@ -122,15 +121,27 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
     <nav className={scrolled ? 'scrolled' : ''}>
       <div className="nav-container">
         <div className="nav-left">
-            <Link to="/" className="logo-link" onClick={handleHomeClick}>
+            <Link to="/" className="logo-link" onClick={(e) => handleNavLinkClick('/', e)}>
                 <div className="logo logo-animate">
                     <img src={logoImg} alt="MoziPont Logo" />
                 </div>
             </Link>
             <ul className="nav-links">
-                <li><NavLink to="/" end onClick={handleHomeClick}>Kezdőlap</NavLink></li>
-                <li><NavLink to="/top-50-filmek">Top 50 Film</NavLink></li>
-                <li><NavLink to="/top-50-sorozatok">Top 50 Sorozat</NavLink></li>
+                <li>
+                    <NavLink to="/" end onClick={(e) => handleNavLinkClick('/', e)}>
+                        Kezdőlap
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/top-50-filmek" onClick={(e) => handleNavLinkClick('/top-50-filmek', e)}>
+                        Top 50 Film
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/top-50-sorozatok" onClick={(e) => handleNavLinkClick('/top-50-sorozatok', e)}>
+                        Top 50 Sorozat
+                    </NavLink>
+                </li>
             </ul>
         </div>
 
