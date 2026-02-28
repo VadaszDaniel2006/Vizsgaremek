@@ -47,7 +47,7 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
     const activeStyle = { 
     color: '#00e676', 
     borderColor: '#00e676', 
-     // Ez egy sötét, de jól látható háttér
+    backgroundColor: 'rgba(15, 21, 43, 0.95)' // Ez egy sötét, de jól látható háttér
 };
 
     return (
@@ -151,7 +151,7 @@ export default function HetiAjanlo({ user, openStreaming, openTrailer, openRevie
     const activeStyle = { 
     color: '#00e676', 
     borderColor: '#00e676', 
-     // Ez egy sötét, de jól látható háttér
+    backgroundColor: 'rgba(15, 21, 43, 0.95)' // Ez egy sötét, de jól látható háttér
 };
 
     return (
