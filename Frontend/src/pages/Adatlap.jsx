@@ -9,15 +9,13 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
     
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
 
-    // === EZ A RÉSZ OLDJA MEG AZ OLDAL ALJÁRA GÖRGETÉSI HIBÁT ===
+    // Oldal tetejére ugrás betöltéskor
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [id]);
-    // ==========================================================
 
     useEffect(() => {
         const fetchItemData = async () => {
-            // Kivettük a setLoading(true)-t a sima frissítéshez
             try {
                 const endpoint = type === 'film' ? 'filmek' : 'sorozatok';
                 const res = await fetch(`http://localhost:5000/api/${endpoint}`);
@@ -27,7 +25,7 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
             finally { setLoading(false); }
         };
         fetchItemData();
-    }, [id, type, interactionUpdate]); // <-- LÉNYEGES VÁLTOZÁS ITT!
+    }, [id, type, interactionUpdate]);
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -87,8 +85,10 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
                     <p className="adatlap-plot">{item.leiras}</p>
                     <p className="adatlap-director"><strong>Rendező:</strong> {item.rendezo}</p>
                     
-                    <div className="adatlap-actions">
+                    {/* === ÁTALAKÍTOTT GOMB ELRENDEZÉS === */}
+                    <div className="adatlap-actions" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '15px' }}>
                         
+                        {/* 1. SOR: Fő gombok + Vissza */}
                         <div className="actions-left">
                             <button className="btn-main-action" onClick={() => openStreaming(item)}>
                                 <i className="fas fa-play"></i> Megnézem
@@ -108,34 +108,34 @@ export default function Adatlap({ type, openStreaming, openTrailer, user, onAddT
                                 <i className="fas fa-comment-alt"></i> Vélemények
                             </button>
 
-                            {user && (
-                                <>
-                                    <div className="icon-separator"></div>
-                                    <button 
-                                        className={`btn-circle-action ${status.favorite ? 'active' : ''}`} 
-                                        onClick={toggleFav}
-                                        title="Kedvencek"
-                                    >
-                                        <i className="fas fa-heart"></i>
-                                    </button>
-                                    <button 
-                                        className={`btn-circle-action ${status.listed ? 'active' : ''}`} 
-                                        onClick={toggleList}
-                                        title="Saját lista"
-                                    >
-                                        <i className="fas fa-plus"></i>
-                                    </button>
-                                </>
-                            )}
-                        </div>
-
-                        <div className="actions-right">
                             <button className="btn-back-solid" onClick={() => navigate(-1)}>
                                 <i className="fas fa-arrow-left"></i> Vissza
                             </button>
                         </div>
 
+                        {/* 2. SOR: Kedvencek és Saját lista (Csak bejelentkezve) */}
+                        {user && (
+                            <div className="actions-left">
+                                <button 
+                                    className={`btn-circle-action ${status.favorite ? 'active' : ''}`} 
+                                    onClick={toggleFav}
+                                    title="Kedvencek"
+                                >
+                                    <i className="fas fa-heart"></i>
+                                </button>
+                                <button 
+                                    className={`btn-circle-action ${status.listed ? 'active' : ''}`} 
+                                    onClick={toggleList}
+                                    title="Saját lista"
+                                >
+                                    <i className="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        )}
+                        
                     </div>
+                    {/* =================================== */}
+
                 </div>
             </div>
         </div>
