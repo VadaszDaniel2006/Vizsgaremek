@@ -15,6 +15,7 @@ import ReviewsSidebar from './components/ReviewsSidebar';
 import Kereses from './pages/Kereses';
 import Adatlap from './pages/Adatlap'; 
 import Top50Oldal from './pages/Top50Oldal';
+import HetiAjanlo from './pages/HetiAjanlo';
 
 import './App.css'; 
 
@@ -410,7 +411,10 @@ function App() {
                     interactionUpdate={interactionUpdate} 
                 />
             } />
+
+            {/* --- HETI AJÁNLÓ ÚTVONAL --- */}
             
+            <Route path="/heti-ajanlo" element={<HetiAjanlo user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
         </Routes>
 
         <Footer />

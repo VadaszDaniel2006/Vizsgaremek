@@ -18,20 +18,16 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
   const location = useLocation(); 
   const searchRef = useRef(null); 
 
-  // Globális görgetés: minden normál oldalváltáskor a tetejére ugrik
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // === ÁLTALÁNOS GÖRDÍTŐ FÜGGVÉNY ===
-  // Ezt használjuk minden navbar linknél. Ha már ott vagyunk, felgörget finoman!
   const handleNavLinkClick = (path, e) => {
     if (location.pathname === path) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-  // ==================================
 
   const toggleSearch = (e) => {
     if (e) {
@@ -127,21 +123,11 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
                 </div>
             </Link>
             <ul className="nav-links">
-                <li>
-                    <NavLink to="/" end onClick={(e) => handleNavLinkClick('/', e)}>
-                        Kezdőlap
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/top-50-filmek" onClick={(e) => handleNavLinkClick('/top-50-filmek', e)}>
-                        Top 50 Film
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/top-50-sorozatok" onClick={(e) => handleNavLinkClick('/top-50-sorozatok', e)}>
-                        Top 50 Sorozat
-                    </NavLink>
-                </li>
+                <li><NavLink to="/" end onClick={(e) => handleNavLinkClick('/', e)}>Kezdőlap</NavLink></li>
+                <li><NavLink to="/top-50-filmek" onClick={(e) => handleNavLinkClick('/top-50-filmek', e)}>Top 50 Film</NavLink></li>
+                <li><NavLink to="/top-50-sorozatok" onClick={(e) => handleNavLinkClick('/top-50-sorozatok', e)}>Top 50 Sorozat</NavLink></li>
+                {/* ÚJ MENÜPONT ITT */}
+                <li><NavLink to="/heti-ajanlo" onClick={(e) => handleNavLinkClick('/heti-ajanlo', e)}>Heti Ajánló</NavLink></li>
             </ul>
         </div>
 
