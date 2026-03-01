@@ -126,8 +126,9 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
                 <li><NavLink to="/" end onClick={(e) => handleNavLinkClick('/', e)}>Kezdőlap</NavLink></li>
                 <li><NavLink to="/top-50-filmek" onClick={(e) => handleNavLinkClick('/top-50-filmek', e)}>Top 50 Film</NavLink></li>
                 <li><NavLink to="/top-50-sorozatok" onClick={(e) => handleNavLinkClick('/top-50-sorozatok', e)}>Top 50 Sorozat</NavLink></li>
-                {/* ÚJ MENÜPONT ITT */}
+                
                 <li><NavLink to="/heti-ajanlo" onClick={(e) => handleNavLinkClick('/heti-ajanlo', e)}>Heti Ajánló</NavLink></li>
+                <li><NavLink to="/mozik-terkep" onClick={(e) => handleNavLinkClick('/mozik-terkep', e)}>Mozitérkép</NavLink></li>
             </ul>
         </div>
 

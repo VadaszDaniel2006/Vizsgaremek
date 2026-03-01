@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: db:3306
--- Létrehozás ideje: 2026. Feb 26. 21:29
+-- Létrehozás ideje: 2026. Már 01. 16:52
 -- Kiszolgáló verziója: 8.4.8
 -- PHP verzió: 8.3.30
 
@@ -70,11 +70,11 @@ INSERT INTO `custom_list_items` (`id`, `list_id`, `film_id`, `sorozat_id`, `adde
 (28, 5, 7, NULL, '2026-02-02 15:45:26'),
 (29, 5, 6, NULL, '2026-02-02 15:47:01'),
 (45, 6, 9, NULL, '2026-02-23 20:53:05'),
-(46, 6, 1, NULL, '2026-02-23 21:01:21'),
 (47, 6, 3, NULL, '2026-02-23 21:01:22'),
 (48, 6, 10, NULL, '2026-02-26 17:05:24'),
 (50, 6, NULL, 110, '2026-02-26 17:46:47'),
-(51, 6, 7, NULL, '2026-02-26 18:29:23');
+(51, 6, 7, NULL, '2026-02-26 18:29:23'),
+(52, 6, NULL, 112, '2026-02-28 15:02:00');
 
 -- --------------------------------------------------------
 
@@ -103,15 +103,15 @@ CREATE TABLE `filmek` (
 
 INSERT INTO `filmek` (`id`, `cim`, `leiras`, `poszter_url`, `elozetes_url`, `megjelenes_ev`, `hossz_perc`, `rating`, `rendezo_id`, `kategoria_id`, `created_at`, `alap_rating`) VALUES
 (1, 'Dune: Part Two', 'Paul Atreides egyesíti erőit Chani-val és a fremenekkel, miközben bosszút áll azokon, akik elpusztították a családját.', 'https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', 'Way9Dexny3w', 2024, 166, 8.8, 1, 'action', '2026-01-28 18:01:57', 8.8),
-(2, 'Oppenheimer', 'J. Robert Oppenheimer fizikus története, aki a Manhattan Terv keretében az atombomba kifejlesztésén dolgozott.', 'https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 'uYPbbksJxIg', 2023, 180, 8.6, 2, 'biography', '2026-01-28 18:01:57', 8.6),
+(2, 'Oppenheimer', 'J. Robert Oppenheimer fizikus története, aki a Manhattan Terv keretében az atombomba kifejlesztésén dolgozott.', 'https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 'uYPbbksJxIg', 2023, 180, 9.3, 2, 'biography', '2026-01-28 18:01:57', 8.6),
 (3, 'Top Gun: Maverick', 'Harminc év szolgálat után Pete \'Maverick\' Mitchell visszatér, hogy kiképezzen egy különleges egységet.', 'https://image.tmdb.org/t/p/original/62HCnUTziyWcpDaBO2i1DX17ljH.jpg', 'giXco2jaZ_4', 2022, 130, 8.3, 3, 'action', '2026-01-28 18:01:57', 8.3),
 (4, 'The Batman', 'Amikor Rébusz, a szadista sorozatgyilkos elkezd politikai figurákat gyilkolni, Batman kénytelen a Gotham alvilágában nyomozni.', 'https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg', 'mqqft2x_Aa4', 2022, 176, 7.8, 4, 'action', '2026-01-28 18:01:57', 7.8),
 (5, 'Inception', 'Egy tolvaj, aki álommegosztó technológián keresztül lop titkokat, megkapja a feladatot, hogy ültessen el egy ötletet egy vezérigazgató elméjébe.', 'https://image.tmdb.org/t/p/original/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', 'YoHD9XEInc0', 2010, 148, 8.8, 2, 'scifi', '2026-01-28 18:01:57', 8.8),
 (6, 'Interstellar', 'Egy csapat felfedező féreglyukon keresztül utazik az űrben, hogy biztosítsák az emberiség túlélését.', 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10543523_p_v8_as.jpg', 'zSWdZVtXT7E', 2014, 169, 9.3, 2, 'scifi', '2026-01-28 18:01:57', 8.7),
-(7, 'Avatar: The Way of Water', 'Jake Sully és Neytiri mindent megtesznek, hogy együtt tartsák családjukat, amikor új fenyegetés üti fel a fejét.', 'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_.jpg', 'd9MyW72ELq0', 2022, 192, 8.8, 5, 'scifi', '2026-01-28 18:01:57', 7.6),
+(7, 'Avatar: The Way of Water', 'Jake Sully és Neytiri mindent megtesznek, hogy együtt tartsák családjukat, amikor új fenyegetés üti fel a fejét.', 'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_.jpg', 'd9MyW72ELq0', 2022, 192, 7.3, 5, 'scifi', '2026-01-28 18:01:57', 7.6),
 (8, 'Spider-Man: No Way Home', 'Pókember kiléte lelepleződik, ezért Doctor Strange segítségét kéri, de a varázslat balul sül el.', 'https://image.tmdb.org/t/p/original/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg', 'JfVOs4VSpmA', 2021, 148, 8.2, 6, 'action', '2026-01-28 18:01:57', 8.2),
 (9, 'Deadpool & Wolverine', 'A fásult Wade Wilson kénytelen újra jelmezt húzni, amikor egy új fenyegetés nemcsak a világát, hanem az egész univerzumot veszélyezteti.', 'https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', '73_1biulkYk', 2024, 128, 8.0, 7, 'action', '2026-01-28 18:01:57', 8.0),
-(10, 'Gladiator II', 'Évekkel Maximus halála után Lucius kénytelen belépni a Colosseumba, miután otthonát elfoglalják a zsarnok császárok.', 'https://m.media-amazon.com/images/M/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_.jpg', 'IIerkFJEcuU', 2024, 148, 8.0, 8, 'action', '2026-01-28 18:01:57', 8.0),
+(10, 'Gladiator II', 'Évekkel Maximus halála után Lucius kénytelen belépni a Colosseumba, miután otthonát elfoglalják a zsarnok császárok.', 'https://m.media-amazon.com/images/M/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_.jpg', 'IIerkFJEcuU', 2024, 148, 8.7, 8, 'action', '2026-01-28 18:01:57', 8.0),
 (11, 'Black Panther: Wakanda Forever', 'Wakanda vezetői küzdenek nemzetük védelméért a beavatkozó világhatalmakkal szemben T\'Challa király halála után.', 'https://image.tmdb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg', '_Z3QKkl1WyM', 2022, 161, 8.7, 9, 'action', '2026-01-28 18:01:57', 7.3),
 (12, 'Avengers: Endgame', 'A Bosszúállók megmaradt tagjainak újra össze kell állniuk, hogy visszafordítsák Thanos tetteit és helyreállítsák az univerzum egyensúlyát.', 'https://image.tmdb.org/t/p/original/or06FN3Dka5tukK1e9sl16pB3iy.jpg', 'TcMBFSGVi1c', 2019, 181, 8.4, 10, 'action', '2026-01-28 18:01:57', 8.4);
 
@@ -168,8 +168,10 @@ INSERT INTO `kedvencek` (`id`, `user_id`, `film_id`, `sorozat_id`, `added_at`) V
 (28, 15, NULL, 106, '2026-02-01 21:03:08'),
 (53, 16, 10, NULL, '2026-02-26 17:05:07'),
 (56, 16, NULL, 110, '2026-02-26 17:46:48'),
-(57, 16, 9, NULL, '2026-02-26 18:28:51'),
-(58, 16, 7, NULL, '2026-02-26 18:29:24');
+(58, 16, 7, NULL, '2026-02-26 18:29:24'),
+(59, 16, NULL, 111, '2026-02-28 13:38:44'),
+(83, 16, 2, NULL, '2026-02-28 15:11:56'),
+(85, 16, 6, NULL, '2026-03-01 16:51:07');
 
 -- --------------------------------------------------------
 
@@ -232,6 +234,99 @@ INSERT INTO `media_platformok` (`id`, `platform_id`, `film_id`, `sorozat_id`, `k
 (27, 1, NULL, 110, NULL),
 (28, 3, NULL, 111, NULL),
 (29, 5, NULL, 112, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `mozik`
+--
+
+CREATE TABLE `mozik` (
+  `id` int NOT NULL,
+  `nev` varchar(255) NOT NULL,
+  `varos` varchar(100) NOT NULL,
+  `cim` varchar(255) NOT NULL,
+  `lat` decimal(10,6) NOT NULL,
+  `lng` decimal(10,6) NOT NULL,
+  `url` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- A tábla adatainak kiíratása `mozik`
+--
+
+INSERT INTO `mozik` (`id`, `nev`, `varos`, `cim`, `lat`, `lng`, `url`) VALUES
+(1, 'Cinema City Allee', 'Budapest', '1117 Budapest, Október huszonharmadika u. 8-10.', 47.474800, 19.047400, 'https://www.cinemacity.hu/cinemas/allee'),
+(2, 'Cinema City Westend', 'Budapest', '1062 Budapest, Váci út 1-3.', 47.514600, 19.058500, 'https://www.cinemacity.hu/cinemas/westend'),
+(3, 'Cinema City Aréna', 'Budapest', '1087 Budapest, Kerepesi út 9.', 47.498800, 19.106100, 'https://www.cinemacity.hu/cinemas/arena'),
+(4, 'Corvin Mozi', 'Budapest', '1082 Budapest, Corvin köz 1.', 47.485800, 19.070500, 'https://corvinmozi.hu/'),
+(5, 'Puskin Mozi', 'Budapest', '1053 Budapest, Kossuth Lajos u. 18.', 47.493300, 19.058500, 'https://puskinmozi.hu/'),
+(6, 'Cinema City Debrecen', 'Debrecen', '4026 Debrecen, Péterfia u. 18.', 47.531600, 21.624400, 'https://www.cinemacity.hu/cinemas/debrecen'),
+(7, 'Apollo Mozi', 'Debrecen', '4025 Debrecen, Miklós u. 1.', 47.528300, 21.623100, 'https://apollomozi.hu/'),
+(8, 'Belvárosi Mozi', 'Szeged', '6720 Szeged, Vaszy Viktor tér 3.', 46.253000, 20.148200, 'https://belvarosimozi.hu/'),
+(9, 'Cinema City Szeged', 'Szeged', '6724 Szeged, Londoni krt. 3.', 46.256800, 20.140400, 'https://www.cinemacity.hu/cinemas/szeged'),
+(10, 'Cinema City Pécs', 'Pécs', '7622 Pécs, Bajcsy-Zsilinszky u. 11.', 46.071800, 18.232300, 'https://www.cinemacity.hu/cinemas/pecs'),
+(11, 'Apolló Mozi', 'Pécs', '7621 Pécs, Perczel Miklós u. 22.', 46.076100, 18.228500, 'https://www.apollopecs.hu/'),
+(12, 'Cinema City Győr', 'Győr', '9027 Győr, Budai út 1.', 47.691700, 17.643300, 'https://www.cinemacity.hu/cinemas/gyor'),
+(13, 'Cinema City Miskolc', 'Miskolc', '3525 Miskolc, Szentpáli u. 2-6.', 48.103100, 20.783600, 'https://www.cinemacity.hu/cinemas/miskolc'),
+(14, 'Savaria Mozi', 'Szombathely', '9700 Szombathely, Mártírok tere 1.', 47.230700, 16.621400, 'https://savariamozi.hu/'),
+(15, 'Cinema City Allee', 'Budapest', 'Október huszonharmadika u. 8-10.', 47.474800, 19.047400, 'https://www.cinemacity.hu/cinemas/allee'),
+(16, 'Cinema City Westend', 'Budapest', 'Váci út 1-3.', 47.514600, 19.058500, 'https://www.cinemacity.hu/cinemas/westend'),
+(17, 'Cinema City Aréna', 'Budapest', 'Kerepesi út 9.', 47.498800, 19.106100, 'https://www.cinemacity.hu/cinemas/arena'),
+(18, 'Cinema City Mammut', 'Budapest', 'Lövőház u. 2-6.', 47.508500, 19.025300, 'https://www.cinemacity.hu/cinemas/mammut'),
+(19, 'Cinema City Campona', 'Budapest', 'Nagytétényi út 37-43.', 47.407400, 19.018500, 'https://www.cinemacity.hu/cinemas/campona'),
+(20, 'Cinema City Duna Plaza', 'Budapest', 'Váci út 178.', 47.545800, 19.074400, 'https://www.cinemacity.hu/cinemas/dunaplaza/1141#/buy-tickets-by-cinema?in-cinema=1141&at=2026-03-01&view-mode=list'),
+(21, 'Cinema City Debrecen', 'Debrecen', 'Péterfia u. 18.', 47.531600, 21.624400, 'https://www.cinemacity.hu/cinemas/debrecen'),
+(22, 'Cinema City Szeged', 'Szeged', 'Londoni krt. 3.', 46.256800, 20.140400, 'https://www.cinemacity.hu/cinemas/szeged'),
+(23, 'Cinema City Pécs', 'Pécs', 'Bajcsy-Zsilinszky u. 11.', 46.071800, 18.232300, 'https://www.cinemacity.hu/cinemas/pecs'),
+(24, 'Cinema City Győr', 'Győr', 'Budai út 1.', 47.691700, 17.643300, 'https://www.cinemacity.hu/cinemas/gyor'),
+(25, 'Cinema City Miskolc', 'Miskolc', 'Szentpáli u. 2-6.', 48.103100, 20.783600, 'https://www.cinemacity.hu/cinemas/miskolc'),
+(26, 'Cinema City Alba', 'Székesfehérvár', 'Palotai út 1.', 47.192500, 18.409300, 'https://www.cinemacity.hu/cinemas/alba'),
+(27, 'Cinema City Balaton', 'Veszprém', 'Budapest út 20-28.', 47.096300, 17.917100, 'https://www.cinemacity.hu/cinemas/balaton'),
+(28, 'Cinema City Szolnok', 'Szolnok', 'Ady Endre út 28/A', 47.172500, 20.198300, 'https://www.cinemacity.hu/cinemas/szolnok'),
+(29, 'Cinema City Zalaegerszeg', 'Zalaegerszeg', 'Stadion u. 5.', 46.848800, 16.845900, 'https://www.cinemacity.hu/cinemas/zala/1135#/buy-tickets-by-cinema?in-cinema=1135&at=2026-03-01&view-mode=list'),
+(30, 'Cinema City Nyíregyháza', 'Nyíregyháza', 'László u. 8.', 47.955500, 21.706100, 'https://www.cinemacity.hu/cinemas/nyiregyhaza'),
+(31, 'Cinema City Sopron', 'Sopron', 'Kőszegi út 14.', 47.674800, 16.598500, 'https://www.cinemacity.hu/cinemas/sopron'),
+(32, 'Cinema City Savaria', 'Szombathely', 'Körmendi út 52-54.', 47.218500, 16.626300, 'https://www.cinemacity.hu/cinemas/savaria'),
+(33, 'Agria Mozi Eger', 'Eger', 'Törvényház u. 4.', 47.898600, 20.370800, 'https://egermozi.hu/'),
+(34, 'Kultik Csepel', 'Budapest', 'II. Rákóczi Ferenc út 154.', 47.425800, 19.068300, 'https://csepelimozi.hu/'),
+(35, 'Kultik Kaposvár', 'Kaposvár', 'Nagy Imre tér 1.', 46.357500, 17.795200, 'https://kultik.hu/kaposvar'),
+(36, 'Kultik Sopron', 'Sopron', 'Lackner Kristóf u. 35.', 47.688800, 16.582200, 'https://elitmozi.hu/'),
+(37, 'Kultik Salgótarján', 'Salgótarján', 'Fő tér 5.', 48.106200, 19.805500, 'https://kultik.hu/#cinema:8'),
+(38, 'Kultik Szentes', 'Szentes', 'Tóth József u. 10.', 46.651500, 20.258800, 'https://szentesimozi.hu/'),
+(40, 'Kultik Ajka', 'Ajka', 'Szabadság tér 13.', 47.103200, 17.558200, 'https://kultik.hu/#cinema:2'),
+(41, 'Kultik Dunaújváros', 'Dunaújváros', 'Béke krt. 1.', 46.960500, 18.939200, 'https://kultikdunaujvaros.hu/'),
+(42, 'Etele Cinema', 'Budapest', 'Etele tér 1.', 47.464600, 19.022300, 'https://etelecinema.hu/'),
+(43, 'Corvin Mozi', 'Budapest', 'Corvin köz 1.', 47.485800, 19.070500, 'https://corvinmozi.hu/'),
+(44, 'Sugár Mozi', 'Budapest', 'Örs vezér tere 24.', 47.502800, 19.136200, 'https://sugarmozi.hu/'),
+(45, 'Puskin Mozi', 'Budapest', 'Kossuth Lajos u. 18.', 47.493300, 19.058500, 'https://puskinmozi.hu/'),
+(46, 'Toldi Mozi', 'Budapest', 'Bajcsy-Zsilinszky út 36.', 47.503300, 19.054500, 'https://toldimozi.hu/'),
+(47, 'Művész Mozi', 'Budapest', 'Teréz krt. 30.', 47.507300, 19.059200, 'https://muveszmozi.hu/'),
+(48, 'Lurdy Mozi', 'Budapest', 'Könyves Kálmán krt. 12.', 47.468800, 19.088800, 'https://lurdymozi.hu/'),
+(49, 'Kino Cafe Mozi', 'Budapest', 'Szent István krt. 16.', 47.513200, 19.049600, 'https://kinocafemozi.hu/'),
+(50, 'Tabán Art Mozi', 'Budapest', 'Krisztina krt. 87-89.', 47.498400, 19.027900, 'https://tabanartmozi.hu/'),
+(51, 'Apollo Mozi', 'Debrecen', 'Miklós u. 1.', 47.528300, 21.623100, 'https://apollomozi.hu/'),
+(52, 'Belvárosi Mozi', 'Szeged', 'Vaszy Viktor tér 3.', 46.253000, 20.148200, 'https://belvarosimozi.hu/'),
+(53, 'Apolló Mozi Pécs', 'Pécs', 'Perczel Miklós u. 22.', 46.076100, 18.228500, 'https://www.apollopecs.hu/'),
+(54, 'Savaria Mozi', 'Szombathely', 'Mártírok tere 1.', 47.230700, 16.621400, 'https://savariamozi.hu/'),
+(55, 'Agóra Savaria Filmszínház', 'Szombathely', 'Mártírok tere 1.', 47.230700, 16.621400, 'https://savariamozi.hu/'),
+(56, 'Center Mozi', 'Békéscsaba', 'Andrássy út 37-43.', 46.678100, 21.096300, 'https://centermozi.hu/'),
+(57, 'Tisza Mozi', 'Szolnok', 'Templom u. 4.', 47.172600, 20.198200, 'https://tiszamozi.hu/'),
+(58, 'Barátság Ház Mozi', 'Székesfehérvár', 'III. Béla király tér 1.', 47.197900, 18.423700, 'https://baratsagmozi.hu/'),
+(59, 'Művészetek Háza Mozi', 'Miskolc', 'Rákóczi Ferenc u. 5.', 48.102500, 20.781300, 'https://muhamiskolc.hu/'),
+(60, 'Kőrösy Mozi', 'Baja', 'Oroszlán u. 3.', 46.180500, 18.953200, 'https://artmozi.korosikultura.hu/'),
+(61, 'Otthon Mozi', 'Kecskemét', 'Kossuth tér 4.', 46.907500, 19.691800, 'https://otthonmozi.hu/'),
+(62, 'Malom Mozi', 'Kecskemét', 'Korona u. 2.', 46.906300, 19.691200, 'https://malommozi.hu/'),
+(63, 'Szivárvány Kultúrpalota', 'Kaposvár', 'Noszlopy Gáspár u. 5.', 46.357500, 17.795200, 'https://szivarvanykulturpalota.hu/'),
+(64, 'Makói Mozi', 'Makó', 'Szegedi u. 1-3.', 46.215500, 20.477200, 'https://makoimozi.hu/'),
+(65, 'Petőfi Mozi', 'Pápa', 'Március 15. tér 1.', 47.329800, 17.464500, 'https://papamozi.hu/'),
+(66, 'Krúdy Mozi', 'Nyíregyháza', 'Bessenyei tér 1.', 47.955500, 21.716100, 'https://krudymozi.hu/'),
+(67, 'Tatabánya Vértes Center Mozi', 'Tatabánya', 'Győri út 7-9.', 47.585500, 18.397200, 'https://mimozink.hu/'),
+(68, 'MiMozink Óbuda', 'Budapest', 'Bécsi út 154.', 47.540100, 19.032200, 'https://mimozink.hu/'),
+(69, 'Szentgotthárdi Csákányi László Filmszínház', 'Szentgotthárd', 'Széll Kálmán tér 7.', 46.953500, 16.273600, 'https://www.csakanyimozi.hu/hu/'),
+(70, 'Uránia Nemzeti Filmszínház', 'Budapest', 'Rákóczi út 21.', 47.495200, 19.064500, 'https://urania-nf.hu/'),
+(71, 'Fontana Filmszínház', 'Hévíz', 'Rákóczi u. 9.', 46.788800, 17.189500, 'https://fontanamozi.hu/'),
+(72, 'Ligetplex Cinema', 'Gyenesdiás', 'Kereskedők útja 4-6.', 46.766700, 17.283300, 'https://ligetplexcinema.hu/home');
 
 -- --------------------------------------------------------
 
@@ -342,11 +437,14 @@ CREATE TABLE `reviews` (
 INSERT INTO `reviews` (`id`, `user_id`, `film_id`, `sorozat_id`, `rating`, `comment`, `created_at`) VALUES
 (11, 15, NULL, 106, 3, 'nagyon gyengfe volt eredet történetként', '2026-02-01 21:03:03'),
 (18, 15, 10, NULL, 8, 'asdfsfs', '2026-02-02 15:00:55'),
-(30, 16, NULL, 112, 10, 'ez igen', '2026-02-23 20:45:52'),
 (34, 16, 11, NULL, 10, 'ez igen', '2026-02-26 18:29:53'),
-(35, 16, 7, NULL, 10, 'wow', '2026-02-26 18:54:44'),
 (36, 16, NULL, 106, 8, 'egész jó', '2026-02-26 20:28:21'),
-(37, 16, 6, NULL, 10, 'elképestő kép világ', '2026-02-26 21:27:44');
+(37, 16, 6, NULL, 10, 'elképestő kép világ', '2026-02-26 21:27:44'),
+(39, 16, NULL, 109, 10, 'zs kedvence', '2026-02-26 21:34:58'),
+(46, 16, 10, NULL, 10, 'hnnn', '2026-02-28 13:54:25'),
+(47, 16, 2, NULL, 10, 'sada', '2026-02-28 14:36:46'),
+(49, 16, NULL, 112, 10, 'ez nem semmi', '2026-02-28 15:15:20'),
+(50, 16, 7, NULL, 7, 'egész jó', '2026-03-01 16:48:53');
 
 -- --------------------------------------------------------
 
@@ -404,7 +502,7 @@ INSERT INTO `sorozatok` (`id`, `cim`, `leiras`, `poszter_url`, `elozetes_url`, `
 (106, 'House of the Dragon', 'A Targaryen-ház története 200 évvel a Trónok harca eseményei előtt.', 'https://static.posters.cz/image/1300/143695.jpg', 'DotnJ7tTA34', 2022, '', 2, 60, 6.5, 16, 'fantasy', '2026-01-28 18:01:57', 8.5),
 (107, 'Arcane', 'A testvérek, Vi és Powder a gazdag Piltover és a földalatti Zaun közötti konfliktus ellentétes oldalára kerülnek.', 'https://image.tmdb.org/t/p/original/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg', 'fXmAurh012s', 2021, '', 1, 40, 9.0, 17, 'animation', '2026-01-28 18:01:57', 9.0),
 (108, 'The Boys', 'Egy csapat önbíráskodó elindul, hogy leleplezze a szuperhősöket, akik visszaélnek szupererejükkel.', 'https://m.media-amazon.com/images/M/MV5BMGRlZDE2ZGEtZTU5Mi00ODdkLWFmMTEtY2UwMmViNWNmZjczXkEyXkFqcGc@._V1_.jpg', 'Fv0leN8TmR8', 2019, '', 4, 60, 8.7, 18, 'action', '2026-01-28 18:01:57', 8.7),
-(109, 'Game of Thrones', 'Kilenc nemesi család küzd Westeros földjének uralmáért, miközben egy ősi ellenség tér vissza évezredek óta tartó álmából.', 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'KPLWWIOCOOQ', 2011, '2019', 8, 55, 9.2, 19, 'fantasy', '2026-01-28 18:01:57', 9.2),
+(109, 'Game of Thrones', 'Kilenc nemesi család küzd Westeros földjének uralmáért, miközben egy ősi ellenség tér vissza évezredek óta tartó álmából.', 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'KPLWWIOCOOQ', 2011, '2019', 8, 55, 9.6, 19, 'fantasy', '2026-01-28 18:01:57', 9.2),
 (110, 'The Witcher', 'Ríviai Geralt, a magányos szörnyvadász küzd, hogy megtalálja helyét a világban, ahol az emberek gyakran gonoszabbak, mint a bestiák.', 'https://image.tmdb.org/t/p/original/7vjaCdMw15FEbXyLQTVa04URsPm.jpg', 'ndl1W4ltcmg', 2019, '', 3, 60, 8.0, 20, 'fantasy', '2026-01-28 18:01:57', 8.0),
 (111, 'Loki', 'A Bosszúállók: Végjáték eseményei után Loki a titokzatos Idővariációs Hatósághoz kerül.', 'https://image.tmdb.org/t/p/original/voHUmluYmKyleFkTu3lOXQG702u.jpg', 'nW948Va-l10', 2021, '2023', 2, 50, 8.2, 21, 'scifi', '2026-01-28 18:01:57', 8.2),
 (112, 'Severance', 'Mark egy olyan csapatot vezet, akiknek emlékeit sebészeti úton különítették el a munka és a magánélet között.', 'https://static.sorozatjunkie.hu/wp-content/uploads/2025/12/Severance-Kulonvalas-2.-evad-Apple-TV.jpg', 'VwP6M9zS_pQ', 2022, '', 2, 50, 9.3, 22, 'thriller', '2026-01-28 18:01:57', 8.7);
@@ -541,6 +639,12 @@ ALTER TABLE `media_platformok`
   ADD KEY `sorozat_id` (`sorozat_id`);
 
 --
+-- A tábla indexei `mozik`
+--
+ALTER TABLE `mozik`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- A tábla indexei `nemzetisegek`
 --
 ALTER TABLE `nemzetisegek`
@@ -621,7 +725,7 @@ ALTER TABLE `custom_lists`
 -- AUTO_INCREMENT a táblához `custom_list_items`
 --
 ALTER TABLE `custom_list_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT a táblához `filmek`
@@ -633,7 +737,7 @@ ALTER TABLE `filmek`
 -- AUTO_INCREMENT a táblához `kedvencek`
 --
 ALTER TABLE `kedvencek`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT a táblához `media_orszagok`
@@ -646,6 +750,12 @@ ALTER TABLE `media_orszagok`
 --
 ALTER TABLE `media_platformok`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT a táblához `mozik`
+--
+ALTER TABLE `mozik`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT a táblához `nemzetisegek`
@@ -669,7 +779,7 @@ ALTER TABLE `rendezok`
 -- AUTO_INCREMENT a táblához `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT a táblához `search_history`

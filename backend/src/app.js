@@ -9,8 +9,9 @@ const movieRoutes = require('./routes/movieRoutes');
 const seriesRoutes = require('./routes/seriesRoutes');
 const interactionRoutes = require('./routes/interactionRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-// --- ÚJ SOR: Importáljuk a searchRoute-ot ---
 const searchRoutes = require('./routes/searchRoutes'); 
+// --- ÚJ SOR: Importáljuk a moziRoute-ot ---
+const moziRoutes = require('./routes/moziRoutes');
 // ----------------------------------------------
 
 const app = express();
@@ -19,11 +20,9 @@ app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 
-// --- JAVÍTÁS ITT: MÉRET LIMIT NÖVELÉSE ---
-// Az alapbeállítás (100kb) helyett 10MB-ot engedélyezünk a képek miatt
+// Méret limit növelése
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-// ------------------------------------------
 
 // Végpontok használata
 app.use('/api/auth', authRoutes);
@@ -31,8 +30,9 @@ app.use('/api/filmek', movieRoutes);
 app.use('/api/sorozatok', seriesRoutes);
 app.use('/api/interactions', interactionRoutes);
 app.use('/api/admin', adminRoutes);
-// --- ÚJ SOR: Bekötjük a keresőt az /api alá ---
 app.use('/api', searchRoutes); 
+// --- ÚJ SOR: Bekötjük a mozikat az /api/mozik alá ---
+app.use('/api/mozik', moziRoutes);
 // ----------------------------------------------
 
 app.use((req, res) => {
