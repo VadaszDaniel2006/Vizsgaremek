@@ -1,11 +1,22 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
-// --- 1. ÖSSZES FELHASZNÁLÓ LISTÁZÁSA ---
+// --- 1. ÖSSZES FELHASZNÁLÓ LISTÁZÁSA (JAVÍTVA: AVATAR FALLBACK) ---
 exports.getAllUsers = async (req, res) => {
     try {
-        // PONTOSAN AZOKAT AZ OSZLOPOKAT KÉRJÜK, AMIK A KÉPEN VANNAK
-        const sql = 'SELECT id, nev, username, email, role, regisztracio_datum, avatar FROM users ORDER BY regisztracio_datum DESC';
+        // COALESCE: Ha az avatar NULL, az alapértelmezett URL-t adja vissza
+        const sql = `
+            SELECT 
+                id, 
+                nev, 
+                felhasznalonev AS username, 
+                email, 
+                jogosultsag AS role, 
+                regisztracio_datum, 
+                COALESCE(avatar, 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png') AS avatar 
+            FROM felhasznalok 
+            ORDER BY regisztracio_datum DESC
+        `;
         const [users] = await db.query(sql);
         res.json(users);
     } catch (error) {
@@ -18,16 +29,14 @@ exports.getAllUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     const id = req.params.id;
     try {
-        // Először a kapcsolódó adatokat töröljük, hogy ne legyen SQL hiba
-        await db.query('DELETE FROM reviews WHERE user_id = ?', [id]);
-        await db.query('DELETE FROM kedvencek WHERE user_id = ?', [id]);
+        // Kapcsolódó adatok törlése az új táblanevekkel
+        await db.query('DELETE FROM ertekelesek WHERE felhasznalo_id = ?', [id]);
+        await db.query('DELETE FROM kedvencek WHERE felhasznalo_id = ?', [id]);
         
-        // Listák törlése (kicsit bonyolultabb, mert a list_items-et is törölni kell)
-        await db.query('DELETE FROM custom_list_items WHERE list_id IN (SELECT id FROM custom_lists WHERE user_id = ?)', [id]);
-        await db.query('DELETE FROM custom_lists WHERE user_id = ?', [id]);
+        await db.query('DELETE FROM sajat_lista_elemek WHERE lista_id IN (SELECT id FROM sajat_listak WHERE felhasznalo_id = ?)', [id]);
+        await db.query('DELETE FROM sajat_listak WHERE felhasznalo_id = ?', [id]);
 
-        // Végül a felhasználót
-        await db.query('DELETE FROM users WHERE id = ?', [id]);
+        await db.query('DELETE FROM felhasznalok WHERE id = ?', [id]);
         
         res.json({ message: 'Felhasználó sikeresen törölve.' });
     } catch (error) {
@@ -42,8 +51,7 @@ exports.updateUser = async (req, res) => {
     const { email, password, role } = req.body;
 
     try {
-        // Megnézzük, hogy az email foglalt-e MÁS által
-        const [existing] = await db.query('SELECT id FROM users WHERE email = ? AND id != ?', [email, id]);
+        const [existing] = await db.query('SELECT id FROM felhasznalok WHERE email = ? AND id != ?', [email, id]);
         
         if (existing.length > 0) {
             return res.status(400).json({ message: "Ez az email cím már foglalt!" });
@@ -53,20 +61,17 @@ exports.updateUser = async (req, res) => {
         let params;
 
         if (password && password.trim() !== "") {
-            // HA VAN új jelszó -> Titkosítjuk és a 'password_hash' oszlopba mentjük
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
             
-            sql = 'UPDATE users SET email = ?, role = ?, password_hash = ? WHERE id = ?';
+            sql = 'UPDATE felhasznalok SET email = ?, jogosultsag = ?, jelszo_hash = ? WHERE id = ?';
             params = [email, role, hashedPassword, id];
         } else {
-            // HA NINCS új jelszó -> Csak emailt és rangot mentünk
-            sql = 'UPDATE users SET email = ?, role = ? WHERE id = ?';
+            sql = 'UPDATE felhasznalok SET email = ?, jogosultsag = ? WHERE id = ?';
             params = [email, role, id];
         }
 
         await db.query(sql, params);
-
         res.json({ message: "Sikeres frissítés!", user: { id, email, role } });
 
     } catch (error) {

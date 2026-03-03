@@ -86,7 +86,7 @@ const Top50ListItem = ({ item, index, type, user, openStreaming, openTrailer, op
     );
 };
 
-export default function Top50Oldal({ type, user, openStreaming, openTrailer, openReviews, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) {
+export default function Top50Page({ type, user, openStreaming, openTrailer, openReviews, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
 

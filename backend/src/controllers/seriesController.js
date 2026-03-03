@@ -4,7 +4,7 @@ exports.getAllSeries = async (req, res) => {
     try {
         const query = `
             SELECT 
-                s.*, 
+                m.*, 
                 k.nev AS kategoria, 
                 r.nev AS rendezo,
                 -- Összefűzzük a platformokat egy listává
@@ -12,14 +12,14 @@ exports.getAllSeries = async (req, res) => {
                     DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                     SEPARATOR ';;;'
                 ) AS platform_raw
-            FROM sorozatok s
-            LEFT JOIN kategoriak k ON s.kategoria_id = k.id
-            LEFT JOIN rendezok r ON s.rendezo_id = r.id
-            -- Az új média_platformok táblát használjuk!
-            LEFT JOIN media_platformok mp ON s.id = mp.sorozat_id
+            FROM media m
+            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+            LEFT JOIN rendezok r ON m.rendezo_id = r.id
+            LEFT JOIN media_platformok mp ON m.id = mp.media_id
             LEFT JOIN platformok p ON mp.platform_id = p.id
-            GROUP BY s.id
-            ORDER BY s.megjelenes_ev_start DESC
+            WHERE m.tipus = 'sorozat'
+            GROUP BY m.id
+            ORDER BY m.megjelenes_ev_start DESC
         `;
 
         const [rows] = await db.query(query);
@@ -65,24 +65,26 @@ exports.getAllSeries = async (req, res) => {
         res.status(500).json({ message: "Szerver hiba történt az adatok lekérésekor." });
     }
 };
+
 exports.getTop50Series = async (req, res) => {
     try {
         const query = `
             SELECT 
-                s.*,
+                m.*,
                 k.nev AS kategoria,
                 r.nev AS rendezo,
                 GROUP_CONCAT(
                     DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                     SEPARATOR ';;;'
                 ) AS platform_raw
-            FROM sorozatok s
-            LEFT JOIN kategoriak k ON s.kategoria_id = k.id
-            LEFT JOIN rendezok r ON s.rendezo_id = r.id
-            LEFT JOIN media_platformok mp ON s.id = mp.sorozat_id
+            FROM media m
+            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+            LEFT JOIN rendezok r ON m.rendezo_id = r.id
+            LEFT JOIN media_platformok mp ON m.id = mp.media_id
             LEFT JOIN platformok p ON mp.platform_id = p.id
-            GROUP BY s.id
-            ORDER BY s.rating DESC
+            WHERE m.tipus = 'sorozat'
+            GROUP BY m.id
+            ORDER BY m.rating DESC
             LIMIT 50
         `;
 
@@ -100,8 +102,14 @@ exports.getTop50Series = async (req, res) => {
             delete item.platform_raw;
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
+            // Évszám formázás ide is, hogy ne törjön el a kártya a frontend-en
+            const ev_szoveg = item.megjelenes_ev_end 
+                ? `${item.megjelenes_ev_start}-${item.megjelenes_ev_end}` 
+                : `${item.megjelenes_ev_start}-`;
+
             return { 
                 ...item, 
+                megjelenes_ev: ev_szoveg,
                 platform_lista, 
                 platform_nev: elsoPlatform.nev || null,
                 platform_logo: elsoPlatform.logo || null,

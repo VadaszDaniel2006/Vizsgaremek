@@ -94,7 +94,7 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
     );
 };
 
-export default function HetiAjanlo({ user, openStreaming, openTrailer, openReviews, openInfo, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) {
+export default function WeeklyPick({ user, openStreaming, openTrailer, openReviews, openInfo, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) {
     const [recommendations, setRecommendations] = useState({ featured: null, list: [] });
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });

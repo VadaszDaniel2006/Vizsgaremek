@@ -66,7 +66,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 };
 
 // --- FŐ KOMPONENS ---
-const MozikTerkep = () => {
+const CinemaMap = () => {
   const [moziLista, setMoziLista] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -266,4 +266,4 @@ const MozikTerkep = () => {
   );
 };
 
-export default MozikTerkep;
+export default CinemaMap;

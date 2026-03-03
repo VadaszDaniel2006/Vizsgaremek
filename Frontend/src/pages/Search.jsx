@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 
-export default function Kereses() {
+export default function Search() {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('q'); 
     const [results, setResults] = useState([]);

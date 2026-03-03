@@ -8,15 +8,15 @@ import AuthModal from './components/AuthModal';
 import Toast from './components/Toast';
 import ConfirmModal from './components/ConfirmModal';
 import Footer from './components/Footer';
-import ProfilSzerkeszto from './components/ProfilSzerkeszto'; 
+import ProfileEditor from './components/ProfileEditor'; 
 import Sidebar from './components/Sidebar';
 import AdminDashboard from './components/AdminDashboard';
 import ReviewsSidebar from './components/ReviewsSidebar'; 
-import Kereses from './pages/Kereses';
-import Adatlap from './pages/Adatlap'; 
-import Top50Oldal from './pages/Top50Oldal';
-import HetiAjanlo from './pages/HetiAjanlo';
-import MozikTerkep from './pages/MozikTerkep';
+import Search from './pages/Search';
+import MediaDetails from './pages/MediaDetails'; 
+import Top50Page from './pages/Top50Page';
+import WeeklyPick from './pages/WeeklyPick';
+import CinemaMap from './pages/CinemaMap';
 
 import './App.css'; 
 
@@ -351,11 +351,11 @@ function App() {
                 </main>
             } />
             <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/kereses" element={<Kereses />} />
+            <Route path="/kereses" element={<Search />} />
             
             {/* --- ADATLAP ÚTVONALAK --- */}
             <Route path="/film/:id" element={
-                <Adatlap 
+                <MediaDetails 
                     type="film" 
                     openStreaming={openStreaming} 
                     openTrailer={openTrailer}
@@ -369,7 +369,7 @@ function App() {
                 />
             } />
             <Route path="/sorozat/:id" element={
-                <Adatlap 
+                <MediaDetails
                     type="sorozat" 
                     openStreaming={openStreaming} 
                     openTrailer={openTrailer}
@@ -385,7 +385,7 @@ function App() {
             
             {/* --- TOP 50 ÚTVONALAK --- */}
             <Route path="/top-50-filmek" element={
-                <Top50Oldal 
+                <Top50Page
                     type="film" 
                     user={user} 
                     openStreaming={openStreaming} 
@@ -399,7 +399,7 @@ function App() {
                 />
             } />
             <Route path="/top-50-sorozatok" element={
-                <Top50Oldal 
+                <Top50Page 
                     type="sorozat" 
                     user={user} 
                     openStreaming={openStreaming} 
@@ -415,14 +415,14 @@ function App() {
 
             {/* --- HETI AJÁNLÓ ÚTVONAL --- */}
             
-            <Route path="/heti-ajanlo" element={<HetiAjanlo user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
-            <Route path="/mozik-terkep" element={<MozikTerkep />} />
+            <Route path="/heti-ajanlo" element={<WeeklyPick user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
+            <Route path="/mozik-terkep" element={<CinemaMap />} />
         </Routes>
 
         <Footer />
         <ModalManager trailerModal={trailerModal} closeTrailer={closeTrailer} infoModal={infoModal} closeInfo={closeInfo} streamingModal={streamingModal} closeStreaming={closeStreaming} openStreaming={openStreaming} />
         {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} onLogin={handleLogin} />}
-        {profileModalOpen && user && <ProfilSzerkeszto user={user} onClose={() => setProfileModalOpen(false)} onSave={handleUpdateProfile} />}
+        {profileModalOpen && user && <ProfileEditor user={user} onClose={() => setProfileModalOpen(false)} onSave={handleUpdateProfile} />}
         <ConfirmModal isOpen={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)} onConfirm={confirmLogout} title="Kijelentkezés" message="Biztosan ki szeretnél lépni a fiókodból?" />
         {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
         </div>

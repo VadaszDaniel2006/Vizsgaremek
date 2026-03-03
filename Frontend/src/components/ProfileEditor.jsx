@@ -14,7 +14,7 @@ const CATEGORIES = [
     { id: 'docu', name: 'Dokumentum', icon: '📹' }
 ];
 
-export default function ProfilSzerkeszto({ user, onClose, onSave }) {
+export default function ProfileEditor({ user, onClose, onSave }) {
     // Űrlap állapotok (Email eltávolítva)
     const [formData, setFormData] = useState({
         name: user.name || '',

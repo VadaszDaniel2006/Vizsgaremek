@@ -1,85 +1,112 @@
 const db = require('../config/db');
 
 // --- SEGÉDFÜGGVÉNY: Átlag újraszámolása ---
-async function updateAverageRating(filmId, sorozatId) {
+async function updateAverageRating(mediaId) {
     try {
         const FALLBACK_RATING = 8.0; 
-        const targetId = filmId || sorozatId;
-        const targetTable = filmId ? 'filmek' : 'sorozatok';
-        const idColumn = filmId ? 'film_id' : 'sorozat_id';
 
-        const [baseData] = await db.query(`SELECT alap_rating FROM ${targetTable} WHERE id = ?`, [targetId]);
+        // 1. Lekérjük a media alap értékelését
+        const [baseData] = await db.query(`SELECT alap_rating FROM media WHERE id = ?`, [mediaId]);
         const baseRating = (baseData[0] && baseData[0].alap_rating) ? parseFloat(baseData[0].alap_rating) : FALLBACK_RATING;
 
+        // 2. Lekérjük a felhasználói értékeléseket (reviews -> ertekelesek)
         const [stats] = await db.query(
-            `SELECT SUM(rating) as total_score, COUNT(*) as vote_count FROM reviews WHERE ${idColumn} = ?`, 
-            [targetId]
+            `SELECT SUM(pontszam) as total_score, COUNT(*) as vote_count FROM ertekelesek WHERE media_id = ?`, 
+            [mediaId]
         );
 
         const userTotalScore = stats[0].total_score ? parseFloat(stats[0].total_score) : 0;
         const userVoteCount = stats[0].vote_count ? parseInt(stats[0].vote_count) : 0;
 
+        // 3. Új átlag kiszámolása (súlyozott)
         const finalRating = (baseRating + userTotalScore) / (1 + userVoteCount);
         const roundedRating = finalRating.toFixed(1);
 
-        await db.query(`UPDATE ${targetTable} SET rating = ? WHERE id = ?`, [roundedRating, targetId]);
+        // 4. Frissítjük a media táblában
+        await db.query(`UPDATE media SET rating = ? WHERE id = ?`, [roundedRating, mediaId]);
     } catch (err) { console.error("Hiba az átlag frissítésekor:", err); }
 }
 
 // --- KEDVENCEK ---
 exports.addToFavorites = async (req, res) => {
+    // A React felől még filmId/sorozatId jön, de mi összevonjuk mediaId-ba
     const { userId, filmId, sorozatId } = req.body;
-    if (!userId || (!filmId && !sorozatId)) return res.status(400).json({ message: "Hiányzó adatok!" });
+    const mediaId = filmId || sorozatId;
+    
+    if (!userId || !mediaId) return res.status(400).json({ message: "Hiányzó adatok!" });
 
     try {
-        const [existing] = await db.query('SELECT * FROM kedvencek WHERE user_id = ? AND (film_id = ? OR sorozat_id = ?)', [userId, filmId || null, sorozatId || null]);
+        const [existing] = await db.query('SELECT * FROM kedvencek WHERE felhasznalo_id = ? AND media_id = ?', [userId, mediaId]);
         if (existing.length > 0) return res.status(400).json({ message: "Már a kedvencek között van!" });
 
-        await db.query('INSERT INTO kedvencek (user_id, film_id, sorozat_id, added_at) VALUES (?, ?, ?, NOW())', [userId, filmId || null, sorozatId || null]);
+        await db.query('INSERT INTO kedvencek (felhasznalo_id, media_id, hozzaadva) VALUES (?, ?, NOW())', [userId, mediaId]);
         res.status(200).json({ message: "Hozzáadva a kedvencekhez!" });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba" }); }
+    } catch (err) { console.error("Kedvencek hozzáadása hiba:", err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
 exports.getFavorites = async (req, res) => {
     const { userId } = req.params;
     try {
         const query = `
-            SELECT k.id, k.added_at, 
-                   f.id as film_id, f.cim as film_cim, f.poszter_url as film_poster, 
-                   f.leiras as film_leiras, f.rating as film_rating, f.megjelenes_ev as film_ev,
-                   
-                   s.id as sorozat_id, s.cim as sorozat_cim, s.poszter_url as sorozat_poster,
-                   s.leiras as sorozat_leiras, s.rating as sorozat_rating, s.megjelenes_ev_start as sorozat_ev
+            SELECT k.id, k.hozzaadva AS added_at, 
+                   m.id as media_id, m.tipus, m.cim as title, m.poszter_url as poster, 
+                   m.leiras, m.rating, m.megjelenes_ev_start as start_year, m.megjelenes_ev_end as end_year
             FROM kedvencek k 
-            LEFT JOIN filmek f ON k.film_id = f.id 
-            LEFT JOIN sorozatok s ON k.sorozat_id = s.id 
-            WHERE k.user_id = ? 
-            ORDER BY k.added_at DESC
+            JOIN media m ON k.media_id = m.id 
+            WHERE k.felhasznalo_id = ? 
+            ORDER BY k.hozzaadva DESC
         `;
         const [results] = await db.query(query, [userId]);
 
+        // Formázzuk úgy, ahogy a Frontend megszokta (hogy ne törjön el)
+        const formattedResults = results.map(item => {
+            const formattedItem = {
+                id: item.id,
+                added_at: item.added_at
+            };
+
+            // A React kód a 'film_id' és 'sorozat_id' kulcsokat keresi
+            if (item.tipus === 'film') {
+                formattedItem.film_id = item.media_id;
+                formattedItem.film_cim = item.title;
+                formattedItem.film_poster = item.poster;
+                formattedItem.film_leiras = item.leiras;
+                formattedItem.film_rating = item.rating;
+                formattedItem.film_ev = item.start_year;
+            } else {
+                formattedItem.sorozat_id = item.media_id;
+                formattedItem.sorozat_cim = item.title;
+                formattedItem.sorozat_poster = item.poster;
+                formattedItem.sorozat_leiras = item.leiras;
+                formattedItem.sorozat_rating = item.rating;
+                formattedItem.sorozat_ev = item.start_year;
+            }
+            return formattedItem;
+        });
+
         // Platformok lekérdezése
-        for (const item of results) {
-            let platformSql = `SELECT p.id, p.nev, p.logo_url, p.weboldal_url FROM media_platformok mp JOIN platformok p ON mp.platform_id = p.id`;
-            const params = [];
-            if (item.film_id) { platformSql += ` WHERE mp.film_id = ?`; params.push(item.film_id); } 
-            else { platformSql += ` WHERE mp.sorozat_id = ?`; params.push(item.sorozat_id); }
-            try { const [platforms] = await db.query(platformSql, params); item.platformok = platforms || []; } 
-            catch (pErr) { item.platformok = []; }
+        for (const item of formattedResults) {
+            const currentMediaId = item.film_id || item.sorozat_id;
+            let platformSql = `SELECT p.id, p.nev, p.logo_url, p.weboldal_url FROM media_platformok mp JOIN platformok p ON mp.platform_id = p.id WHERE mp.media_id = ?`;
+            try { 
+                const [platforms] = await db.query(platformSql, [currentMediaId]); 
+                item.platformok = platforms || []; 
+            } catch (pErr) { item.platformok = []; }
         }
-        res.status(200).json(results);
+        res.status(200).json(formattedResults);
     } catch (err) { console.error("SQL Hiba (Favorites):", err); res.status(500).json({ message: "Szerver hiba." }); }
 };
 
 exports.removeFromFavorites = async (req, res) => {
     const { userId, itemId, filmId, sorozatId } = req.body;
+    const mediaId = filmId || sorozatId;
+    
     try {
-        let sql = 'DELETE FROM kedvencek WHERE user_id = ?';
+        let sql = 'DELETE FROM kedvencek WHERE felhasznalo_id = ?';
         const params = [userId];
 
         if (itemId) { sql += ' AND id = ?'; params.push(itemId); } 
-        else if (filmId) { sql += ' AND film_id = ?'; params.push(filmId); } 
-        else if (sorozatId) { sql += ' AND sorozat_id = ?'; params.push(sorozatId); } 
+        else if (mediaId) { sql += ' AND media_id = ?'; params.push(mediaId); } 
         else { return res.status(400).json({ message: "Hiányzó azonosító!" }); }
 
         await db.query(sql, params);
@@ -90,67 +117,89 @@ exports.removeFromFavorites = async (req, res) => {
 // --- SAJÁT LISTA ---
 exports.addToMyList = async (req, res) => {
     const { userId, filmId, sorozatId } = req.body;
-    if (!userId) return res.status(400).json({ message: "Nincs bejelentkezve!" });
+    const mediaId = filmId || sorozatId;
+    
+    if (!userId || !mediaId) return res.status(400).json({ message: "Nincs bejelentkezve, vagy hiányzó adat!" });
 
     try {
-        let [lists] = await db.query('SELECT id FROM custom_lists WHERE user_id = ? LIMIT 1', [userId]);
+        // custom_lists -> sajat_listak
+        let [lists] = await db.query('SELECT id FROM sajat_listak WHERE felhasznalo_id = ? LIMIT 1', [userId]);
         let listId;
         if (lists.length === 0) {
-            const [newList] = await db.query('INSERT INTO custom_lists (user_id, title, is_public, created_at) VALUES (?, "Saját listám", 0, NOW())', [userId]);
+            const [newList] = await db.query('INSERT INTO sajat_listak (felhasznalo_id, cim, publikus, letrehozva) VALUES (?, "Saját listám", 0, NOW())', [userId]);
             listId = newList.insertId;
         } else { listId = lists[0].id; }
 
-        const [existingItem] = await db.query('SELECT * FROM custom_list_items WHERE list_id = ? AND (film_id = ? OR sorozat_id = ?)', [listId, filmId || null, sorozatId || null]);
+        // custom_list_items -> sajat_lista_elemek
+        const [existingItem] = await db.query('SELECT * FROM sajat_lista_elemek WHERE lista_id = ? AND media_id = ?', [listId, mediaId]);
         if (existingItem.length > 0) return res.status(400).json({ message: "Ez a tétel már a listádon van!" });
 
-        await db.query('INSERT INTO custom_list_items (list_id, film_id, sorozat_id, added_at) VALUES (?, ?, ?, NOW())', [listId, filmId || null, sorozatId || null]);
+        await db.query('INSERT INTO sajat_lista_elemek (lista_id, media_id, hozzaadva) VALUES (?, ?, NOW())', [listId, mediaId]);
         res.status(200).json({ message: "Hozzáadva a saját listához!" });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba" }); }
+    } catch (err) { console.error("Lista hozzáadás hiba:", err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
 exports.getMyList = async (req, res) => {
     const { userId } = req.params;
     try {
         const query = `
-            SELECT cli.id, cli.added_at, 
-                   f.id as film_id, f.cim as film_cim, f.poszter_url as film_poster, 
-                   f.leiras as film_leiras, f.rating as film_rating, f.megjelenes_ev as film_ev,
-                   s.id as sorozat_id, s.cim as sorozat_cim, s.poszter_url as sorozat_poster,
-                   s.leiras as sorozat_leiras, s.rating as sorozat_rating, s.megjelenes_ev_start as sorozat_ev
-            FROM custom_list_items cli 
-            JOIN custom_lists cl ON cli.list_id = cl.id 
-            LEFT JOIN filmek f ON cli.film_id = f.id 
-            LEFT JOIN sorozatok s ON cli.sorozat_id = s.id 
-            WHERE cl.user_id = ? 
-            ORDER BY cli.added_at DESC
+            SELECT cli.id, cli.hozzaadva AS added_at, 
+                   m.id as media_id, m.tipus, m.cim as title, m.poszter_url as poster, 
+                   m.leiras, m.rating, m.megjelenes_ev_start as start_year
+            FROM sajat_lista_elemek cli 
+            JOIN sajat_listak cl ON cli.lista_id = cl.id 
+            JOIN media m ON cli.media_id = m.id 
+            WHERE cl.felhasznalo_id = ? 
+            ORDER BY cli.hozzaadva DESC
         `;
         const [results] = await db.query(query, [userId]);
 
-        for (const item of results) {
-            let platformSql = `SELECT p.id, p.nev, p.logo_url, p.weboldal_url FROM media_platformok mp JOIN platformok p ON mp.platform_id = p.id`;
-            const params = [];
-            if (item.film_id) { platformSql += ` WHERE mp.film_id = ?`; params.push(item.film_id); } 
-            else { platformSql += ` WHERE mp.sorozat_id = ?`; params.push(item.sorozat_id); }
-            try { const [platforms] = await db.query(platformSql, params); item.platformok = platforms || []; } 
-            catch (pErr) { item.platformok = []; }
+        const formattedResults = results.map(item => {
+            const formattedItem = { id: item.id, added_at: item.added_at };
+            if (item.tipus === 'film') {
+                formattedItem.film_id = item.media_id;
+                formattedItem.film_cim = item.title;
+                formattedItem.film_poster = item.poster;
+                formattedItem.film_leiras = item.leiras;
+                formattedItem.film_rating = item.rating;
+                formattedItem.film_ev = item.start_year;
+            } else {
+                formattedItem.sorozat_id = item.media_id;
+                formattedItem.sorozat_cim = item.title;
+                formattedItem.sorozat_poster = item.poster;
+                formattedItem.sorozat_leiras = item.leiras;
+                formattedItem.sorozat_rating = item.rating;
+                formattedItem.sorozat_ev = item.start_year;
+            }
+            return formattedItem;
+        });
+
+        for (const item of formattedResults) {
+            const currentMediaId = item.film_id || item.sorozat_id;
+            let platformSql = `SELECT p.id, p.nev, p.logo_url, p.weboldal_url FROM media_platformok mp JOIN platformok p ON mp.platform_id = p.id WHERE mp.media_id = ?`;
+            try { 
+                const [platforms] = await db.query(platformSql, [currentMediaId]); 
+                item.platformok = platforms || []; 
+            } catch (pErr) { item.platformok = []; }
         }
-        res.status(200).json(results);
+        res.status(200).json(formattedResults);
     } catch (err) { console.error("SQL Hiba (MyList):", err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
 exports.removeFromMyList = async (req, res) => {
     const { userId, itemId, filmId, sorozatId } = req.body; 
+    const mediaId = filmId || sorozatId;
+
     try {
-        const [lists] = await db.query('SELECT id FROM custom_lists WHERE user_id = ? LIMIT 1', [userId]);
+        const [lists] = await db.query('SELECT id FROM sajat_listak WHERE felhasznalo_id = ? LIMIT 1', [userId]);
         if (lists.length === 0) return res.status(404).json({ message: "Nincs listád." });
         const listId = lists[0].id;
 
-        let sql = 'DELETE FROM custom_list_items WHERE list_id = ?';
+        let sql = 'DELETE FROM sajat_lista_elemek WHERE lista_id = ?';
         const params = [listId];
 
         if (itemId) { sql += ' AND id = ?'; params.push(itemId); } 
-        else if (filmId) { sql += ' AND film_id = ?'; params.push(filmId); } 
-        else if (sorozatId) { sql += ' AND sorozat_id = ?'; params.push(sorozatId); } 
+        else if (mediaId) { sql += ' AND media_id = ?'; params.push(mediaId); } 
         else { return res.status(400).json({ message: "Hiányzó azonosító!" }); }
 
         await db.query(sql, params);
@@ -158,13 +207,16 @@ exports.removeFromMyList = async (req, res) => {
     } catch (err) { console.error("Lista törlési hiba:", err); res.status(500).json({ message: "Hiba törléskor." }); }
 };
 
-// --- VÉLEMÉNYEK ---
+// --- VÉLEMÉNYEK (reviews -> ertekelesek) ---
 exports.getReviews = async (req, res) => {
+    // A React URL-ben továbbra is jöhet 'film' vagy 'sorozat', de nekünk már mindegy, a media_id a lényeg
     const { type, id } = req.params; 
     try {
-        let sql = `SELECT r.id, r.comment, r.rating, r.created_at, u.username, u.avatar FROM reviews r JOIN users u ON r.user_id = u.id`;
-        if (type === 'film') sql += ` WHERE r.film_id = ?`; else sql += ` WHERE r.sorozat_id = ?`;
-        sql += ` ORDER BY r.created_at DESC`;
+        let sql = `SELECT r.id, r.szoveg as comment, r.pontszam as rating, r.letrehozva as created_at, u.felhasznalonev as username, u.avatar 
+                   FROM ertekelesek r 
+                   JOIN felhasznalok u ON r.felhasznalo_id = u.id 
+                   WHERE r.media_id = ? 
+                   ORDER BY r.letrehozva DESC`;
         const [results] = await db.query(sql, [id]);
         res.status(200).json(results);
     } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba." }); }
@@ -172,41 +224,42 @@ exports.getReviews = async (req, res) => {
 
 exports.addReview = async (req, res) => {
     const { userId, filmId, sorozatId, comment, rating } = req.body;
+    const mediaId = filmId || sorozatId;
+
     if (!userId) return res.status(401).json({ message: "Jelentkezz be!" });
     if (!rating) return res.status(400).json({ message: "Pontszám kötelező!" });
     if (!comment || comment.trim() === "") return res.status(400).json({ message: "Vélemény kötelező!" });
 
     try {
-        const [existing] = await db.query('SELECT id FROM reviews WHERE user_id = ? AND (film_id = ? OR sorozat_id = ?)', [userId, filmId || null, sorozatId || null]);
+        const [existing] = await db.query('SELECT id FROM ertekelesek WHERE felhasznalo_id = ? AND media_id = ?', [userId, mediaId]);
         if (existing.length > 0) return res.status(400).json({ message: "Már értékelted!" });
-        await db.query('INSERT INTO reviews (user_id, film_id, sorozat_id, comment, rating, created_at) VALUES (?, ?, ?, ?, ?, NOW())', [userId, filmId || null, sorozatId || null, comment, rating]);
-        await updateAverageRating(filmId, sorozatId);
+        
+        await db.query('INSERT INTO ertekelesek (felhasznalo_id, media_id, szoveg, pontszam, letrehozva) VALUES (?, ?, ?, ?, NOW())', [userId, mediaId, comment, rating]);
+        
+        // Újraszámoljuk a media tábla átlagát
+        await updateAverageRating(mediaId);
+        
         res.status(200).json({ message: "Vélemény elküldve!" });
-    } catch (err) { console.error("Hiba:", err); res.status(500).json({ message: "Szerver hiba." }); }
+    } catch (err) { console.error("Hiba az értékelés mentésekor:", err); res.status(500).json({ message: "Szerver hiba." }); }
 };
 
-// --- JAVÍTOTT TÖRLÉS: ADMIN JOGOSULTSÁG ELLENŐRZÉSE ---
 exports.deleteReview = async (req, res) => {
     const { userId, reviewId } = req.body;
     try {
-        // 1. Lekérdezzük a usert, hogy admin-e
-        const [userRows] = await db.query('SELECT role FROM users WHERE id = ?', [userId]);
-        const isAdmin = userRows.length > 0 && userRows[0].role === 'admin';
+        const [userRows] = await db.query('SELECT jogosultsag FROM felhasznalok WHERE id = ?', [userId]);
+        const isAdmin = userRows.length > 0 && userRows[0].jogosultsag === 'admin';
 
-        // 2. Megkeressük a törlendő véleményt
-        const [review] = await db.query('SELECT film_id, sorozat_id, user_id FROM reviews WHERE id = ?', [reviewId]);
+        const [review] = await db.query('SELECT media_id, felhasznalo_id FROM ertekelesek WHERE id = ?', [reviewId]);
         if (review.length === 0) return res.status(404).json({ message: "A vélemény nem található." });
         
-        // 3. Jogosultság ellenőrzése: saját vélemény VAGY admin
-        if (review[0].user_id !== userId && !isAdmin) {
+        if (review[0].felhasznalo_id !== userId && !isAdmin) {
             return res.status(403).json({ message: "Nincs jogosultságod törölni ezt a véleményt!" });
         }
 
-        const { film_id, sorozat_id } = review[0];
+        const media_id = review[0].media_id;
         
-        // 4. Törlés és átlag frissítés
-        await db.query('DELETE FROM reviews WHERE id = ?', [reviewId]);
-        await updateAverageRating(film_id, sorozat_id);
+        await db.query('DELETE FROM ertekelesek WHERE id = ?', [reviewId]);
+        await updateAverageRating(media_id);
         
         res.status(200).json({ message: "Sikeresen törölve!" });
     } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba." }); }
@@ -215,14 +268,17 @@ exports.deleteReview = async (req, res) => {
 // --- STÁTUSZ ---
 exports.checkStatus = async (req, res) => {
     const { userId, filmId, sorozatId } = req.body;
+    const mediaId = filmId || sorozatId;
+
     if (!userId) return res.status(200).json({ reviewed: false, favorite: false, listed: false });
     try {
-        const [review] = await db.query('SELECT id FROM reviews WHERE user_id = ? AND (film_id = ? OR sorozat_id = ?)', [userId, filmId || null, sorozatId || null]);
-        const [favorite] = await db.query('SELECT id FROM kedvencek WHERE user_id = ? AND (film_id = ? OR sorozat_id = ?)', [userId, filmId || null, sorozatId || null]);
+        const [review] = await db.query('SELECT id FROM ertekelesek WHERE felhasznalo_id = ? AND media_id = ?', [userId, mediaId]);
+        const [favorite] = await db.query('SELECT id FROM kedvencek WHERE felhasznalo_id = ? AND media_id = ?', [userId, mediaId]);
+        
         let listed = false;
-        const [lists] = await db.query('SELECT id FROM custom_lists WHERE user_id = ? LIMIT 1', [userId]);
+        const [lists] = await db.query('SELECT id FROM sajat_listak WHERE felhasznalo_id = ? LIMIT 1', [userId]);
         if (lists.length > 0) {
-            const [item] = await db.query('SELECT id FROM custom_list_items WHERE list_id = ? AND (film_id = ? OR sorozat_id = ?)', [lists[0].id, filmId || null, sorozatId || null]);
+            const [item] = await db.query('SELECT id FROM sajat_lista_elemek WHERE lista_id = ? AND media_id = ?', [lists[0].id, mediaId]);
             if (item.length > 0) listed = true;
         }
         res.status(200).json({ reviewed: review.length > 0, favorite: favorite.length > 0, listed: listed });

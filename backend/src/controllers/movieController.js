@@ -4,20 +4,21 @@ exports.getAllMovies = async (req, res) => {
     try {
         const query = `
             SELECT 
-                f.*,
+                m.*,
                 k.nev AS kategoria,
                 r.nev AS rendezo,
                 GROUP_CONCAT(
                     DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                     SEPARATOR ';;;'
                 ) AS platform_raw
-            FROM filmek f
-            LEFT JOIN kategoriak k ON f.kategoria_id = k.id
-            LEFT JOIN rendezok r ON f.rendezo_id = r.id
-            LEFT JOIN media_platformok mp ON f.id = mp.film_id
+            FROM media m
+            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+            LEFT JOIN rendezok r ON m.rendezo_id = r.id
+            LEFT JOIN media_platformok mp ON m.id = mp.media_id
             LEFT JOIN platformok p ON mp.platform_id = p.id
-            GROUP BY f.id
-            ORDER BY f.megjelenes_ev DESC
+            WHERE m.tipus = 'film'
+            GROUP BY m.id
+            ORDER BY m.megjelenes_ev_start DESC
         `;
 
         const [rows] = await db.query(query);
@@ -36,8 +37,12 @@ exports.getAllMovies = async (req, res) => {
             delete movie.platform_raw;
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
+            // Hogy a frontend kód ne törjön el, visszaadjuk 'megjelenes_ev' néven a start évet
+            const megjelenes_ev = movie.megjelenes_ev_start;
+
             return { 
-                ...movie, 
+                ...movie,
+                megjelenes_ev, 
                 platform_lista, 
                 platform_nev: elsoPlatform.nev || null,
                 platform_logo: elsoPlatform.logo || null,
@@ -57,20 +62,21 @@ exports.getTop50Movies = async (req, res) => {
     try {
         const query = `
             SELECT 
-                f.*,
+                m.*,
                 k.nev AS kategoria,
                 r.nev AS rendezo,
                 GROUP_CONCAT(
                     DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                     SEPARATOR ';;;'
                 ) AS platform_raw
-            FROM filmek f
-            LEFT JOIN kategoriak k ON f.kategoria_id = k.id
-            LEFT JOIN rendezok r ON f.rendezo_id = r.id
-            LEFT JOIN media_platformok mp ON f.id = mp.film_id
+            FROM media m
+            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+            LEFT JOIN rendezok r ON m.rendezo_id = r.id
+            LEFT JOIN media_platformok mp ON m.id = mp.media_id
             LEFT JOIN platformok p ON mp.platform_id = p.id
-            GROUP BY f.id
-            ORDER BY f.rating DESC
+            WHERE m.tipus = 'film'
+            GROUP BY m.id
+            ORDER BY m.rating DESC
             LIMIT 50
         `;
 
@@ -88,8 +94,12 @@ exports.getTop50Movies = async (req, res) => {
             delete movie.platform_raw;
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
+            // Hogy a frontend kód ne törjön el, visszaadjuk 'megjelenes_ev' néven a start évet
+            const megjelenes_ev = movie.megjelenes_ev_start;
+
             return { 
-                ...movie, 
+                ...movie,
+                megjelenes_ev, 
                 platform_lista, 
                 platform_nev: elsoPlatform.nev || null,
                 platform_logo: elsoPlatform.logo || null,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-export default function Adatlap({ type, openStreaming, openTrailer, user, onAddToFav, onRemoveFromFav, onAddToList, onRemoveFromList, onOpenReviews, interactionUpdate }) {
+export default function MediaDetails({ type, openStreaming, openTrailer, user, onAddToFav, onRemoveFromFav, onAddToList, onRemoveFromList, onOpenReviews, interactionUpdate }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const [item, setItem] = useState(null);
