@@ -20,7 +20,6 @@ import CinemaMap from './pages/CinemaMap';
 
 import './App.css'; 
 
-// --- HERO SLIDE ---
 const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, openTrailer, interactionUpdate }) => {
     const [status, setStatus] = useState({ favorite: false, listed: false });
 
@@ -63,12 +62,11 @@ const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handl
                     <h1>{movie.cim}</h1>
                     <div className="movie-meta-tags">
                         <span className="rating-tag"><i className="fas fa-star"></i> {movie.rating}</span>
-                        <span className="year-tag">{movie.megjelenes_ev}</span>
-                        <span className="genre-tag">{movie.kategoria}</span>
+                        <span className="year-tag">{movie.megjelenes_ev_start}</span>
+                        <span className="genre-tag">{movie.kategoria_id}</span>
                     </div>
                     <div className="description-block">
                         <p className="plot">{movie.leiras}</p>
-                        <div className="credits"><p><strong>Rendező:</strong> {movie.rendezo}</p></div>
                     </div>
                     <div className="info-buttons">
                         <button className="btn-watch" onClick={() => openStreaming(movie)}><i className="fas fa-play"></i> Megnézem</button>
@@ -109,10 +107,12 @@ function App() {
 
   const fetchAllData = useCallback(async () => {
       try {
-        const movieResponse = await fetch('http://localhost:5000/api/filmek');
+        const movieResponse = await fetch('http://localhost:5000/api/filmek', { cache: 'no-store' });
         const movieJson = await movieResponse.json();
-        const seriesResponse = await fetch('http://localhost:5000/api/sorozatok');
+        
+        const seriesResponse = await fetch('http://localhost:5000/api/sorozatok', { cache: 'no-store' });
         const seriesJson = await seriesResponse.json();
+        
         if(movieJson.data) { setMoviesData(movieJson.data); setFeaturedMovies(movieJson.data.slice(0, 5)); }
         if(seriesJson.data) { setSeriesData(seriesJson.data); }
         setLoading(false); 
@@ -129,7 +129,8 @@ function App() {
                       headers: {
                           'Content-Type': 'application/json',
                           'Authorization': `Bearer ${token}`
-                      }
+                      },
+                      cache: 'no-store'
                   });
 
                   if (res.ok) {
@@ -139,12 +140,9 @@ function App() {
                       localStorage.removeItem('token');
                       setUser(null);
                   }
-              } catch (error) {
-                  console.error("Nem sikerült az auto-login:", error);
-              }
+              } catch (error) { console.error("Nem sikerült az auto-login:", error); }
           }
       };
-
       checkLoggedInUser();
   }, []);
 
@@ -153,18 +151,13 @@ function App() {
   useEffect(() => { window.onscroll = () => setScrolled(window.pageYOffset > 50); return () => (window.onscroll = null); }, []);
 
   const showNotification = (message, type = 'success') => { setToast({ message, type }); };
-  
-  // --- JAVÍTVA: AZ ÉRTÉKELÉS LEADÁSAKOR FRISSÍT MINDENT ÉS NEM VILLOG ---
-  const handleReviewChange = () => { 
-      fetchAllData(); 
-      setInteractionUpdate(prev => prev + 1); 
-  };
+  const handleReviewChange = () => { fetchAllData(); setInteractionUpdate(prev => prev + 1); };
 
   const fetchSidebarData = async (type) => {
       if (!user) return;
       const endpoint = type === 'favorites' ? 'favorites' : 'mylist';
       try {
-          const res = await fetch(`http://localhost:5000/api/interactions/users/${user.id}/${endpoint}`);
+          const res = await fetch(`http://localhost:5000/api/interactions/users/${user.id}/${endpoint}`, { cache: 'no-store' });
           if (!res.ok) throw new Error("Szerver hiba");
           const data = await res.json();
           setSidebarItems(Array.isArray(data) ? data : []);
@@ -181,11 +174,8 @@ function App() {
               method: 'DELETE', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ userId: user.id, itemId })
           });
-          if(response.ok) { 
-              fetchSidebarData(sidebarType); 
-              showNotification("Sikeres törlés.", "success");
-              setInteractionUpdate(prev => prev + 1);
-          } else { showNotification("Hiba a törléskor.", "error"); }
+          if(response.ok) { fetchSidebarData(sidebarType); showNotification("Sikeres törlés.", "success"); setInteractionUpdate(prev => prev + 1); } 
+          else { showNotification("Hiba a törléskor.", "error"); }
       } catch (err) { showNotification("Szerver hiba.", "error"); }
   };
 
@@ -199,10 +189,8 @@ function App() {
 
   const handleSidebarItemClick = (partialItem) => {
       const fullMovie = moviesData.find(m => m.id == partialItem.id) || seriesData.find(s => s.id == partialItem.id);
-      if (fullMovie) {
-          const mergedMovie = { ...fullMovie, platformok: (partialItem.platformok && partialItem.platformok.length > 0) ? partialItem.platformok : fullMovie.platformok };
-          openInfo(mergedMovie);
-      } else { openInfo(partialItem); }
+      if (fullMovie) { const mergedMovie = { ...fullMovie, platformok: (partialItem.platformok && partialItem.platformok.length > 0) ? partialItem.platformok : fullMovie.platformok }; openInfo(mergedMovie); } 
+      else { openInfo(partialItem); }
   };
 
   const handleAddToFav = async (movie) => {
@@ -214,10 +202,7 @@ function App() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, filmId: !isSeries ? contentId : null, sorozatId: isSeries ? contentId : null })
       });
-      if (response.ok) {
-          showNotification("Hozzáadva a kedvencekhez!", "success");
-          setInteractionUpdate(prev => prev + 1); 
-      }
+      if (response.ok) { showNotification("Hozzáadva a kedvencekhez!", "success"); setInteractionUpdate(prev => prev + 1); }
     } catch (error) { showNotification("Hiba mentéskor.", "info"); }
   };
 
@@ -230,10 +215,7 @@ function App() {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: user.id, filmId: !isSeries ? contentId : null, sorozatId: isSeries ? contentId : null })
         });
-        if (response.ok) {
-            showNotification("Hozzáadva a listához!", "success");
-            setInteractionUpdate(prev => prev + 1); 
-        }
+        if (response.ok) { showNotification("Hozzáadva a listához!", "success"); setInteractionUpdate(prev => prev + 1); }
     } catch (error) { showNotification("Hiba mentéskor.", "error"); }
   };
 
@@ -246,10 +228,8 @@ function App() {
               method: 'DELETE', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ userId: user.id, filmId: !isSeries ? contentId : null, sorozatId: isSeries ? contentId : null })
           });
-          if(response.ok) {
-              showNotification("Sikeres törlés.", "success");
-              setInteractionUpdate(prev => prev + 1); 
-          } else showNotification("Hiba törléskor.", "error");
+          if(response.ok) { showNotification("Sikeres törlés.", "success"); setInteractionUpdate(prev => prev + 1); } 
+          else showNotification("Hiba törléskor.", "error");
       } catch (error) { showNotification("Szerver hiba.", "error"); }
   };
 
@@ -262,10 +242,8 @@ function App() {
               method: 'DELETE', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ userId: user.id, filmId: !isSeries ? contentId : null, sorozatId: isSeries ? contentId : null })
           });
-          if(response.ok) {
-              showNotification("Sikeres törlés.", "success");
-              setInteractionUpdate(prev => prev + 1); 
-          } else showNotification("Hiba törléskor.", "error");
+          if(response.ok) { showNotification("Sikeres törlés.", "success"); setInteractionUpdate(prev => prev + 1); } 
+          else showNotification("Hiba törléskor.", "error");
       } catch (error) { showNotification("Szerver hiba.", "error"); }
   };
 
@@ -316,105 +294,34 @@ function App() {
                     <div className="content-container">
                         {moviesData.length > 0 && ( 
                             <MovieRow 
-                                title="Népszerű filmek" 
-                                items={moviesData} 
-                                user={user} 
-                                onOpenTrailer={openTrailer} 
-                                onOpenStreaming={openStreaming} 
-                                onOpenInfo={openInfo} 
-                                onAddToFav={handleAddToFav} 
-                                onRemoveFromFav={handleRemoveFromFav}
-                                onAddToList={handleAddToMyList} 
-                                onRemoveFromList={handleRemoveFromList}
-                                onOpenReviews={openReviews}
-                                interactionUpdate={interactionUpdate} 
+                                title="Népszerű filmek" items={moviesData} user={user} 
+                                onOpenTrailer={openTrailer} onOpenStreaming={openStreaming} onOpenInfo={openInfo} 
+                                onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav}
+                                onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList}
+                                onOpenReviews={openReviews} interactionUpdate={interactionUpdate} 
                             /> 
                         )}
                          {seriesData.length > 0 && ( 
                             <MovieRow 
-                                title="Népszerű sorozatok" 
-                                items={seriesData} 
-                                user={user} 
-                                isSeries={true} 
-                                onOpenTrailer={openTrailer} 
-                                onOpenStreaming={openStreaming} 
-                                onOpenInfo={openInfo} 
-                                onAddToFav={handleAddToFav} 
-                                onRemoveFromFav={handleRemoveFromFav}
-                                onAddToList={handleAddToMyList} 
-                                onRemoveFromList={handleRemoveFromList}
-                                onOpenReviews={openReviews}
-                                interactionUpdate={interactionUpdate} 
+                                title="Népszerű sorozatok" items={seriesData} user={user} isSeries={true} 
+                                onOpenTrailer={openTrailer} onOpenStreaming={openStreaming} onOpenInfo={openInfo} 
+                                onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav}
+                                onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList}
+                                onOpenReviews={openReviews} interactionUpdate={interactionUpdate} 
                             /> 
                         )}
                     </div>
                 </main>
             } />
-            <Route path="/admin" element={<AdminDashboard />} />
+            
+            {/* ITT TÖRTÉNT A VARÁZSLAT: ÁTADJUK A fetchAllData FÜGGVÉNYT AZ ADMINNAK! */}
+            <Route path="/admin" element={<AdminDashboard refreshApp={fetchAllData} />} />
+            
             <Route path="/kereses" element={<Search />} />
-            
-            {/* --- ADATLAP ÚTVONALAK --- */}
-            <Route path="/film/:id" element={
-                <MediaDetails 
-                    type="film" 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    user={user}
-                    onAddToFav={handleAddToFav}
-                    onRemoveFromFav={handleRemoveFromFav}
-                    onAddToList={handleAddToMyList}
-                    onRemoveFromList={handleRemoveFromList}
-                    onOpenReviews={openReviews}
-                    interactionUpdate={interactionUpdate}
-                />
-            } />
-            <Route path="/sorozat/:id" element={
-                <MediaDetails
-                    type="sorozat" 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    user={user}
-                    onAddToFav={handleAddToFav}
-                    onRemoveFromFav={handleRemoveFromFav}
-                    onAddToList={handleAddToMyList}
-                    onRemoveFromList={handleRemoveFromList}
-                    onOpenReviews={openReviews}
-                    interactionUpdate={interactionUpdate}
-                />
-            } />
-            
-            {/* --- TOP 50 ÚTVONALAK --- */}
-            <Route path="/top-50-filmek" element={
-                <Top50Page
-                    type="film" 
-                    user={user} 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    openReviews={openReviews}
-                    handleAddToFav={handleAddToFav} 
-                    handleRemoveFromFav={handleRemoveFromFav} 
-                    handleAddToMyList={handleAddToMyList} 
-                    handleRemoveFromList={handleRemoveFromList} 
-                    interactionUpdate={interactionUpdate} 
-                />
-            } />
-            <Route path="/top-50-sorozatok" element={
-                <Top50Page 
-                    type="sorozat" 
-                    user={user} 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    openReviews={openReviews}
-                    handleAddToFav={handleAddToFav} 
-                    handleRemoveFromFav={handleRemoveFromFav} 
-                    handleAddToMyList={handleAddToMyList} 
-                    handleRemoveFromList={handleRemoveFromList} 
-                    interactionUpdate={interactionUpdate} 
-                />
-            } />
-
-            {/* --- HETI AJÁNLÓ ÚTVONAL --- */}
-            
+            <Route path="/film/:id" element={<MediaDetails type="film" openStreaming={openStreaming} openTrailer={openTrailer} user={user} onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav} onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList} onOpenReviews={openReviews} interactionUpdate={interactionUpdate} />} />
+            <Route path="/sorozat/:id" element={<MediaDetails type="sorozat" openStreaming={openStreaming} openTrailer={openTrailer} user={user} onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav} onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList} onOpenReviews={openReviews} interactionUpdate={interactionUpdate} />} />
+            <Route path="/top-50-filmek" element={<Top50Page type="film" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
+            <Route path="/top-50-sorozatok" element={<Top50Page type="sorozat" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
             <Route path="/heti-ajanlo" element={<WeeklyPick user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
             <Route path="/mozik-terkep" element={<CinemaMap />} />
         </Routes>

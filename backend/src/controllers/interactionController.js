@@ -27,7 +27,7 @@ exports.addToFavorites = async (req, res) => {
         if (existing.length > 0) return res.status(400).json({ message: "Már a kedvencek között van!" });
         await db.query('INSERT INTO kedvencek (felhasznalo_id, media_id, hozzaadva) VALUES (?, ?, NOW())', [userId, mediaId]);
         res.status(200).json({ message: "Hozzáadva a kedvencekhez!" });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba" }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
 exports.getFavorites = async (req, res) => {
@@ -49,7 +49,7 @@ exports.getFavorites = async (req, res) => {
             try { const [platforms] = await db.query(`SELECT p.id, p.nev, p.logo_url, p.weboldal_url FROM media_platformok mp JOIN platformok p ON mp.platform_id = p.id WHERE mp.media_id = ?`, [currentMediaId]); item.platformok = platforms || []; } catch (pErr) { item.platformok = []; }
         }
         res.status(200).json(formattedResults);
-    } catch (err) { res.status(500).json({ message: "Szerver hiba." }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba." }); }
 };
 
 exports.removeFromFavorites = async (req, res) => {
@@ -60,7 +60,7 @@ exports.removeFromFavorites = async (req, res) => {
         if (itemId) { sql += ' AND id = ?'; params.push(itemId); } else if (mediaId) { sql += ' AND media_id = ?'; params.push(mediaId); } else { return res.status(400).json({ message: "Hiányzó azonosító!" }); }
         await db.query(sql, params);
         res.status(200).json({ message: "Törölve." });
-    } catch (err) { res.status(500).json({ message: "Hiba törléskor." }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Hiba törléskor." }); }
 };
 
 exports.addToMyList = async (req, res) => {
@@ -75,7 +75,7 @@ exports.addToMyList = async (req, res) => {
         if (existingItem.length > 0) return res.status(400).json({ message: "Ez a tétel már a listádon van!" });
         await db.query('INSERT INTO sajat_lista_elemek (lista_id, media_id, hozzaadva) VALUES (?, ?, NOW())', [listId, mediaId]);
         res.status(200).json({ message: "Hozzáadva a saját listához!" });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba" }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
 exports.getMyList = async (req, res) => {
@@ -93,7 +93,7 @@ exports.getMyList = async (req, res) => {
             return formattedItem;
         });
         res.status(200).json(formattedResults);
-    } catch (err) { res.status(500).json({ message: "Szerver hiba" }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
 exports.removeFromMyList = async (req, res) => {
@@ -106,14 +106,14 @@ exports.removeFromMyList = async (req, res) => {
         if (itemId) { sql += ' AND id = ?'; params.push(itemId); } else if (mediaId) { sql += ' AND media_id = ?'; params.push(mediaId); } else { return res.status(400).json({ message: "Hiányzó azonosító!" }); }
         await db.query(sql, params);
         res.status(200).json({ message: "Törölve." });
-    } catch (err) { res.status(500).json({ message: "Hiba törléskor." }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Hiba törléskor." }); }
 };
 
 exports.getReviews = async (req, res) => {
     try {
         const [results] = await db.query(`SELECT r.id, r.szoveg as comment, r.pontszam as rating, r.letrehozva as created_at, u.felhasznalonev as username, u.avatar FROM ertekelesek r JOIN felhasznalok u ON r.felhasznalo_id = u.id WHERE r.media_id = ? ORDER BY r.letrehozva DESC`, [req.params.id]);
         res.status(200).json(results);
-    } catch (err) { res.status(500).json({ message: "Szerver hiba." }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba." }); }
 };
 
 exports.addReview = async (req, res) => {
@@ -128,7 +128,7 @@ exports.addReview = async (req, res) => {
         await db.query('INSERT INTO ertekelesek (felhasznalo_id, media_id, szoveg, pontszam, letrehozva) VALUES (?, ?, ?, ?, NOW())', [userId, mediaId, comment, rating]);
         await updateAverageRating(mediaId);
         res.status(200).json({ message: "Vélemény elküldve!" });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba." }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba." }); }
 };
 
 exports.deleteReview = async (req, res) => {
@@ -142,7 +142,7 @@ exports.deleteReview = async (req, res) => {
         await db.query('DELETE FROM ertekelesek WHERE id = ?', [reviewId]);
         await updateAverageRating(review[0].media_id);
         res.status(200).json({ message: "Sikeresen törölve!" });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba." }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba." }); }
 };
 
 exports.checkStatus = async (req, res) => {
@@ -159,15 +159,27 @@ exports.checkStatus = async (req, res) => {
             if (item.length > 0) listed = true;
         }
         res.status(200).json({ reviewed: review.length > 0, favorite: favorite.length > 0, listed: listed });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba" }); }
+    } catch (err) { console.error(err); res.status(500).json({ message: "Szerver hiba" }); }
 };
 
-// --- FRISSÍTVE: JELENTÉS BEKÜLDÉSE (OKKAL EGYÜTT) ---
+// --- BIZTONSÁGOS JELENTÉS BEKÜLDÉSE (FALLBACK-KEL) ---
 exports.reportReview = async (req, res) => {
     const { reviewId } = req.params;
     const { reason } = req.body; 
     try {
+        // 1. Megpróbáljuk a módosított adatbázis szerint (indoklással) menteni
         await db.query('UPDATE ertekelesek SET jelentve = 1, jelentes_oka = ? WHERE id = ?', [reason || 'Egyéb', reviewId]);
         res.status(200).json({ message: "Köszönjük! A véleményt jelentetted az adminoknak." });
-    } catch (err) { res.status(500).json({ message: "Szerver hiba." }); }
+    } catch (err) { 
+        console.error("Hiba az indoklás mentésénél (hiányzó Docker oszlop?):", err.message);
+        
+        // 2. Ha a Docker DB-ből hiányzik a 'jelentes_oka' oszlop, akkor is végrehajtjuk a jelentést!
+        try {
+            await db.query('UPDATE ertekelesek SET jelentve = 1 WHERE id = ?', [reviewId]);
+            res.status(200).json({ message: "Vélemény sikeresen jelentve!" });
+        } catch (fallbackErr) {
+            console.error("Teljes SQL hiba a jelentésnél:", fallbackErr.message);
+            res.status(500).json({ message: "Szerver hiba." }); 
+        }
+    }
 };
