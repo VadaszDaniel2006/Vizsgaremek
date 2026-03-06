@@ -6,11 +6,13 @@ import Toast from './Toast';
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('users'); 
     
+    // Állapotok (State-ek)
     const [users, setUsers] = useState([]);
     const [reportedReviews, setReportedReviews] = useState([]);
     const [mediaList, setMediaList] = useState([]);
     const [error, setError] = useState('');
     const [toast, setToast] = useState(null);
+    const [currentUserInfo, setCurrentUserInfo] = useState(null); 
 
     const [editingUser, setEditingUser] = useState(null);
     const [formData, setFormData] = useState({ email: '', role: 'user', password: '' });
@@ -27,107 +29,215 @@ export default function AdminDashboard() {
     const initialMediaForm = { tipus: 'film', cim: '', leiras: '', poszter_url: '', elozetes_url: '', megjelenes_ev_start: '', megjelenes_ev_end: '', evadok_szama: '', hossz_perc: '', alap_rating: 8.0, kategoria_id: 'akcio' };
     const [uploadData, setUploadData] = useState(initialMediaForm);
 
+    // BÁRMI MÓDOSUL, MINDEN FÜLET FRISSÍTÜNK A HÁTTÉRBEN
+    const refreshAllData = () => {
+        fetchUsers();
+        fetchReportedReviews();
+        fetchMediaList();
+    };
+
     useEffect(() => {
-        if (activeTab === 'users') fetchUsers();
-        if (activeTab === 'reports') fetchReportedReviews();
-        if (activeTab === 'manageMedia') fetchMediaList();
-    }, [activeTab]);
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) setCurrentUserInfo(JSON.parse(storedUser));
+        
+        // Oldal betöltésekor egyből lekérjük az összes adatot minden fülhöz
+        refreshAllData();
+    }, []);
 
     const showNotification = (message, type = 'success') => { setToast({ message, type }); };
 
-    // --- FELHASZNÁLÓK ---
+    // ==========================================
+    // 1. FELHASZNÁLÓK KEZELÉSE
+    // ==========================================
     const fetchUsers = async () => {
         const token = localStorage.getItem('token');
-        try { const res = await fetch('http://localhost:5000/api/admin/users', { headers: { 'Authorization': `Bearer ${token}` } }); const data = await res.json(); if (res.ok) { setUsers(data); setError(''); } else { setError(data.message || 'Hiba történt.'); } } catch (err) { setError('Nem sikerült elérni a szervert.'); }
-    };
-    const handleDeleteUserConfirmed = async () => {
-        if (!userToDelete) return; const token = localStorage.getItem('token');
-        try { const res = await fetch(`http://localhost:5000/api/admin/users/${userToDelete}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); if (res.ok) { setUsers(users.filter(u => u.id !== userToDelete)); showNotification("Felhasználó törölve."); } } catch (err) { showNotification("Szerver hiba.", "error"); }
-        setShowDeleteModal(false); setUserToDelete(null);
-    };
-    const handleUpdateUser = async (e) => {
-        e.preventDefault(); const token = localStorage.getItem('token');
-        try { const res = await fetch(`http://localhost:5000/api/admin/users/${editingUser.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(formData) }); if (res.ok) { setUsers(users.map(u => u.id === editingUser.id ? { ...u, email: formData.email, role: formData.role } : u)); setEditingUser(null); showNotification("Sikeres mentés!"); } else { showNotification("Hiba történt!", "error"); } } catch (error) { showNotification("Szerver hiba.", "error"); }
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/users', { 
+                headers: { 'Authorization': `Bearer ${token}` },
+                cache: 'no-store' // Megtiltjuk a böngészőnek a régi adatok betöltését!
+            }); 
+            const data = await res.json(); 
+            if (res.ok) { setUsers(data); setError(''); } 
+        } catch (err) { setError('Nem sikerült elérni a szervert.'); }
     };
 
-    // --- KOMMENTEK ---
+    const handleDeleteUserConfirmed = async () => {
+        if (!userToDelete) return; 
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch(`http://localhost:5000/api/admin/users/${userToDelete}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); 
+            if (res.ok) { 
+                setUsers(prev => prev.filter(u => u.id !== userToDelete)); // Azonnali vizuális frissítés
+                refreshAllData(); // Háttér szinkronizáció
+                showNotification("Felhasználó törölve."); 
+            } 
+        } catch (err) { showNotification("Szerver hiba.", "error"); }
+        setShowDeleteModal(false); setUserToDelete(null);
+    };
+
+    const handleUpdateUser = async (e) => {
+        e.preventDefault(); 
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch(`http://localhost:5000/api/admin/users/${editingUser.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(formData) }); 
+            if (res.ok) { 
+                setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, email: formData.email, role: formData.role } : u)); // Azonnali vizuális frissítés
+                setEditingUser(null); 
+                refreshAllData();
+                showNotification("Sikeres mentés!"); 
+            } else { showNotification("Hiba történt!", "error"); } 
+        } catch (error) { showNotification("Szerver hiba.", "error"); }
+    };
+
+    // ==========================================
+    // 2. KOMMENTEK KEZELÉSE
+    // ==========================================
     const fetchReportedReviews = async () => {
         const token = localStorage.getItem('token');
-        try { const res = await fetch('http://localhost:5000/api/admin/reported-reviews', { headers: { 'Authorization': `Bearer ${token}` } }); const data = await res.json(); if (res.ok) setReportedReviews(data); } catch (err) { showNotification("Hiba a jelentések lekérésekor.", "error"); }
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/reported-reviews', { 
+                headers: { 'Authorization': `Bearer ${token}` },
+                cache: 'no-store'
+            }); 
+            const data = await res.json(); 
+            if (res.ok) setReportedReviews(data); 
+        } catch (err) { showNotification("Hiba a jelentések lekérésekor.", "error"); }
     };
+
     const handleDismissReport = async (id) => {
         const token = localStorage.getItem('token');
-        try { const res = await fetch(`http://localhost:5000/api/admin/reported-reviews/${id}/dismiss`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } }); if (res.ok) { setReportedReviews(reportedReviews.filter(r => r.id !== id)); showNotification("Jelentés elutasítva."); } } catch (err) { showNotification("Szerver hiba.", "error"); }
+        try { 
+            const res = await fetch(`http://localhost:5000/api/admin/reported-reviews/${id}/dismiss`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } }); 
+            if (res.ok) { 
+                setReportedReviews(prev => prev.filter(r => r.id !== id)); // Azonnali
+                refreshAllData(); 
+                showNotification("Jelentés elutasítva."); 
+            } 
+        } catch (err) { showNotification("Szerver hiba.", "error"); }
     };
     
-    // JAVÍTOTT TÖRLÉS FÜGGVÉNY
     const handleDeleteReviewConfirmed = async () => {
         if (!reviewToDelete) return; 
         const token = localStorage.getItem('token');
         try { 
-            const res = await fetch(`http://localhost:5000/api/admin/reported-reviews/${reviewToDelete}`, { 
-                method: 'DELETE', 
-                headers: { 'Authorization': `Bearer ${token}` } 
-            }); 
+            const res = await fetch(`http://localhost:5000/api/admin/reported-reviews/${reviewToDelete}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); 
             if (res.ok) { 
-                setReportedReviews(reportedReviews.filter(r => r.id !== reviewToDelete)); 
+                setReportedReviews(prev => prev.filter(r => r.id !== reviewToDelete)); // Azonnali törlés a listából
+                refreshAllData();
                 showNotification("Komment véglegesen törölve.", "success"); 
-            } else {
-                showNotification("Hiba a komment törlésekor.", "error");
-            }
+            } else { showNotification("Hiba a komment törlésekor.", "error"); }
         } catch (err) { showNotification("Szerver hiba.", "error"); }
         setShowReviewDeleteModal(false); setReviewToDelete(null);
     };
 
-    // --- TARTALOM KEZELÉSE ---
+    // ==========================================
+    // 3. TARTALOM (FILM/SOROZAT) KEZELÉSE
+    // ==========================================
     const fetchMediaList = async () => {
         const token = localStorage.getItem('token');
-        try { const res = await fetch('http://localhost:5000/api/admin/media', { headers: { 'Authorization': `Bearer ${token}` } }); const data = await res.json(); if (res.ok) setMediaList(data); } catch (err) { showNotification("Hiba a tartalmak lekérésekor.", "error"); }
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/media', { 
+                headers: { 'Authorization': `Bearer ${token}` },
+                cache: 'no-store'
+            }); 
+            const data = await res.json(); 
+            if (res.ok) setMediaList(data); 
+        } catch (err) { showNotification("Hiba a tartalmak lekérésekor.", "error"); }
     };
+
     const handleUploadSubmit = async (e) => {
-        e.preventDefault(); const token = localStorage.getItem('token');
+        e.preventDefault(); 
+        const token = localStorage.getItem('token');
         const url = editingMedia ? `http://localhost:5000/api/admin/media/${editingMedia.id}` : 'http://localhost:5000/api/admin/media';
         const method = editingMedia ? 'PUT' : 'POST';
         try {
-            const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(uploadData) }); const data = await res.json();
-            if (res.ok) { showNotification(data.message, "success"); setUploadData(initialMediaForm); if (editingMedia) { setEditingMedia(null); fetchMediaList(); } } else { showNotification(data.message || "Hiba a feltöltésnél.", "error"); }
+            const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(uploadData) }); 
+            const data = await res.json();
+            
+            if (res.ok) { 
+                if (editingMedia) {
+                    // Azonnali vizuális frissítés szerkesztéskor
+                    setMediaList(prev => prev.map(m => m.id === editingMedia.id ? { ...m, ...uploadData } : m));
+                }
+                showNotification(data.message, "success"); 
+                setUploadData(initialMediaForm); 
+                setEditingMedia(null); 
+                refreshAllData(); // Háttérfrissítés mindenhova
+            } else { 
+                showNotification(data.message || "Hiba a feltöltésnél.", "error"); 
+            }
         } catch (err) { showNotification("Szerver hiba a feltöltés során.", "error"); }
     };
+
     const openEditMediaModal = (media) => {
         setEditingMedia(media);
-        setUploadData({ tipus: media.tipus || 'film', cim: media.cim || '', leiras: media.leiras || '', poszter_url: media.poszter_url || '', elozetes_url: media.elozetes_url || '', megjelenes_ev_start: media.megjelenes_ev_start || '', megjelenes_ev_end: media.megjelenes_ev_end || '', evadok_szama: media.evadok_szama || '', hossz_perc: media.hossz_perc || '', alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || 'akcio' });
+        setUploadData({ 
+            tipus: media.tipus || 'film', cim: media.cim || '', leiras: media.leiras || '', poszter_url: media.poszter_url || '', 
+            elozetes_url: media.elozetes_url || '', megjelenes_ev_start: media.megjelenes_ev_start || '', 
+            megjelenes_ev_end: media.megjelenes_ev_end || '', evadok_szama: media.evadok_szama || '', 
+            hossz_perc: media.hossz_perc || '', alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || 'akcio' 
+        });
     };
+
     const handleDeleteMediaConfirmed = async () => {
-        if (!mediaToDelete) return; const token = localStorage.getItem('token');
-        try { const res = await fetch(`http://localhost:5000/api/admin/media/${mediaToDelete}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); if (res.ok) { setMediaList(mediaList.filter(m => m.id !== mediaToDelete)); showNotification("Tartalom sikeresen törölve."); } } catch (err) { showNotification("Szerver hiba.", "error"); }
+        if (!mediaToDelete) return; 
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch(`http://localhost:5000/api/admin/media/${mediaToDelete}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); 
+            if (res.ok) { 
+                setMediaList(prev => prev.filter(m => m.id !== mediaToDelete)); // Azonnali törlés a táblázatból
+                refreshAllData(); 
+                showNotification("Tartalom sikeresen törölve."); 
+            } 
+        } catch (err) { showNotification("Szerver hiba.", "error"); }
         setShowMediaDeleteModal(false); setMediaToDelete(null);
     };
 
-    // --- RENDERELÉSEK ---
+    // ==========================================
+    // RENDERELÉSI FUNKCIÓK (UI)
+    // ==========================================
     const renderUsersTab = () => (
         <div style={{ overflowX: 'auto', background: '#161b22', borderRadius: '12px', border: '1px solid #333' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead><tr style={{ background: '#0f152b', borderBottom: '1px solid #333' }}><th style={{ padding: '15px' }}>ID</th><th style={{ padding: '15px' }}>Név / User</th><th style={{ padding: '15px' }}>Email</th><th style={{ padding: '15px' }}>Jogosultság</th><th style={{ padding: '15px', textAlign: 'right' }}>Művelet</th></tr></thead>
-                <tbody>{users.map(user => (<tr key={user.id} style={{ borderBottom: '1px solid #222' }}><td style={{ padding: '15px', color: '#888' }}>{user.id}</td><td style={{ padding: '15px' }}><div style={{fontWeight:'bold'}}>{user.nev || user.username}</div><div style={{fontSize:'0.8rem', color:'#aaa'}}>@{user.username}</div></td><td style={{ padding: '15px', color: '#ccc' }}>{user.email}</td><td style={{ padding: '15px' }}><span style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', background: user.role === 'admin' ? '#e74c3c' : '#3e50ff', color: 'white' }}>{user.role}</span></td><td style={{ padding: '15px', textAlign: 'right' }}><div style={{display:'flex', justifyContent:'flex-end', gap:'10px'}}><button onClick={() => { setEditingUser(user); setFormData({ email: user.email, role: user.role, password: '' }); }} style={{ background: '#f39c12', border: 'none', color: 'white', padding: '8px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-edit"></i></button><button onClick={() => { setUserToDelete(user.id); setShowDeleteModal(true); }} style={{ background: '#ff4b4b', border: 'none', color: 'white', padding: '8px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-trash"></i></button></div></td></tr>))}</tbody>
+                <tbody>{users.map(user => (
+                    <tr key={user.id} style={{ borderBottom: '1px solid #222' }}>
+                        <td style={{ padding: '15px', color: '#888' }}>{user.id}</td>
+                        <td style={{ padding: '15px' }}><div style={{fontWeight:'bold'}}>{user.nev || user.username}</div><div style={{fontSize:'0.8rem', color:'#aaa'}}>@{user.username}</div></td>
+                        <td style={{ padding: '15px', color: '#ccc' }}>{user.email}</td>
+                        <td style={{ padding: '15px' }}><span style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', background: user.role === 'admin' ? '#e74c3c' : '#3e50ff', color: 'white' }}>{user.role}</span></td>
+                        <td style={{ padding: '15px', textAlign: 'right' }}>
+                            <div style={{display:'flex', justifyContent:'flex-end', gap:'10px'}}>
+                                <button onClick={() => { setEditingUser(user); setFormData({ email: user.email, role: user.role, password: '' }); }} style={{ background: '#f39c12', border: 'none', color: 'white', padding: '8px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-edit"></i></button>
+                                <button onClick={() => { setUserToDelete(user.id); setShowDeleteModal(true); }} style={{ background: '#ff4b4b', border: 'none', color: 'white', padding: '8px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                ))}</tbody>
             </table>
         </div>
     );
 
     const renderReportsTab = () => (
         <div style={{ overflowX: 'auto', background: '#161b22', borderRadius: '12px', border: '1px solid #333' }}>
-            {reportedReviews.length === 0 ? (<div style={{ padding: '40px', textAlign: 'center', color: '#888' }}><i className="fas fa-check-circle" style={{fontSize: '3rem', marginBottom: '15px', color: '#2ecc71'}}></i><h3>Nincsenek jelentett kommentek</h3></div>) : (
+            {reportedReviews.length === 0 ? (
+                <div style={{ padding: '40px', textAlign: 'center', color: '#888' }}><i className="fas fa-check-circle" style={{fontSize: '3rem', marginBottom: '15px', color: '#2ecc71'}}></i><h3>Nincsenek jelentett kommentek</h3></div>
+            ) : (
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                     <thead><tr style={{ background: '#0f152b', borderBottom: '1px solid #333' }}><th style={{ padding: '15px' }}>Tartalom / Jelentés oka</th><th style={{ padding: '15px' }}>Kommentelő</th><th style={{ padding: '15px' }}>Vélemény</th><th style={{ padding: '15px', textAlign: 'right' }}>Művelet</th></tr></thead>
-                    <tbody>
-                        {reportedReviews.map(review => (
-                            <tr key={review.id} style={{ borderBottom: '1px solid #222' }}>
-                                <td style={{ padding: '15px' }}><div style={{ color: '#3e50ff', fontWeight: 'bold' }}>{review.media_title}</div><div style={{ fontSize: '0.8rem', color: '#e74c3c', marginTop: '5px' }}><i className="fas fa-exclamation-triangle"></i> {review.report_reason || 'Nincs megadva'}</div></td>
-                                <td style={{ padding: '15px' }}>@{review.username}</td>
-                                <td style={{ padding: '15px', maxWidth: '300px' }}><div style={{ color: '#f1c40f', marginBottom: '5px' }}><i className="fas fa-star"></i> {review.rating}/10</div><div style={{ color: '#ccc', fontStyle: 'italic' }}>"{review.comment}"</div></td>
-                                <td style={{ padding: '15px', textAlign: 'right' }}><div style={{display:'flex', justifyContent:'flex-end', gap:'10px'}}><button onClick={() => handleDismissReport(review.id)} style={{ background: '#27ae60', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-check"></i> Elutasít</button><button onClick={() => { setReviewToDelete(review.id); setShowReviewDeleteModal(true); }} style={{ background: '#ff4b4b', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-trash"></i> Töröl</button></div></td>
-                            </tr>
-                        ))}
-                    </tbody>
+                    <tbody>{reportedReviews.map(review => (
+                        <tr key={review.id} style={{ borderBottom: '1px solid #222' }}>
+                            <td style={{ padding: '15px' }}><div style={{ color: '#3e50ff', fontWeight: 'bold' }}>{review.media_title}</div><div style={{ fontSize: '0.8rem', color: '#e74c3c', marginTop: '5px' }}><i className="fas fa-exclamation-triangle"></i> {review.report_reason || 'Nincs megadva'}</div></td>
+                            <td style={{ padding: '15px' }}>@{review.username}</td>
+                            <td style={{ padding: '15px', maxWidth: '300px' }}><div style={{ color: '#f1c40f', marginBottom: '5px' }}><i className="fas fa-star"></i> {review.rating}/10</div><div style={{ color: '#ccc', fontStyle: 'italic' }}>"{review.comment}"</div></td>
+                            <td style={{ padding: '15px', textAlign: 'right' }}>
+                                <div style={{display:'flex', justifyContent:'flex-end', gap:'10px'}}>
+                                    <button onClick={() => handleDismissReport(review.id)} style={{ background: '#27ae60', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-check"></i> Elutasít</button>
+                                    <button onClick={() => { setReviewToDelete(review.id); setShowReviewDeleteModal(true); }} style={{ background: '#ff4b4b', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-trash"></i> Töröl</button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}</tbody>
                 </table>
             )}
         </div>
@@ -137,16 +247,19 @@ export default function AdminDashboard() {
         <div style={{ overflowX: 'auto', background: '#161b22', borderRadius: '12px', border: '1px solid #333' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead><tr style={{ background: '#0f152b', borderBottom: '1px solid #333' }}><th style={{ padding: '15px' }}>Poszter</th><th style={{ padding: '15px' }}>Cím</th><th style={{ padding: '15px' }}>Típus / Év</th><th style={{ padding: '15px', textAlign: 'right' }}>Művelet</th></tr></thead>
-                <tbody>
-                    {mediaList.map(media => (
-                        <tr key={media.id} style={{ borderBottom: '1px solid #222' }}>
-                            <td style={{ padding: '15px' }}><img src={media.poszter_url} alt="poszter" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} /></td>
-                            <td style={{ padding: '15px', fontWeight: 'bold', fontSize: '1.1rem' }}>{media.cim}</td>
-                            <td style={{ padding: '15px', color: '#aaa' }}><span style={{ textTransform: 'uppercase', fontSize: '0.8rem', background: '#333', padding: '2px 6px', borderRadius: '4px', marginRight: '8px' }}>{media.tipus}</span>{media.megjelenes_ev_start} {media.megjelenes_ev_end ? `- ${media.megjelenes_ev_end}` : ''}</td>
-                            <td style={{ padding: '15px', textAlign: 'right' }}><div style={{display:'flex', justifyContent:'flex-end', gap:'10px'}}><button onClick={() => openEditMediaModal(media)} style={{ background: '#f39c12', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-edit"></i></button><button onClick={() => { setMediaToDelete(media.id); setShowMediaDeleteModal(true); }} style={{ background: '#ff4b4b', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-trash"></i></button></div></td>
-                        </tr>
-                    ))}
-                </tbody>
+                <tbody>{mediaList.map(media => (
+                    <tr key={media.id} style={{ borderBottom: '1px solid #222' }}>
+                        <td style={{ padding: '15px' }}><img src={media.poszter_url} alt="poszter" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} /></td>
+                        <td style={{ padding: '15px', fontWeight: 'bold', fontSize: '1.1rem' }}>{media.cim}</td>
+                        <td style={{ padding: '15px', color: '#aaa' }}><span style={{ textTransform: 'uppercase', fontSize: '0.8rem', background: '#333', padding: '2px 6px', borderRadius: '4px', marginRight: '8px' }}>{media.tipus}</span>{media.megjelenes_ev_start} {media.megjelenes_ev_end ? `- ${media.megjelenes_ev_end}` : ''}</td>
+                        <td style={{ padding: '15px', textAlign: 'right' }}>
+                            <div style={{display:'flex', justifyContent:'flex-end', gap:'10px'}}>
+                                <button onClick={() => openEditMediaModal(media)} style={{ background: '#f39c12', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-edit"></i></button>
+                                <button onClick={() => { setMediaToDelete(media.id); setShowMediaDeleteModal(true); }} style={{ background: '#ff4b4b', border: 'none', color: 'white', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}><i className="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                ))}</tbody>
             </table>
         </div>
     );
@@ -218,6 +331,7 @@ export default function AdminDashboard() {
                 </Link>
             </div>
 
+            {/* FELHASZNÁLÓ SZERKESZTŐ MODAL */}
             {editingUser && (
                 <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10000 }}>
                     <div style={{ background: '#1f2a48', padding: '30px', borderRadius: '12px', width: '400px', border: '1px solid #334155', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
@@ -235,6 +349,7 @@ export default function AdminDashboard() {
                 </div>
             )}
 
+            {/* TARTALOM SZERKESZTŐ MODAL */}
             {editingMedia && (
                 <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10000 }}>
                     <div style={{ background: '#1f2a48', padding: '30px', borderRadius: '12px', width: '650px', maxWidth: '95%', border: '1px solid #334155', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
