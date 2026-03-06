@@ -29,4 +29,6 @@ router.post('/reviews', interactionController.addReview);
 // 3. Vélemény törlése (EZT PÓTOLTUK!)
 router.delete('/reviews', interactionController.deleteReview);
 
+router.post('/reviews/:reviewId/report', interactionController.reportReview);
+
 module.exports = router;
