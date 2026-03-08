@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: db:3306
--- Létrehozás ideje: 2026. Már 03. 21:26
+-- Létrehozás ideje: 2026. Már 06. 12:55
 -- Kiszolgáló verziója: 8.4.8
 -- PHP verzió: 8.3.30
 
@@ -33,15 +33,17 @@ CREATE TABLE `ertekelesek` (
   `pontszam` int NOT NULL,
   `szoveg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci,
   `letrehozva` datetime DEFAULT CURRENT_TIMESTAMP,
-  `media_id` int DEFAULT NULL
+  `media_id` int DEFAULT NULL,
+  `jelentes_oka` varchar(255) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  `jelentve` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `ertekelesek`
 --
 
-INSERT INTO `ertekelesek` (`id`, `felhasznalo_id`, `pontszam`, `szoveg`, `letrehozva`, `media_id`) VALUES
-(52, 20, 10, 'ez igen', '2026-03-03 20:55:09', 7);
+INSERT INTO `ertekelesek` (`id`, `felhasznalo_id`, `pontszam`, `szoveg`, `letrehozva`, `media_id`, `jelentes_oka`, `jelentve`) VALUES
+(52, 20, 10, 'ez igen', '2026-03-03 20:55:09', 7, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -55,7 +57,7 @@ CREATE TABLE `felhasznalok` (
   `felhasznalonev` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci NOT NULL,
   `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci NOT NULL,
   `jelszo_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `avatar` longtext COLLATE utf8mb4_hungarian_ci,
+  `avatar` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci,
   `jogosultsag` enum('user','admin') CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT 'user',
   `regisztracio_datum` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
@@ -123,7 +125,7 @@ CREATE TABLE `kedvencek` (
 CREATE TABLE `kedvenc_kategoriak` (
   `id` int NOT NULL,
   `felhasznalo_id` int NOT NULL,
-  `kategoria_id` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL
+  `kategoria_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
@@ -149,18 +151,18 @@ INSERT INTO `kedvenc_kategoriak` (`id`, `felhasznalo_id`, `kategoria_id`) VALUES
 
 CREATE TABLE `media` (
   `id` int NOT NULL,
-  `tipus` enum('film','sorozat') COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `cim` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `leiras` text COLLATE utf8mb4_hungarian_ci,
-  `poszter_url` varchar(255) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
-  `elozetes_url` varchar(255) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  `tipus` enum('film','sorozat') CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `cim` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `leiras` text CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci,
+  `poszter_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  `elozetes_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `megjelenes_ev_start` int DEFAULT NULL,
-  `megjelenes_ev_end` varchar(10) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  `megjelenes_ev_end` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `evadok_szama` int DEFAULT NULL,
   `hossz_perc` int DEFAULT NULL,
   `rating` decimal(3,1) DEFAULT NULL,
   `alap_rating` decimal(3,1) DEFAULT NULL,
-  `kategoria_id` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  `kategoria_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `rendezo_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
@@ -178,7 +180,7 @@ INSERT INTO `media` (`id`, `tipus`, `cim`, `leiras`, `poszter_url`, `elozetes_ur
 (7, 'film', 'Avatar: The Way of Water', 'Jake Sully és Neytiri mindent megtesznek, hogy együtt tartsák családjukat, amikor új fenyegetés üti fel a fejét.', 'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_.jpg', 'd9MyW72ELq0', 2022, NULL, NULL, 192, 8.8, 7.6, 'scifi', 5),
 (8, 'film', 'Spider-Man: No Way Home', 'Pókember kiléte lelepleződik, ezért Doctor Strange segítségét kéri, de a varázslat balul sül el.', 'https://image.tmdb.org/t/p/original/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg', 'JfVOs4VSpmA', 2021, NULL, NULL, 148, 8.2, 8.2, 'action', 6),
 (9, 'film', 'Deadpool & Wolverine', 'A fásult Wade Wilson kénytelen újra jelmezt húzni, amikor egy új fenyegetés nemcsak a világát, hanem az egész univerzumot veszélyezteti.', 'https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', '73_1biulkYk', 2024, NULL, NULL, 128, 8.0, 8.0, 'action', 7),
-(10, 'film', 'Gladiator II', 'Évekkel Maximus halála után Lucius kénytelen belépni a Colosseumba, miután otthonát elfoglalják a zsarnok császárok.', 'https://m.media-amazon.com/images/M/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_.jpg', 'IIerkFJEcuU', 2024, NULL, NULL, 148, 8.7, 8.0, 'action', 8),
+(10, 'film', 'Gladiator II', 'Évekkel Maximus halála után Lucius kénytelen belépni a Colosseumba, miután otthonát elfoglalják a zsarnok császárok.', 'https://m.media-amazon.com/images/M/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_.jpg', 'IIerkFJEcuU', 2024, NULL, NULL, 148, 8.0, 8.0, 'action', 8),
 (11, 'film', 'Black Panther: Wakanda Forever', 'Wakanda vezetői küzdenek nemzetük védelméért a beavatkozó világhatalmakkal szemben T\'Challa király halála után.', 'https://image.tmdb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg', '_Z3QKkl1WyM', 2022, NULL, NULL, 161, 8.7, 7.3, 'action', 9),
 (12, 'film', 'Avengers: Endgame', 'A Bosszúállók megmaradt tagjainak újra össze kell állniuk, hogy visszafordítsák Thanos tetteit és helyreállítsák az univerzum egyensúlyát.', 'https://image.tmdb.org/t/p/original/or06FN3Dka5tukK1e9sl16pB3iy.jpg', 'TcMBFSGVi1c', 2019, NULL, NULL, 181, 8.4, 8.4, 'action', 10),
 (10101, 'sorozat', 'Stranger Things', 'Amikor egy kisfiú eltűnik, egy kisvárosnak szembe kell néznie titkos kísérletekkel és természetfeletti erőkkel.', 'https://dnm.nflximg.net/api/v6/2DuQlx0fM4wd1nzqm5BFBi6ILa8/AAAAQeHSBosv8l2X9RZuaT3ygZYs0XLLqa8vrpyBf1dTH8cjYR6sQsL26uyTNujyLkzvZKz3OyFvkd0u6PS-ZGcpyuRHnDLuYXucxhVMJxQXmZLlz88mnJ_jX5UymYsghaBfcEGD2RbIifQR7j4N5gGkvBDQ.jpg?r=473', 'AfQ13jsLDms', 2016, '2026', 4, 50, 8.7, 8.7, 'horror', 11),
@@ -191,8 +193,8 @@ INSERT INTO `media` (`id`, `tipus`, `cim`, `leiras`, `poszter_url`, `elozetes_ur
 (10108, 'sorozat', 'The Boys', 'Egy csapat önbíráskodó elindul, hogy leleplezze a szuperhősöket, akik visszaélnek szupererejükkel.', 'https://m.media-amazon.com/images/M/MV5BMGRlZDE2ZGEtZTU5Mi00ODdkLWFmMTEtY2UwMmViNWNmZjczXkEyXkFqcGc@._V1_.jpg', 'Fv0leN8TmR8', 2019, '', 4, 60, 8.7, 8.7, 'action', 18),
 (10109, 'sorozat', 'Game of Thrones', 'Kilenc nemesi család küzd Westeros földjének uralmáért, miközben egy ősi ellenség tér vissza évezredek óta tartó álmából.', 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'KPLWWIOCOOQ', 2011, '2019', 8, 55, 9.6, 9.2, 'fantasy', 19),
 (10110, 'sorozat', 'The Witcher', 'Ríviai Geralt, a magányos szörnyvadász küzd, hogy megtalálja helyét a világban, ahol az emberek gyakran gonoszabbak, mint a bestiák.', 'https://image.tmdb.org/t/p/original/7vjaCdMw15FEbXyLQTVa04URsPm.jpg', 'ndl1W4ltcmg', 2019, '', 3, 60, 8.0, 8.0, 'fantasy', 20),
-(10111, 'sorozat', 'Loki', 'A Bosszúállók: Végjáték eseményei után Loki a titokzatos Idővariációs Hatósághoz kerül.', 'https://image.tmdb.org/t/p/original/voHUmluYmKyleFkTu3lOXQG702u.jpg', 'nW948Va-l10', 2021, '2023', 2, 50, 8.2, 8.2, 'scifi', 21),
-(10112, 'sorozat', 'Severance', 'Mark egy olyan csapatot vezet, akiknek emlékeit sebészeti úton különítették el a munka és a magánélet között.', 'https://static.sorozatjunkie.hu/wp-content/uploads/2025/12/Severance-Kulonvalas-2.-evad-Apple-TV.jpg', 'VwP6M9zS_pQ', 2022, '', 2, 50, 9.3, 8.7, 'thriller', 22);
+(10111, 'sorozat', 'Loki', 'A Bosszúállók: Végjáték eseményei után Loki a titokzatos Idővariációs Hatósághoz kerül.', 'https://image.tmdb.org/t/p/original/voHUmluYmKyleFkTu3lOXQG702u.jpg', 'nW948Va-l10', 2021, '2023', 2, NULL, 8.2, 8.2, 'scifi', 21),
+(10112, 'sorozat', 'Severance', 'Mark egy olyan csapatot vezet, akiknek emlékeit sebészeti úton különítették el a munka és a magánélet között.', 'https://static.sorozatjunkie.hu/wp-content/uploads/2025/12/Severance-Kulonvalas-2.-evad-Apple-TV.jpg', 'VwP6M9zS_pQ', 2023, NULL, 2, NULL, 9.3, 8.7, 'thriller', 22);
 
 -- --------------------------------------------------------
 
@@ -627,7 +629,7 @@ ALTER TABLE `sajat_lista_elemek`
 -- AUTO_INCREMENT a táblához `ertekelesek`
 --
 ALTER TABLE `ertekelesek`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT a táblához `felhasznalok`

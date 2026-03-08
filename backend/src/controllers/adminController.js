@@ -11,7 +11,11 @@ exports.getAllUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     const id = req.params.id;
     try {
-        await db.query('DELETE FROM ertekelesek WHERE felhasznalo_id = ?', [id]); await db.query('DELETE FROM kedvencek WHERE felhasznalo_id = ?', [id]); await db.query('DELETE FROM sajat_lista_elemek WHERE lista_id IN (SELECT id FROM sajat_listak WHERE felhasznalo_id = ?)', [id]); await db.query('DELETE FROM sajat_listak WHERE felhasznalo_id = ?', [id]); await db.query('DELETE FROM felhasznalok WHERE id = ?', [id]);
+        await db.query('DELETE FROM ertekelesek WHERE felhasznalo_id = ?', [id]); 
+        await db.query('DELETE FROM kedvencek WHERE felhasznalo_id = ?', [id]); 
+        await db.query('DELETE FROM sajat_lista_elemek WHERE lista_id IN (SELECT id FROM sajat_listak WHERE felhasznalo_id = ?)', [id]); 
+        await db.query('DELETE FROM sajat_listak WHERE felhasznalo_id = ?', [id]); 
+        await db.query('DELETE FROM felhasznalok WHERE id = ?', [id]);
         res.json({ message: 'Felhasználó sikeresen törölve.' });
     } catch (error) { res.status(500).json({ message: 'Hiba a törléskor.' }); }
 };
@@ -46,7 +50,6 @@ exports.dismissReport = async (req, res) => {
     } catch (error) { res.status(500).json({ message: 'Szerver hiba.' }); }
 };
 
-// --- ÚJ: JELENTETT KOMMENT VÉGLEGES TÖRLÉSE ÉS ÁTLAG ÚJRASZÁMOLÁSA ---
 exports.deleteReportedReview = async (req, res) => {
     const { id } = req.params;
     try {
@@ -69,39 +72,152 @@ exports.deleteReportedReview = async (req, res) => {
     } catch (error) { res.status(500).json({ message: 'Szerver hiba a törlés során.' }); }
 };
 
-exports.addMedia = async (req, res) => {
-    const { tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, kategoria_id, alap_rating } = req.body;
-    if (!cim || !leiras || !poszter_url || !megjelenes_ev_start || !kategoria_id) return res.status(400).json({ message: "A kötelező mezőket ki kell tölteni!" });
-    try {
-        const finalRating = alap_rating ? parseFloat(alap_rating) : 8.0;
-        const sql = `INSERT INTO media (tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, alap_rating, kategoria_id, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const params = [ tipus, cim, leiras, poszter_url, elozetes_url || null, megjelenes_ev_start, tipus === 'sorozat' ? (megjelenes_ev_end || null) : null, tipus === 'sorozat' ? (evadok_szama || null) : null, tipus === 'film' ? (hossz_perc || null) : null, finalRating, kategoria_id, finalRating ];
-        await db.query(sql, params); res.status(201).json({ message: "Sikeresen feltöltve az adatbázisba!" });
-    } catch (error) { res.status(500).json({ message: "Szerver hiba a feltöltés során." }); }
-};
-
 exports.getAllMedia = async (req, res) => {
     try {
-        const [media] = await db.query('SELECT id, tipus, cim, megjelenes_ev_start, poszter_url, elozetes_url, alap_rating, kategoria_id, leiras, megjelenes_ev_end, evadok_szama, hossz_perc FROM media ORDER BY id DESC');
+        // Platform azonosító lekérése a listázáshoz (a szerkesztő ablak betöltéséhez)
+        const sql = `
+            SELECT m.id, m.tipus, m.cim, m.megjelenes_ev_start, m.poszter_url, m.elozetes_url, 
+                   m.alap_rating, m.kategoria_id, m.leiras, m.megjelenes_ev_end, m.evadok_szama, m.hossz_perc,
+                   m.rendezo_id, r.nev AS rendezo_nev, r.nemzetiseg AS nemzetiseg_nev,
+                   (SELECT platform_id FROM media_platformok WHERE media_id = m.id LIMIT 1) AS platform_id
+            FROM media m 
+            LEFT JOIN rendezok r ON m.rendezo_id = r.id 
+            ORDER BY m.id DESC
+        `;
+        const [media] = await db.query(sql);
         res.json(media);
-    } catch (error) { res.status(500).json({ message: 'Szerver hiba.' }); }
-};
-
-exports.updateMedia = async (req, res) => {
-    const { id } = req.params;
-    const { tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, kategoria_id, alap_rating } = req.body;
-    try {
-        const finalRating = alap_rating ? parseFloat(alap_rating) : 8.0;
-        const sql = `UPDATE media SET tipus = ?, cim = ?, leiras = ?, poszter_url = ?, elozetes_url = ?, megjelenes_ev_start = ?, megjelenes_ev_end = ?, evadok_szama = ?, hossz_perc = ?, kategoria_id = ?, alap_rating = ? WHERE id = ?`;
-        const params = [ tipus, cim, leiras, poszter_url, elozetes_url || null, megjelenes_ev_start, tipus === 'sorozat' ? (megjelenes_ev_end || null) : null, tipus === 'sorozat' ? (evadok_szama || null) : null, tipus === 'film' ? (hossz_perc || null) : null, kategoria_id, finalRating, id ];
-        await db.query(sql, params); res.json({ message: "Sikeresen frissítve!" });
-    } catch (error) { res.status(500).json({ message: "Szerver hiba a frissítés során." }); }
+    } catch (error) { 
+        console.error("Hiba a media lekérésekor:", error);
+        res.status(500).json({ message: 'Szerver hiba.' }); 
+    }
 };
 
 exports.deleteMedia = async (req, res) => {
     const { id } = req.params;
     try {
-        await db.query('DELETE FROM ertekelesek WHERE media_id = ?', [id]); await db.query('DELETE FROM kedvencek WHERE media_id = ?', [id]); await db.query('DELETE FROM sajat_lista_elemek WHERE media_id = ?', [id]); await db.query('DELETE FROM media_platformok WHERE media_id = ?', [id]); await db.query('DELETE FROM megtekintesek WHERE media_id = ?', [id]); await db.query('DELETE FROM media WHERE id = ?', [id]);
+        await db.query('DELETE FROM ertekelesek WHERE media_id = ?', [id]); 
+        await db.query('DELETE FROM kedvencek WHERE media_id = ?', [id]); 
+        await db.query('DELETE FROM sajat_lista_elemek WHERE media_id = ?', [id]); 
+        await db.query('DELETE FROM media_platformok WHERE media_id = ?', [id]); 
+        await db.query('DELETE FROM megtekintesek WHERE media_id = ?', [id]); 
+        await db.query('DELETE FROM media WHERE id = ?', [id]);
         res.json({ message: 'Tartalom sikeresen törölve.' });
     } catch (error) { res.status(500).json({ message: 'Hiba a tartalom törlésekor.' }); }
+};
+
+// =========================================================================
+// BIZTONSÁGOS FELTÖLTÉS ÉS SZERKESZTÉS (Platform kezeléssel)
+// =========================================================================
+
+exports.addMedia = async (req, res) => {
+    // Kinyerjük a platform_id-t is a kérésből
+    const { tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, kategoria_id, alap_rating, rendezo_nev, nemzetiseg_nev, platform_id } = req.body;
+    
+    if (!cim || !leiras || !poszter_url || !megjelenes_ev_start) {
+        return res.status(400).json({ message: "A kötelező mezőket ki kell tölteni!" });
+    }
+    
+    try {
+        let finalRendezoId = null;
+
+        // RENDEZŐ LOGIKA
+        if (rendezo_nev && rendezo_nev.trim() !== '') {
+            const [existingDir] = await db.query('SELECT id FROM rendezok WHERE nev = ? LIMIT 1', [rendezo_nev.trim()]);
+            if (existingDir.length > 0) {
+                finalRendezoId = existingDir[0].id; 
+                if (nemzetiseg_nev && nemzetiseg_nev.trim() !== '') {
+                    await db.query('UPDATE rendezok SET nemzetiseg = ? WHERE id = ?', [nemzetiseg_nev.trim(), finalRendezoId]);
+                }
+            } else {
+                const finalNemzetiseg = (nemzetiseg_nev && nemzetiseg_nev.trim() !== '') ? nemzetiseg_nev.trim() : null;
+                const [newDir] = await db.query('INSERT INTO rendezok (nev, nemzetiseg) VALUES (?, ?)', [rendezo_nev.trim(), finalNemzetiseg]);
+                finalRendezoId = newDir.insertId; 
+            }
+        }
+
+        const finalRating = alap_rating ? parseFloat(alap_rating) : 8.0;
+        const finalEvStart = megjelenes_ev_start ? parseInt(megjelenes_ev_start) : null;
+        const finalEvEnd = (tipus === 'sorozat' && megjelenes_ev_end && megjelenes_ev_end.trim() !== '') ? megjelenes_ev_end : null;
+        const finalEvadok = (tipus === 'sorozat' && evadok_szama) ? parseInt(evadok_szama) : null;
+        const finalHossz = (tipus === 'film' && hossz_perc) ? parseInt(hossz_perc) : null;
+        const finalKategoria = (kategoria_id && kategoria_id.trim() !== '') ? kategoria_id : null;
+
+        // Media tábla mentése
+        const sql = `INSERT INTO media 
+            (tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, alap_rating, kategoria_id, rating, rendezo_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            
+        const params = [ tipus, cim, leiras, poszter_url, elozetes_url || null, finalEvStart, finalEvEnd, finalEvadok, finalHossz, finalRating, finalKategoria, finalRating, finalRendezoId ];
+        
+        const [newMedia] = await db.query(sql, params); 
+        const mediaId = newMedia.insertId;
+
+        // PLATFORM MENTÉSE (ha adtak meg)
+        if (platform_id && platform_id !== '') {
+            await db.query('INSERT INTO media_platformok (media_id, platform_id) VALUES (?, ?)', [mediaId, parseInt(platform_id)]);
+        }
+
+        res.status(201).json({ message: "Sikeresen feltöltve az adatbázisba!" });
+    } catch (error) { 
+        console.error("Hiba a feltöltésnél:", error);
+        res.status(500).json({ message: "Szerver hiba a feltöltés során." }); 
+    }
+};
+
+exports.updateMedia = async (req, res) => {
+    const { id } = req.params;
+    const { tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, kategoria_id, alap_rating, rendezo_nev, nemzetiseg_nev, platform_id } = req.body;
+    
+    if (!cim || !leiras || !poszter_url || !megjelenes_ev_start) {
+        return res.status(400).json({ message: "A kötelező mezőket ki kell tölteni!" });
+    }
+
+    try {
+        let finalRendezoId = null;
+
+        if (rendezo_nev && rendezo_nev.trim() !== '') {
+            const [existingDir] = await db.query('SELECT id FROM rendezok WHERE nev = ? LIMIT 1', [rendezo_nev.trim()]);
+            if (existingDir.length > 0) {
+                finalRendezoId = existingDir[0].id;
+                if (nemzetiseg_nev && nemzetiseg_nev.trim() !== '') {
+                    await db.query('UPDATE rendezok SET nemzetiseg = ? WHERE id = ?', [nemzetiseg_nev.trim(), finalRendezoId]);
+                }
+            } else {
+                const finalNemzetiseg = (nemzetiseg_nev && nemzetiseg_nev.trim() !== '') ? nemzetiseg_nev.trim() : null;
+                const [newDir] = await db.query('INSERT INTO rendezok (nev, nemzetiseg) VALUES (?, ?)', [rendezo_nev.trim(), finalNemzetiseg]);
+                finalRendezoId = newDir.insertId;
+            }
+        }
+
+        const finalRating = alap_rating ? parseFloat(alap_rating) : 8.0;
+        const finalEvStart = megjelenes_ev_start ? parseInt(megjelenes_ev_start) : null;
+        const finalEvEnd = (tipus === 'sorozat' && megjelenes_ev_end && megjelenes_ev_end.trim() !== '') ? megjelenes_ev_end : null;
+        const finalEvadok = (tipus === 'sorozat' && evadok_szama) ? parseInt(evadok_szama) : null;
+        const finalHossz = (tipus === 'film' && hossz_perc) ? parseInt(hossz_perc) : null;
+        const finalKategoria = (kategoria_id && kategoria_id.trim() !== '') ? kategoria_id : null;
+
+        const sql = `UPDATE media SET 
+            tipus = ?, cim = ?, leiras = ?, poszter_url = ?, elozetes_url = ?, 
+            megjelenes_ev_start = ?, megjelenes_ev_end = ?, evadok_szama = ?, 
+            hossz_perc = ?, kategoria_id = ?, alap_rating = ?, rendezo_id = ?
+            WHERE id = ?`;
+            
+        const params = [ tipus, cim, leiras, poszter_url, elozetes_url || null, finalEvStart, finalEvEnd, finalEvadok, finalHossz, finalKategoria, finalRating, finalRendezoId, id ];
+        
+        await db.query(sql, params); 
+
+        // PLATFORM FRISSÍTÉSE
+        // Először töröljük a régi platform kapcsolatokat a media_id alapján
+        await db.query('DELETE FROM media_platformok WHERE media_id = ?', [id]);
+        
+        // Majd beszúrjuk az újat, ha van kiválasztva
+        if (platform_id && platform_id !== '') {
+            await db.query('INSERT INTO media_platformok (media_id, platform_id) VALUES (?, ?)', [id, parseInt(platform_id)]);
+        }
+
+        res.json({ message: "Sikeresen frissítve!" });
+    } catch (error) { 
+        console.error("Hiba a frissítésnél:", error);
+        res.status(500).json({ message: "Szerver hiba a frissítés során." }); 
+    }
 };

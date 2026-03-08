@@ -18,33 +18,35 @@ exports.globalSearch = async (req, res) => {
                 m.megjelenes_ev_start AS ev, 
                 m.tipus 
             FROM media m
-            -- Kapcsolatok a magyarított táblákkal
+            -- Kapcsolatok a táblákkal
             LEFT JOIN kategoriak k ON m.kategoria_id = k.id
             LEFT JOIN rendezok r ON m.rendezo_id = r.id
             LEFT JOIN media_orszagok mo ON m.id = mo.media_id
             LEFT JOIN nemzetisegek n ON mo.nemzetiseg_id = n.id
             WHERE 
                 m.cim LIKE ?           -- Keresés a címben
-                OR k.nev LIKE ?        -- Keresés a kategóriában (pl. "Sci-fi")
+                OR m.leiras LIKE ?     -- Keresés a leírásban
+                OR k.nev LIKE ?        -- Keresés a kategóriában
                 OR r.nev LIKE ?        -- Keresés a rendező nevében
-                OR n.nev LIKE ?        -- Keresés az ország nevében (pl. "Magyar")
+                OR r.nemzetiseg LIKE ? -- Keresés a RENDEZŐ NEMZETISÉGÉBEN (pl. "Brit")
+                OR n.nev LIKE ?        -- Keresés az külön ország táblában
             ORDER BY m.cim ASC
             LIMIT 20;
         `;
 
-        // Itt figyelj: 4 kérdőjel = 4 paraméter a tömbben!
+        // 6 darab kérdőjel van a WHERE részben, tehát 6-szor kell átadni a keresett szót!
         const [results] = await db.query(query, [
             searchQuery, 
             searchQuery, 
             searchQuery, 
+            searchQuery,
+            searchQuery,
             searchQuery
         ]);
 
         res.status(200).json(results);
     } catch (err) {
         console.error("Keresési hiba:", err);
-        // Ha "Illegal mix of collations" hibát látsz a konzolon, 
-        // akkor a nemzetisegek táblát is magyarítani kell (utf8mb4_hungarian_ci)!
         res.status(500).json({ message: "Hiba történt a keresés során." });
     }
 };
