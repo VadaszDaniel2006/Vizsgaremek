@@ -1,27 +1,65 @@
 const db = require('../config/db');
 
 exports.getAllMovies = async (req, res) => {
-    try {
-        const query = `
-            SELECT 
-                m.*,
-                k.nev AS kategoria,
-                r.nev AS rendezo,
-                GROUP_CONCAT(
-                    DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
-                    SEPARATOR ';;;'
-                ) AS platform_raw
-            FROM media m
-            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
-            LEFT JOIN rendezok r ON m.rendezo_id = r.id
-            LEFT JOIN media_platformok mp ON m.id = mp.media_id
-            LEFT JOIN platformok p ON mp.platform_id = p.id
-            WHERE m.tipus = 'film'
-            GROUP BY m.id
-            ORDER BY m.megjelenes_ev_start DESC
-        `;
+    const userId = req.query.userId;
 
-        const [rows] = await db.query(query);
+    try {
+        let query = "";
+        let params = [];
+
+        // HA BE VAN JELENTKEZVE: Okos ajánlórendszer
+        if (userId && userId !== 'undefined' && userId !== 'null' && userId !== '') {
+            query = `
+                SELECT 
+                    m.*,
+                    k.nev AS kategoria,
+                    r.nev AS rendezo,
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
+                        SEPARATOR ';;;'
+                    ) AS platform_raw
+                FROM media m
+                LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+                LEFT JOIN rendezok r ON m.rendezo_id = r.id
+                LEFT JOIN media_platformok mp ON m.id = mp.media_id
+                LEFT JOIN platformok p ON mp.platform_id = p.id
+                LEFT JOIN (
+                    -- Megnézzük a kedvenc kategóriákat
+                    SELECT DISTINCT kategoria_id 
+                    FROM kedvenc_kategoriak 
+                    WHERE felhasznalo_id = ?
+                ) AS user_prefs ON m.kategoria_id = user_prefs.kategoria_id
+                WHERE m.tipus = 'film'
+                GROUP BY m.id, user_prefs.kategoria_id
+                -- 3-szoros esély a kedvenceknek, de a többi is bekerülhet (kevert lista!)
+                ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC
+                LIMIT 17
+            `;
+            params.push(userId);
+        } else {
+            // HA NINCS BEJELENTKEZVE: Sima 17 random film
+            query = `
+                SELECT 
+                    m.*,
+                    k.nev AS kategoria,
+                    r.nev AS rendezo,
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
+                        SEPARATOR ';;;'
+                    ) AS platform_raw
+                FROM media m
+                LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+                LEFT JOIN rendezok r ON m.rendezo_id = r.id
+                LEFT JOIN media_platformok mp ON m.id = mp.media_id
+                LEFT JOIN platformok p ON mp.platform_id = p.id
+                WHERE m.tipus = 'film'
+                GROUP BY m.id
+                ORDER BY RAND()
+                LIMIT 17
+            `;
+        }
+
+        const [rows] = await db.query(query, params);
 
         const movies = rows.map(movie => {
             let platform_lista = [];
@@ -37,7 +75,6 @@ exports.getAllMovies = async (req, res) => {
             delete movie.platform_raw;
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
-            // Hogy a frontend kód ne törjön el, visszaadjuk 'megjelenes_ev' néven a start évet
             const megjelenes_ev = movie.megjelenes_ev_start;
 
             return { 
@@ -94,7 +131,6 @@ exports.getTop50Movies = async (req, res) => {
             delete movie.platform_raw;
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
-            // Hogy a frontend kód ne törjön el, visszaadjuk 'megjelenes_ev' néven a start évet
             const megjelenes_ev = movie.megjelenes_ev_start;
 
             return { 

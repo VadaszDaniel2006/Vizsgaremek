@@ -74,7 +74,6 @@ exports.deleteReportedReview = async (req, res) => {
 
 exports.getAllMedia = async (req, res) => {
     try {
-        // Platform azonosító lekérése a listázáshoz (a szerkesztő ablak betöltéséhez)
         const sql = `
             SELECT m.id, m.tipus, m.cim, m.megjelenes_ev_start, m.poszter_url, m.elozetes_url, 
                    m.alap_rating, m.kategoria_id, m.leiras, m.megjelenes_ev_end, m.evadok_szama, m.hossz_perc,
@@ -106,11 +105,10 @@ exports.deleteMedia = async (req, res) => {
 };
 
 // =========================================================================
-// BIZTONSÁGOS FELTÖLTÉS ÉS SZERKESZTÉS (Platform kezeléssel)
+// BIZTONSÁGOS FELTÖLTÉS (Okos ID Generálással)
 // =========================================================================
 
 exports.addMedia = async (req, res) => {
-    // Kinyerjük a platform_id-t is a kérésből
     const { tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, kategoria_id, alap_rating, rendezo_nev, nemzetiseg_nev, platform_id } = req.body;
     
     if (!cim || !leiras || !poszter_url || !megjelenes_ev_start) {
@@ -118,6 +116,18 @@ exports.addMedia = async (req, res) => {
     }
     
     try {
+        // --- OKOS ID GENERÁTOR LOGIKA ---
+        let newId;
+        if (tipus === 'film') {
+            // Megkeressük a legnagyobb ID-t, ami film és 10000 alatti
+            const [result] = await db.query("SELECT MAX(id) as maxId FROM media WHERE tipus = 'film' AND id < 10000");
+            newId = (result[0].maxId || 0) + 1;
+        } else {
+            // Megkeressük a legnagyobb ID-t, ami sorozat és 10000 feletti
+            const [result] = await db.query("SELECT MAX(id) as maxId FROM media WHERE tipus = 'sorozat' AND id >= 10000");
+            newId = (result[0].maxId || 10100) + 1; // Ha nincs még, 10101 lesz
+        }
+
         let finalRendezoId = null;
 
         // RENDEZŐ LOGIKA
@@ -142,19 +152,18 @@ exports.addMedia = async (req, res) => {
         const finalHossz = (tipus === 'film' && hossz_perc) ? parseInt(hossz_perc) : null;
         const finalKategoria = (kategoria_id && kategoria_id.trim() !== '') ? kategoria_id : null;
 
-        // Media tábla mentése
+        // Bekerült az "id" oszlop a beszúrásba!
         const sql = `INSERT INTO media 
-            (tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, alap_rating, kategoria_id, rating, rendezo_id) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            (id, tipus, cim, leiras, poszter_url, elozetes_url, megjelenes_ev_start, megjelenes_ev_end, evadok_szama, hossz_perc, alap_rating, kategoria_id, rating, rendezo_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
             
-        const params = [ tipus, cim, leiras, poszter_url, elozetes_url || null, finalEvStart, finalEvEnd, finalEvadok, finalHossz, finalRating, finalKategoria, finalRating, finalRendezoId ];
+        const params = [ newId, tipus, cim, leiras, poszter_url, elozetes_url || null, finalEvStart, finalEvEnd, finalEvadok, finalHossz, finalRating, finalKategoria, finalRating, finalRendezoId ];
         
-        const [newMedia] = await db.query(sql, params); 
-        const mediaId = newMedia.insertId;
+        await db.query(sql, params); 
 
-        // PLATFORM MENTÉSE (ha adtak meg)
+        // PLATFORM MENTÉSE (A kiszámolt newId-val)
         if (platform_id && platform_id !== '') {
-            await db.query('INSERT INTO media_platformok (media_id, platform_id) VALUES (?, ?)', [mediaId, parseInt(platform_id)]);
+            await db.query('INSERT INTO media_platformok (media_id, platform_id) VALUES (?, ?)', [newId, parseInt(platform_id)]);
         }
 
         res.status(201).json({ message: "Sikeresen feltöltve az adatbázisba!" });
@@ -207,10 +216,8 @@ exports.updateMedia = async (req, res) => {
         await db.query(sql, params); 
 
         // PLATFORM FRISSÍTÉSE
-        // Először töröljük a régi platform kapcsolatokat a media_id alapján
         await db.query('DELETE FROM media_platformok WHERE media_id = ?', [id]);
         
-        // Majd beszúrjuk az újat, ha van kiválasztva
         if (platform_id && platform_id !== '') {
             await db.query('INSERT INTO media_platformok (media_id, platform_id) VALUES (?, ?)', [id, parseInt(platform_id)]);
         }

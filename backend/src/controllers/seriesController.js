@@ -1,28 +1,62 @@
 const db = require('../config/db');
 
 exports.getAllSeries = async (req, res) => {
-    try {
-        const query = `
-            SELECT 
-                m.*, 
-                k.nev AS kategoria, 
-                r.nev AS rendezo,
-                -- Összefűzzük a platformokat egy listává
-                GROUP_CONCAT(
-                    DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
-                    SEPARATOR ';;;'
-                ) AS platform_raw
-            FROM media m
-            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
-            LEFT JOIN rendezok r ON m.rendezo_id = r.id
-            LEFT JOIN media_platformok mp ON m.id = mp.media_id
-            LEFT JOIN platformok p ON mp.platform_id = p.id
-            WHERE m.tipus = 'sorozat'
-            GROUP BY m.id
-            ORDER BY m.megjelenes_ev_start DESC
-        `;
+    const userId = req.query.userId;
 
-        const [rows] = await db.query(query);
+    try {
+        let query = "";
+        let params = [];
+
+        if (userId && userId !== 'undefined' && userId !== 'null' && userId !== '') {
+            query = `
+                SELECT 
+                    m.*, 
+                    k.nev AS kategoria, 
+                    r.nev AS rendezo,
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
+                        SEPARATOR ';;;'
+                    ) AS platform_raw
+                FROM media m
+                LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+                LEFT JOIN rendezok r ON m.rendezo_id = r.id
+                LEFT JOIN media_platformok mp ON m.id = mp.media_id
+                LEFT JOIN platformok p ON mp.platform_id = p.id
+                LEFT JOIN (
+                    -- Megnézzük a sorozatoknál is a kedvenc kategóriákat
+                    SELECT DISTINCT kategoria_id 
+                    FROM kedvenc_kategoriak 
+                    WHERE felhasznalo_id = ?
+                ) AS user_prefs ON m.kategoria_id = user_prefs.kategoria_id
+                WHERE m.tipus = 'sorozat'
+                GROUP BY m.id, user_prefs.kategoria_id
+                ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC
+                LIMIT 12
+            `;
+            params.push(userId);
+        } else {
+            query = `
+                SELECT 
+                    m.*, 
+                    k.nev AS kategoria, 
+                    r.nev AS rendezo,
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
+                        SEPARATOR ';;;'
+                    ) AS platform_raw
+                FROM media m
+                LEFT JOIN kategoriak k ON m.kategoria_id = k.id
+                LEFT JOIN rendezok r ON m.rendezo_id = r.id
+                LEFT JOIN media_platformok mp ON m.id = mp.media_id
+                LEFT JOIN platformok p ON mp.platform_id = p.id
+                WHERE m.tipus = 'sorozat'
+                GROUP BY m.id
+                ORDER BY RAND()
+                LIMIT 12
+            `;
+        }
+
+        const [rows] = await db.query(query, params);
 
         const series = rows.map(serie => {
             let platform_lista = [];
@@ -35,22 +69,17 @@ exports.getAllSeries = async (req, res) => {
                 });
             }
 
-            // Kiszűrjük a technikai mezőt
             delete serie.platform_raw;
 
-            // --- KOMPATIBILITÁSI RÉTEGEK ---
-            
-            // 1. Évszám formázás: A frontend 'megjelenes_ev' mezőt vár (pl: "2016-2026")
             const ev_szoveg = serie.megjelenes_ev_end 
                 ? `${serie.megjelenes_ev_start}-${serie.megjelenes_ev_end}` 
                 : `${serie.megjelenes_ev_start}-`;
 
-            // 2. Első platform adatai a ModalManager.js logó megjelenítéséhez
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
             return { 
                 ...serie, 
-                megjelenes_ev: ev_szoveg, // Visszaadjuk a kombinált stringet
+                megjelenes_ev: ev_szoveg, 
                 platform_lista, 
                 platform_nev: elsoPlatform.nev || null,
                 platform_logo: elsoPlatform.logo || null,
@@ -102,7 +131,6 @@ exports.getTop50Series = async (req, res) => {
             delete item.platform_raw;
             const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
-            // Évszám formázás ide is, hogy ne törjön el a kártya a frontend-en
             const ev_szoveg = item.megjelenes_ev_end 
                 ? `${item.megjelenes_ev_start}-${item.megjelenes_ev_end}` 
                 : `${item.megjelenes_ev_start}-`;

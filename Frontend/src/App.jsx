@@ -20,8 +20,8 @@ import CinemaMap from './pages/CinemaMap';
 
 import './App.css'; 
 
-// --- HERO SLIDE ---
-const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, openTrailer, interactionUpdate }) => {
+// --- HERO SLIDE (Itt kapta meg az openReviews propot) ---
+const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, openTrailer, interactionUpdate, openReviews }) => {
     const [status, setStatus] = useState({ favorite: false, listed: false });
 
     useEffect(() => {
@@ -62,18 +62,20 @@ const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handl
                 <div className="slide-left-info">
                     <h1>{movie.cim}</h1>
                     <div className="movie-meta-tags">
-                        <span className="rating-tag"><i className="fas fa-star"></i> {movie.rating}</span>
+                        <span className="rating-tag"><i className="fas fa-star"></i> {movie.rating || movie.alap_rating}</span>
                         <span className="year-tag">{movie.megjelenes_ev}</span>
                         <span className="genre-tag">{movie.kategoria}</span>
                     </div>
                     <div className="description-block">
                         <p className="plot">{movie.leiras}</p>
-                        <div className="credits"><p><strong>Rendező:</strong> {movie.rendezo}</p></div>
+                        <div className="credits"><p><strong>Rendező:</strong> {movie.rendezo || 'Ismeretlen'}</p></div>
                     </div>
                     <div className="info-buttons">
                         <button className="btn-watch" onClick={() => openStreaming(movie)}><i className="fas fa-play"></i> Megnézem</button>
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.favorite ? activeStyle : {}) }} onClick={toggleFav}><i className="fas fa-heart"></i></button>
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.listed ? activeStyle : {}) }} onClick={toggleList}><i className="fas fa-plus"></i></button>
+                        {/* ÚJ KOMMENT GOMB A HERO SZEKCIÓBAN */}
+                        <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px' }} onClick={() => openReviews(movie)}><i className="fas fa-comment-alt"></i></button>
                     </div>
                 </div>
                 <div className="slide-right-image-frame">
@@ -107,21 +109,26 @@ function App() {
   const [reviewMovie, setReviewMovie] = useState(null); 
   const [interactionUpdate, setInteractionUpdate] = useState(0);
 
-  const fetchAllData = useCallback(async () => {
+  const fetchAllData = useCallback(async (currentUserId = '') => {
+      const uid = typeof currentUserId === 'object' ? '' : currentUserId;
       try {
-        const movieResponse = await fetch('http://localhost:5000/api/filmek', { cache: 'no-store' });
+        const movieResponse = await fetch(`http://localhost:5000/api/filmek?userId=${uid}`, { cache: 'no-store' });
         const movieJson = await movieResponse.json();
         
-        const seriesResponse = await fetch('http://localhost:5000/api/sorozatok', { cache: 'no-store' });
+        const seriesResponse = await fetch(`http://localhost:5000/api/sorozatok?userId=${uid}`, { cache: 'no-store' });
         const seriesJson = await seriesResponse.json();
         
-        if(movieJson.data) { setMoviesData(movieJson.data); setFeaturedMovies(movieJson.data.slice(0, 5)); }
-        if(seriesJson.data) { setSeriesData(seriesJson.data); }
+        if(movieJson.data) { 
+            setFeaturedMovies(movieJson.data.slice(0, 5)); 
+            setMoviesData(movieJson.data.slice(5, 17)); 
+        }
+        if(seriesJson.data) { 
+            setSeriesData(seriesJson.data.slice(0, 12)); 
+        }
         setLoading(false); 
       } catch (error) { 
           console.error(error); 
           setLoading(false); 
-          showNotification("Nem sikerült kapcsolódni a szerverhez!", "info"); 
       }
   }, []);
 
@@ -132,36 +139,32 @@ function App() {
               try {
                   const res = await fetch('http://localhost:5000/api/auth/me', {
                       method: 'GET',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': `Bearer ${token}`
-                      }
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
                   });
 
                   if (res.ok) {
                       const data = await res.json();
                       setUser(data.user); 
+                      fetchAllData(data.user.id);
+                      return;
                   } else {
                       localStorage.removeItem('token');
-                      setUser(null);
                   }
-              } catch (error) {
-                  console.error("Nem sikerült az auto-login:", error);
-              }
+              } catch (error) { console.error("Nem sikerült az auto-login:", error); }
           }
+          fetchAllData('');
       };
 
       checkLoggedInUser();
-  }, []);
+  }, [fetchAllData]);
 
-  useEffect(() => { fetchAllData(); }, [fetchAllData]);
   useEffect(() => { if (featuredMovies.length === 0) return; const interval = setInterval(() => { setCurrentSlide((prev) => (prev + 1) % featuredMovies.length); }, 8000); return () => clearInterval(interval); }, [featuredMovies]);
   useEffect(() => { window.onscroll = () => setScrolled(window.pageYOffset > 50); return () => (window.onscroll = null); }, []);
 
   const showNotification = (message, type = 'success') => { setToast({ message, type }); };
   
   const handleReviewChange = () => { 
-      fetchAllData(); 
+      fetchAllData(user ? user.id : ''); 
       setInteractionUpdate(prev => prev + 1); 
   };
 
@@ -274,10 +277,30 @@ function App() {
       } catch (error) { showNotification("Szerver hiba.", "error"); }
   };
 
-  const handleLogin = (userData) => { setUser(userData.user); localStorage.setItem('token', userData.token); showNotification(`Sikeres belépés! Üdv, ${userData.user.name}!`, 'success'); };
-  const handleUpdateProfile = (updatedData) => { setUser(prev => ({ ...prev, ...updatedData })); setProfileModalOpen(false); showNotification('Profil sikeresen frissítve!', 'success'); };
+  const handleLogin = (userData) => { 
+      setUser(userData.user); 
+      localStorage.setItem('token', userData.token); 
+      showNotification(`Sikeres belépés! Üdv, ${userData.user.name}!`, 'success'); 
+      setAuthModalOpen(false);
+      fetchAllData(userData.user.id);
+  };
+
+  const handleUpdateProfile = (updatedData) => { 
+      setUser(prev => ({ ...prev, ...updatedData })); 
+      setProfileModalOpen(false); 
+      showNotification('Profil sikeresen frissítve!', 'success'); 
+  };
+
   const initiateLogout = () => { setShowLogoutConfirm(true); };
-  const confirmLogout = () => { setUser(null); localStorage.removeItem('token'); setShowLogoutConfirm(false); showNotification('Sikeresen kijelentkeztél.', 'info'); window.location.href = '/'; };
+
+  const confirmLogout = () => { 
+      setUser(null); 
+      localStorage.removeItem('token'); 
+      setShowLogoutConfirm(false); 
+      showNotification('Sikeresen kijelentkeztél.', 'info'); 
+      window.location.href = '/'; 
+  };
+
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % featuredMovies.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + featuredMovies.length) % featuredMovies.length);
 
@@ -311,7 +334,8 @@ function App() {
                                         handleAddToMyList={handleAddToMyList}
                                         handleRemoveFromList={handleRemoveFromList}
                                         openTrailer={openTrailer}
-                                        interactionUpdate={interactionUpdate} 
+                                        interactionUpdate={interactionUpdate}
+                                        openReviews={openReviews} /* ITT ADJUK ÁT A FUNKCIÓT A HERO SLIDE-NAK */
                                     />
                                 ))}
                             </div>
@@ -356,74 +380,16 @@ function App() {
                 </main>
             } />
             
-            {/* --- ADATLAP ÚTVONALAK --- */}
-            <Route path="/film/:id" element={
-                <MediaDetails 
-                    type="film" 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    user={user}
-                    onAddToFav={handleAddToFav}
-                    onRemoveFromFav={handleRemoveFromFav}
-                    onAddToList={handleAddToMyList}
-                    onRemoveFromList={handleRemoveFromList}
-                    onOpenReviews={openReviews}
-                    interactionUpdate={interactionUpdate}
-                />
-            } />
-            <Route path="/sorozat/:id" element={
-                <MediaDetails
-                    type="sorozat" 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    user={user}
-                    onAddToFav={handleAddToFav}
-                    onRemoveFromFav={handleRemoveFromFav}
-                    onAddToList={handleAddToMyList}
-                    onRemoveFromList={handleRemoveFromList}
-                    onOpenReviews={openReviews}
-                    interactionUpdate={interactionUpdate}
-                />
-            } />
+            <Route path="/film/:id" element={<MediaDetails type="film" openStreaming={openStreaming} openTrailer={openTrailer} user={user} onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav} onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList} onOpenReviews={openReviews} interactionUpdate={interactionUpdate} />} />
+            <Route path="/sorozat/:id" element={<MediaDetails type="sorozat" openStreaming={openStreaming} openTrailer={openTrailer} user={user} onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav} onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList} onOpenReviews={openReviews} interactionUpdate={interactionUpdate} />} />
             
-            {/* --- TOP 50 ÚTVONALAK --- */}
-            <Route path="/top-50-filmek" element={
-                <Top50Page
-                    type="film" 
-                    user={user} 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    openReviews={openReviews}
-                    handleAddToFav={handleAddToFav} 
-                    handleRemoveFromFav={handleRemoveFromFav} 
-                    handleAddToMyList={handleAddToMyList} 
-                    handleRemoveFromList={handleRemoveFromList} 
-                    interactionUpdate={interactionUpdate} 
-                />
-            } />
-            <Route path="/top-50-sorozatok" element={
-                <Top50Page 
-                    type="sorozat" 
-                    user={user} 
-                    openStreaming={openStreaming} 
-                    openTrailer={openTrailer}
-                    openReviews={openReviews}
-                    handleAddToFav={handleAddToFav} 
-                    handleRemoveFromFav={handleRemoveFromFav} 
-                    handleAddToMyList={handleAddToMyList} 
-                    handleRemoveFromList={handleRemoveFromList} 
-                    interactionUpdate={interactionUpdate} 
-                />
-            } />
+            <Route path="/top-50-filmek" element={<Top50Page type="film" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
+            <Route path="/top-50-sorozatok" element={<Top50Page type="sorozat" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
 
-            {/* --- EGYÉB ÚTVONALAK --- */}
             <Route path="/heti-ajanlo" element={<WeeklyPick user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
             <Route path="/mozik-terkep" element={<CinemaMap />} />
             <Route path="/kereses" element={<Search />} />
-            
-            {/* --- FRISSÍTETT ADMIN ÚTVONAL --- */}
-            <Route path="/admin" element={<AdminDashboard refreshApp={fetchAllData} />} />
-            
+            <Route path="/admin" element={<AdminDashboard refreshApp={() => fetchAllData(user ? user.id : '')} />} />
         </Routes>
 
         <Footer />
