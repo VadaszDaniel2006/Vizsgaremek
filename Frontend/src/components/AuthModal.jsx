@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Toast from './Toast'; // Toast beimportálása
+import Toast from './Toast';
 
 // Kategóriák listája
 const CATEGORIES = [
@@ -26,13 +26,14 @@ export default function AuthModal({ onClose, onLogin }) {
   const [username, setUsername] = useState('');
   const [favoriteCategories, setFavoriteCategories] = useState([]); 
   
+  // --- ÚJ: JELSZÓ LÁTHATÓSÁG ÁLLAPOTOK ---
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
-  // Toast állapot (üzenet és típus)
   const [toast, setToast] = useState(null);
 
-  // Kategória váltás
   const toggleCategory = (catId) => {
     let newCategories = [...favoriteCategories];
     if (newCategories.includes(catId)) {
@@ -43,13 +44,11 @@ export default function AuthModal({ onClose, onLogin }) {
     setFavoriteCategories(newCategories);
   };
 
-  // --- API KOMMUNIKÁCIÓ ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    // 1. Validáció
     if (isRegister) {
         if (password !== confirmPassword) {
             setError("A jelszavak nem egyeznek!");
@@ -61,7 +60,6 @@ export default function AuthModal({ onClose, onLogin }) {
             setLoading(false);
             return;
         }
-        // --- JAVÍTÁS: KÖTELEZŐ KATEGÓRIA VÁLASZTÁS ---
         if (favoriteCategories.length === 0) {
              setError("Válassz legalább 1 kedvenc kategóriát!");
              setLoading(false);
@@ -72,7 +70,6 @@ export default function AuthModal({ onClose, onLogin }) {
     try {
         const API_URL = 'http://localhost:5000/api/auth';
 
-        // --- REGISZTRÁCIÓ ---
         if (isRegister) {
             const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
@@ -82,28 +79,24 @@ export default function AuthModal({ onClose, onLogin }) {
                     email: email,
                     password: password,
                     username: username,
-                    favoriteCategories: favoriteCategories // Elküldjük a kategóriákat
+                    favoriteCategories: favoriteCategories 
                 })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // SIKERES REGISZTRÁCIÓ - Alert helyett Toast
                 setToast({ message: data.message || "Sikeres regisztráció! Most már bejelentkezhetsz.", type: 'success' });
-                
-                setIsRegister(false); // Átváltás belépésre
+                setIsRegister(false); 
                 setError('');
-                // Mezők ürítése
                 setPassword('');
                 setConfirmPassword('');
-                // Opcionális: kategóriák ürítése, bár ha belépésre váltunk, nem látszik
-                // setFavoriteCategories([]); 
+                setShowPassword(false);
+                setShowConfirmPassword(false);
             } else {
                 setError(data.message || "Hiba történt a regisztrációkor.");
             }
         } 
-        // --- BEJELENTKEZÉS ---
         else {
             const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
@@ -136,14 +129,7 @@ export default function AuthModal({ onClose, onLogin }) {
     <div className="modal active auth-overlay" onClick={onClose}>
       <div className="modal-content auth-card" onClick={(e) => e.stopPropagation()}>
         
-        {/* TOAST MEGJELENÍTÉSE */}
-        {toast && (
-            <Toast 
-                message={toast.message} 
-                type={toast.type} 
-                onClose={() => setToast(null)} 
-            />
-        )}
+        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
         <button className="close-auth" onClick={onClose}>
             <i className="fas fa-times"></i>
@@ -158,71 +144,68 @@ export default function AuthModal({ onClose, onLogin }) {
 
         <form onSubmit={handleSubmit} className="auth-form">
           
-          {/* REGISZTRÁCIÓS MEZŐK */}
           {isRegister && (
             <>
                 <div className="input-group">
-                    <input 
-                        type="text" 
-                        placeholder=" " 
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required={isRegister} 
-                    />
+                    <input type="text" placeholder=" " value={name} onChange={(e) => setName(e.target.value)} required={isRegister} />
                     <label>Teljes név</label>
                 </div>
 
                 <div className="input-group">
-                    <input 
-                        type="text" 
-                        placeholder=" " 
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required={isRegister}
-                    />
+                    <input type="text" placeholder=" " value={username} onChange={(e) => setUsername(e.target.value)} required={isRegister} />
                     <label>Felhasználónév</label>
                 </div>
             </>
           )}
 
-          {/* KÖZÖS MEZŐK */}
           <div className="input-group">
-            <input 
-              type="email" 
-              placeholder=" " 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required 
-            />
+            <input type="email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)} required />
             <label>Email cím</label>
           </div>
 
-          <div className="input-group">
+          {/* JELSZÓ MEZŐ SZEM IKONNAL */}
+          <div className="input-group" style={{ position: 'relative' }}>
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               placeholder=" " 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required 
+              style={{ paddingRight: '45px' }}
             />
             <label>Jelszó</label>
+            <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)} 
+                style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem', padding: 0, zIndex: 10 }}
+                tabIndex="-1"
+            >
+                <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+            </button>
           </div>
 
-          {/* JELSZÓ MEGERŐSÍTÉS */}
           {isRegister && (
-            <div className="input-group">
+            <div className="input-group" style={{ position: 'relative' }}>
               <input 
-                type="password" 
+                type={showConfirmPassword ? "text" : "password"} 
                 placeholder=" " 
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required={isRegister}
+                style={{ paddingRight: '45px' }}
               />
               <label>Jelszó megerősítése</label>
+              <button 
+                  type="button" 
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                  style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem', padding: 0, zIndex: 10 }}
+                  tabIndex="-1"
+              >
+                  <i className={showConfirmPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+              </button>
             </div>
           )}
 
-          {/* KATEGÓRIA VÁLASZTÓ - CSAK REGISZTRÁCIÓKOR */}
           {isRegister && (
              <div className="form-section" style={{textAlign: 'left', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '15px'}}>
                 <h4 style={{fontSize: '1rem', marginBottom: '10px', color: '#ddd'}}>Kedvenc kategóriák (min. 1)</h4>

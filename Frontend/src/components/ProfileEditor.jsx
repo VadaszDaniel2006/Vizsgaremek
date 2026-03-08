@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// Kategóriák listája
 const CATEGORIES = [
     { id: 'action', name: 'Akció', icon: '🔥' },
     { id: 'comedy', name: 'Vígjáték', icon: '😂' },
@@ -15,7 +14,6 @@ const CATEGORIES = [
 ];
 
 export default function ProfileEditor({ user, onClose, onSave }) {
-    // Űrlap állapotok (Email eltávolítva)
     const [formData, setFormData] = useState({
         name: user.name || '',
         username: user.username || '',
@@ -23,18 +21,19 @@ export default function ProfileEditor({ user, onClose, onSave }) {
         favoriteCategories: user.favoriteCategories || []
     });
 
-    // --- ÚJ: JELSZÓ ÁLLAPOTOK ---
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    // --- ÚJ: JELSZÓ LÁTHATÓSÁG ÁLLAPOTOK ---
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const [previewImage, setPreviewImage] = useState(user.avatar || 'https://via.placeholder.com/150');
     const [isLoading, setIsLoading] = useState(false);
-    
-    // Állapot a visszajelző üzeneteknek
     const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
 
-    // Hibaüzenet automatikus eltüntetése 4mp után
     useEffect(() => {
         if (statusMessage.text && statusMessage.type === 'error') {
             const timer = setTimeout(() => setStatusMessage({ type: '', text: '' }), 4000);
@@ -42,11 +41,9 @@ export default function ProfileEditor({ user, onClose, onSave }) {
         }
     }, [statusMessage]);
 
-    // Kép feltöltés kezelése
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // 5MB limit
             if (file.size > 5 * 1024 * 1024) { 
                 setStatusMessage({ type: 'error', text: '⚠️ A kép túl nagy! (Max 5MB)' });
                 return;
@@ -55,7 +52,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
             reader.onloadend = () => {
                 setPreviewImage(reader.result);
                 setFormData(prev => ({ ...prev, avatar: reader.result }));
-                setStatusMessage({ type: '', text: '' }); // Hiba törlése
+                setStatusMessage({ type: '', text: '' }); 
             };
             reader.readAsDataURL(file);
         }
@@ -65,15 +62,11 @@ export default function ProfileEditor({ user, onClose, onSave }) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Kategória váltás (min 1, max 5)
     const toggleCategory = (catId) => {
         let newCategories = [...formData.favoriteCategories];
-        
         if (newCategories.includes(catId)) {
-            // KIVÉTEL
             newCategories = newCategories.filter(id => id !== catId);
         } else {
-            // HOZZÁADÁS
             if (newCategories.length < 5) {
                 newCategories.push(catId);
                 setStatusMessage({ type: '', text: '' }); 
@@ -84,17 +77,14 @@ export default function ProfileEditor({ user, onClose, onSave }) {
         setFormData({ ...formData, favoriteCategories: newCategories });
     };
 
-    // Mentés küldése a szervernek
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // ELLENŐRZÉS: LEGALÁBB 1 KATEGÓRIA
         if (formData.favoriteCategories.length === 0) {
             setStatusMessage({ type: 'error', text: '⚠️ Legalább egy kategóriát kötelező kiválasztani!' });
             return; 
         }
 
-        // --- ÚJ: JELSZÓ VALIDÁCIÓ ---
         if (newPassword || currentPassword) {
             if (!currentPassword) {
                 setStatusMessage({ type: 'error', text: '⚠️ Az új jelszó beállításához meg kell adnod a jelenlegit!' });
@@ -109,7 +99,6 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                 return;
             }
         }
-        // -----------------------------
 
         setIsLoading(true);
         setStatusMessage({ type: '', text: '' });
@@ -127,7 +116,6 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                     username: formData.username,
                     avatar: formData.avatar,
                     favoriteCategories: formData.favoriteCategories,
-                    // ÚJ: jelszavakat is küldjük, ha módosítani akarja
                     currentPassword: currentPassword || undefined,
                     newPassword: newPassword || undefined
                 })
@@ -220,27 +208,80 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                                 <input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="Pl. kissjanos99" />
                             </div>
 
-                            {/* --- ÚJ: JELSZÓ MÓDOSÍTÁSA SZEKCIÓ --- */}
+                            {/* --- JELSZÓ MÓDOSÍTÁSA SZEKCIÓ --- */}
                             <h4 style={{ marginTop: '25px', marginBottom: '15px', color: 'white', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
                                 <i className="fas fa-lock"></i> Jelszó módosítása <span style={{fontSize: '0.8rem', color: '#888'}}>(Opcionális)</span>
                             </h4>
                             
+                            {/* JELENLEGI JELSZÓ */}
                             <div className="profile-input-group">
                                 <label>Jelenlegi jelszó</label>
-                                <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="Ide írd a régit, ha módosítani akarod..." />
+                                <div style={{ position: 'relative' }}>
+                                    <input 
+                                        type={showCurrentPassword ? "text" : "password"} 
+                                        value={currentPassword} 
+                                        onChange={(e) => setCurrentPassword(e.target.value)} 
+                                        placeholder="Ide írd a régit, ha módosítani akarod..." 
+                                        style={{ width: '100%', paddingRight: '45px', boxSizing: 'border-box' }}
+                                    />
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setShowCurrentPassword(!showCurrentPassword)} 
+                                        style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem', padding: 0 }}
+                                        tabIndex="-1"
+                                    >
+                                        <i className={showCurrentPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                {/* ÚJ JELSZÓ */}
                                 <div className="profile-input-group">
                                     <label>Új jelszó</label>
-                                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} disabled={!currentPassword} />
+                                    <div style={{ position: 'relative' }}>
+                                        <input 
+                                            type={showNewPassword ? "text" : "password"} 
+                                            value={newPassword} 
+                                            onChange={(e) => setNewPassword(e.target.value)} 
+                                            disabled={!currentPassword}
+                                            style={{ width: '100%', paddingRight: '45px', boxSizing: 'border-box' }}
+                                        />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setShowNewPassword(!showNewPassword)} 
+                                            disabled={!currentPassword}
+                                            style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: currentPassword ? '#94a3b8' : '#555', cursor: currentPassword ? 'pointer' : 'default', fontSize: '1.2rem', padding: 0 }}
+                                            tabIndex="-1"
+                                        >
+                                            <i className={showNewPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+                                        </button>
+                                    </div>
                                 </div>
+                                
+                                {/* ÚJ JELSZÓ ÚJRA */}
                                 <div className="profile-input-group">
                                     <label>Új jelszó újra</label>
-                                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={!currentPassword} />
+                                    <div style={{ position: 'relative' }}>
+                                        <input 
+                                            type={showConfirmPassword ? "text" : "password"} 
+                                            value={confirmPassword} 
+                                            onChange={(e) => setConfirmPassword(e.target.value)} 
+                                            disabled={!currentPassword} 
+                                            style={{ width: '100%', paddingRight: '45px', boxSizing: 'border-box' }}
+                                        />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                                            disabled={!currentPassword}
+                                            style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: currentPassword ? '#94a3b8' : '#555', cursor: currentPassword ? 'pointer' : 'default', fontSize: '1.2rem', padding: 0 }}
+                                            tabIndex="-1"
+                                        >
+                                            <i className={showConfirmPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            {/* ------------------------------------- */}
                         </div>
                     </div>
 

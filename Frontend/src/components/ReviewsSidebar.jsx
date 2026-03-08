@@ -57,7 +57,6 @@ const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRe
         finally { setConfirmOpen(false); setReviewToDelete(null); }
     };
 
-    // --- ÚJ: JELENTÉS BEKÜLDÉSE ---
     const executeReport = async () => {
         if (!reviewToReport) return;
         try {
@@ -109,7 +108,6 @@ const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRe
                                             </div>
                                             <p className="review-text">{review.comment}</p>
                                             
-                                            {/* --- JAVÍTOTT GOMB ELRENDEZÉS: Szépen elválasztva --- */}
                                             <div className="review-actions" style={{ display: 'flex', gap: '20px', marginTop: '15px', justifyContent: 'flex-end', alignItems: 'center' }}>
                                                 {user && user.username !== review.username && (
                                                     <button title="Jelentés" style={{ color: '#f39c12', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', transition: '0.2s' }}
@@ -137,25 +135,45 @@ const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRe
 
             <ConfirmModal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={executeDelete} title="Vélemény törlése" message="Biztosan törölni szeretnéd ezt a véleményt?" />
             
-            {/* ÚJ JELENTÉS MODAL */}
+            {/* ÚJ, PRÉMIUM JELENTÉS MODAL */}
             {reportModalOpen && (
-                <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10001 }}>
-                    <div style={{ background: '#1f2a48', padding: '30px', borderRadius: '12px', width: '400px', border: '1px solid #444' }}>
-                        <h3 style={{marginTop:0, color: 'white'}}><i className="fas fa-flag" style={{color: '#f39c12'}}></i> Komment jelentése</h3>
-                        <p style={{color: '#aaa', fontSize: '0.9rem', marginBottom: '15px'}}>Kérjük, válaszd ki, miért szeretnéd jelenteni ezt a véleményt az adminisztrátoroknak!</p>
+                <div className="premium-report-overlay" onClick={() => setReportModalOpen(false)}>
+                    <div className="premium-report-card" onClick={e => e.stopPropagation()}>
                         
-                        <select value={reportReason} onChange={(e) => setReportReason(e.target.value)} style={{width:'100%', padding:'10px', background:'#0b0f2b', border:'1px solid #444', color:'white', borderRadius:'4px', marginBottom: '20px'}}>
-                            <option value="Kéretlen tartalom (Spam)">Kéretlen tartalom (Spam)</option>
-                            <option value="Spoiler">Ez egy Spoiler!</option>
-                            <option value="Sértő / Gyűlöletkeltő">Sértő / Gyűlöletkeltő beszéd</option>
-                            <option value="Káromkodás / Obszcén">Káromkodás / Obszcén</option>
-                            <option value="Egyéb">Egyéb</option>
-                        </select>
-
-                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                            <button onClick={() => setReportModalOpen(false)} style={{ background: 'transparent', border: '1px solid #666', color: '#ccc', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}>Mégse</button>
-                            <button onClick={executeReport} style={{ background: '#e67e22', border: 'none', color: 'white', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Jelentés küldése</button>
+                        <div className="premium-report-header">
+                            <div className="premium-report-icon">
+                                <i className="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h2>Jelentés küldése</h2>
+                            <p>Mi a probléma ezzel a véleménnyel?</p>
                         </div>
+                        
+                        <div className="premium-options-container">
+                            {[
+                                "Kéretlen tartalom (Spam)",
+                                "Ez egy Spoiler!",
+                                "Sértő / Gyűlöletkeltő beszéd",
+                                "Káromkodás / Obszcén",
+                                "Egyéb probléma"
+                            ].map((option) => (
+                                <div 
+                                    key={option}
+                                    className={`premium-option-card ${reportReason === option ? 'selected' : ''}`}
+                                    onClick={() => setReportReason(option)}
+                                >
+                                    <span>{option}</span>
+                                    <div className="premium-radio"></div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <button className="premium-btn-submit" onClick={executeReport}>
+                            Jelentés megerősítése
+                        </button>
+                        <button className="premium-btn-cancel" onClick={() => setReportModalOpen(false)}>
+                            Mégse, visszalépek
+                        </button>
+                        
                     </div>
                 </div>
             )}
