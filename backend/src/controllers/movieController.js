@@ -12,19 +12,26 @@ exports.getAllMovies = async (req, res) => {
             query = `
                 SELECT 
                     m.*,
+                    m.premier_datum,
                     k.nev AS kategoria,
                     r.nev AS rendezo,
                     GROUP_CONCAT(
                         DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                         SEPARATOR ';;;'
-                    ) AS platform_raw
+                    ) AS platform_raw,
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT_WS('|||', mo.nev, mo.varos, IFNULL(mo.url, '')) 
+                        SEPARATOR ';;;'
+                    ) AS mozi_raw
                 FROM media m
                 LEFT JOIN kategoriak k ON m.kategoria_id = k.id
                 LEFT JOIN rendezok r ON m.rendezo_id = r.id
                 LEFT JOIN media_platformok mp ON m.id = mp.media_id
                 LEFT JOIN platformok p ON mp.platform_id = p.id
+                LEFT JOIN media_mozik mm ON m.id = mm.media_id
+                LEFT JOIN mozik mo ON mm.mozi_id = mo.id
                 LEFT JOIN (
-                    -- Megnézzük a kedvenc kategóriákat
+                    -- JAVÍTVA: kedvenc_kategoriak (többes szám nélkül)
                     SELECT DISTINCT kategoria_id 
                     FROM kedvenc_kategoriak 
                     WHERE felhasznalo_id = ?
@@ -41,17 +48,24 @@ exports.getAllMovies = async (req, res) => {
             query = `
                 SELECT 
                     m.*,
+                    m.premier_datum,
                     k.nev AS kategoria,
                     r.nev AS rendezo,
                     GROUP_CONCAT(
                         DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                         SEPARATOR ';;;'
-                    ) AS platform_raw
+                    ) AS platform_raw,
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT_WS('|||', mo.nev, mo.varos, IFNULL(mo.url, '')) 
+                        SEPARATOR ';;;'
+                    ) AS mozi_raw
                 FROM media m
                 LEFT JOIN kategoriak k ON m.kategoria_id = k.id
                 LEFT JOIN rendezok r ON m.rendezo_id = r.id
                 LEFT JOIN media_platformok mp ON m.id = mp.media_id
                 LEFT JOIN platformok p ON mp.platform_id = p.id
+                LEFT JOIN media_mozik mm ON m.id = mm.media_id
+                LEFT JOIN mozik mo ON mm.mozi_id = mo.id
                 WHERE m.tipus = 'film'
                 GROUP BY m.id
                 ORDER BY RAND()
@@ -63,7 +77,6 @@ exports.getAllMovies = async (req, res) => {
 
         const movies = rows.map(movie => {
             let platform_lista = [];
-            
             if (movie.platform_raw) {
                 const entries = movie.platform_raw.split(';;;');
                 platform_lista = entries.map(entry => {
@@ -71,16 +84,26 @@ exports.getAllMovies = async (req, res) => {
                     return { nev, logo, url };
                 });
             }
-
             delete movie.platform_raw;
-            const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
+            let mozi_lista = [];
+            if (movie.mozi_raw) {
+                const entries = movie.mozi_raw.split(';;;');
+                mozi_lista = entries.map(entry => {
+                    const [nev, varos, url] = entry.split('|||');
+                    return { nev, varos, url };
+                });
+            }
+            delete movie.mozi_raw;
+
+            const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
             const megjelenes_ev = movie.megjelenes_ev_start;
 
             return { 
                 ...movie,
                 megjelenes_ev, 
                 platform_lista, 
+                mozi_lista, 
                 platform_nev: elsoPlatform.nev || null,
                 platform_logo: elsoPlatform.logo || null,
                 platform_link: elsoPlatform.url || '#'
@@ -100,17 +123,24 @@ exports.getTop50Movies = async (req, res) => {
         const query = `
             SELECT 
                 m.*,
+                m.premier_datum,
                 k.nev AS kategoria,
                 r.nev AS rendezo,
                 GROUP_CONCAT(
                     DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
                     SEPARATOR ';;;'
-                ) AS platform_raw
+                ) AS platform_raw,
+                GROUP_CONCAT(
+                    DISTINCT CONCAT_WS('|||', mo.nev, mo.varos, IFNULL(mo.url, '')) 
+                    SEPARATOR ';;;'
+                ) AS mozi_raw
             FROM media m
             LEFT JOIN kategoriak k ON m.kategoria_id = k.id
             LEFT JOIN rendezok r ON m.rendezo_id = r.id
             LEFT JOIN media_platformok mp ON m.id = mp.media_id
             LEFT JOIN platformok p ON mp.platform_id = p.id
+            LEFT JOIN media_mozik mm ON m.id = mm.media_id
+            LEFT JOIN mozik mo ON mm.mozi_id = mo.id
             WHERE m.tipus = 'film'
             GROUP BY m.id
             ORDER BY m.rating DESC
@@ -129,14 +159,25 @@ exports.getTop50Movies = async (req, res) => {
                 });
             }
             delete movie.platform_raw;
-            const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
 
+            let mozi_lista = [];
+            if (movie.mozi_raw) {
+                const entries = movie.mozi_raw.split(';;;');
+                mozi_lista = entries.map(entry => {
+                    const [nev, varos, url] = entry.split('|||');
+                    return { nev, varos, url };
+                });
+            }
+            delete movie.mozi_raw;
+
+            const elsoPlatform = platform_lista.length > 0 ? platform_lista[0] : {}; 
             const megjelenes_ev = movie.megjelenes_ev_start;
 
             return { 
                 ...movie,
                 megjelenes_ev, 
                 platform_lista, 
+                mozi_lista, 
                 platform_nev: elsoPlatform.nev || null,
                 platform_logo: elsoPlatform.logo || null,
                 platform_link: elsoPlatform.url || '#'

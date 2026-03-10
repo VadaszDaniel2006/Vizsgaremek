@@ -19,4 +19,6 @@ router.get('/media', protect, adminController.getAllMedia);
 router.put('/media/:id', protect, adminController.updateMedia);     
 router.delete('/media/:id', protect, adminController.deleteMedia);  
 
+router.get('/mozik', adminController.getAllMozik);
+
 module.exports = router;

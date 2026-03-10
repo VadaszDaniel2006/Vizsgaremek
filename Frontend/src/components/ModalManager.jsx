@@ -6,11 +6,18 @@ export default function ModalManager({
   streamingModal, closeStreaming 
 }) {
 
-  // Segédfüggvény: Streaming adatok egységesítése
-  // Ez kezeli azt, hogy a backend 'platform_lista'-t küld, de a kód máshol 'platformok'-at használhat
+  // Segédfüggvény: Streaming adatok egységesítése és szűrése (JAVÍTVA)
   const getPlatformList = (movie) => {
     if (!movie) return [];
-    return movie.platform_lista || movie.platformok || [];
+    const platforms = movie.platform_lista || movie.platformok || [];
+    // Csak a valós névvel rendelkező platformokat engedjük át, az "üreseket" nem!
+    return platforms.filter(p => p.nev && p.nev !== 'null' && p.nev.trim() !== '');
+  };
+
+  // Segédfüggvény: Mozi adatok lekérése a backendről érkező objektumból
+  const getMoziList = (movie) => {
+    if (!movie) return [];
+    return movie.mozi_lista || [];
   };
 
   return (
@@ -68,7 +75,7 @@ export default function ModalManager({
         </div>
       )}
 
-      {/* 3. STREAMING MODAL (JAVÍTVA) */}
+      {/* 3. STREAMING & MOZI MODAL */}
       {streamingModal.isOpen && streamingModal.movie && (
         <div className="modal active" onClick={closeStreaming}>
           <div className="modal-content modal-sm" onClick={e => e.stopPropagation()}>
@@ -77,37 +84,81 @@ export default function ModalManager({
               <button className="close-modal" onClick={closeStreaming}><i className="fas fa-times"></i></button>
             </div>
             
-            <div className="streaming-services">
-              {/* Lekérjük a listát a segédfüggvénnyel */}
-              {getPlatformList(streamingModal.movie).length > 0 ? (
-                  getPlatformList(streamingModal.movie).map((platform, index) => {
-                    // Adatmezők egységesítése:
-                    // A backend { logo, url }-t küld, de az adatbázisban logo_url van.
-                    // Ez a kód mindkettőt kezeli.
-                    const logoSrc = platform.logo || platform.logo_url;
-                    const webUrl = platform.url || platform.weboldal_url;
+            <div className="streaming-services-container" style={{ padding: '10px' }}>
+              
+              {/* --- STREAMING SZEKCIÓ --- */}
+              {getPlatformList(streamingModal.movie).length > 0 && (
+                <div className="platforms-section" style={{ marginBottom: getMoziList(streamingModal.movie).length > 0 ? '20px' : '0' }}>
+                  <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Streaming</h4>
+                  <div className="streaming-services">
+                    {getPlatformList(streamingModal.movie).map((platform, index) => {
+                      const logoSrc = platform.logo || platform.logo_url;
+                      const webUrl = platform.url || platform.weboldal_url;
 
-                    return (
-                      <div 
-                          key={index}
-                          className="streaming-service" 
-                          onClick={() => window.open(webUrl, '_blank')}
-                      >
-                          <div className="service-logo">
-                              {logoSrc ? (
-                                  <img src={logoSrc} alt={platform.nev} />
-                              ) : (
-                                  <i className="fas fa-tv"></i>
-                              )}
-                          </div>
-                          <span>{platform.nev}</span>
-                          <i className="fas fa-external-link-alt" style={{marginLeft:'auto', color:'#888'}}></i>
-                      </div>
-                    );
-                  })
-              ) : (
-                <p style={{padding:'20px', color:'#ccc'}}>Nincs elérhető streaming adat ehhez a filmhez.</p>
+                      return (
+                        <div 
+                            key={`plat-${index}`}
+                            className="streaming-service" 
+                            onClick={() => window.open(webUrl, '_blank')}
+                        >
+                            <div className="service-logo">
+                                {logoSrc ? (
+                                    <img src={logoSrc} alt={platform.nev} />
+                                ) : (
+                                    <i className="fas fa-tv"></i>
+                                )}
+                            </div>
+                            <span>{platform.nev}</span>
+                            <i className="fas fa-external-link-alt" style={{marginLeft:'auto', color:'#888'}}></i>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
+
+              {/* --- MOZIK / HAMAROSAN SZEKCIÓ --- */}
+{(() => {
+  const ma = new Date('2026-03-10'); // Fix dátum a teszteléshez (a vizsga napja)
+  const premier = streamingModal.movie.premier_datum ? new Date(streamingModal.movie.premier_datum) : null;
+  const isJovobeli = premier && premier > ma;
+
+  if (isJovobeli) {
+    return (
+      <div className="coming-soon-section" style={{ textAlign: 'center', padding: '20px', background: 'rgba(255,180,0,0.1)', borderRadius: '12px', border: '1px dashed #ffb400' }}>
+        <h4 style={{ color: '#ffb400', marginBottom: '5px' }}><i className="fas fa-calendar-alt"></i> Hamarosan a mozikban!</h4>
+        <p style={{ color: '#ccc', fontSize: '14px' }}>Várható premier: {new Date(streamingModal.movie.premier_datum).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      </div>
+    );
+  }
+
+  // Ha már megjelent, akkor mutatjuk a mozikat (az eredeti kódod)
+  if (getMoziList(streamingModal.movie).length > 0) {
+    return (
+      <div className="cinemas-section">
+        <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase' }}>Mozikban</h4>
+        <div className="streaming-services">
+          {getMoziList(streamingModal.movie).map((mozi, index) => (
+            <div key={`mozi-${index}`} className="streaming-service" onClick={() => mozi.url && window.open(mozi.url, '_blank')}>
+              <div className="service-logo" style={{ color: '#ffb400' }}><i className="fas fa-ticket-alt"></i></div>
+              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px' }}>
+                <span style={{ fontWeight: 'bold' }}>{mozi.nev}</span>
+                <span style={{ fontSize: '12px', color: '#888' }}>{mozi.varos}</span>
+              </div>
+              <i className="fas fa-external-link-alt" style={{ marginLeft: 'auto', color: '#888' }}></i>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
+})()}
+              {/* --- HA EGYIK SINCS --- */}
+              {getPlatformList(streamingModal.movie).length === 0 && getMoziList(streamingModal.movie).length === 0 && (
+                <p style={{textAlign: 'center', padding:'20px', color:'#ccc'}}>Nincs elérhető megtekintési adat ehhez a filmhez.</p>
+              )}
+
             </div>
           </div>
         </div>

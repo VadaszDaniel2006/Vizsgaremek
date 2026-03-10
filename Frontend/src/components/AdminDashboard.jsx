@@ -10,6 +10,7 @@ export default function AdminDashboard({ refreshApp }) {
     const [users, setUsers] = useState([]);
     const [reportedReviews, setReportedReviews] = useState([]);
     const [mediaList, setMediaList] = useState([]);
+    const [mozikList, setMozikList] = useState([]); // Mozik listája
     const [error, setError] = useState('');
     const [toast, setToast] = useState(null);
 
@@ -29,18 +30,19 @@ export default function AdminDashboard({ refreshApp }) {
     const initialMediaForm = { 
         tipus: 'film', cim: '', leiras: '', poszter_url: '', elozetes_url: '', 
         megjelenes_ev_start: '', megjelenes_ev_end: '', evadok_szama: '', hossz_perc: '', 
-        alap_rating: 8.0, kategoria_id: 'akcio', rendezo_nev: '', nemzetiseg_nev: '', platform_id: ''
+        alap_rating: 8.0, kategoria_id: 'akcio', rendezo_nev: '', nemzetiseg_nev: '', platform_id: '',
+        mozi_ids: [] // Mozik tárolása a formban
     };
     const [uploadData, setUploadData] = useState(initialMediaForm);
 
     const refreshAllData = () => {
-        fetchUsers(); fetchReportedReviews(); fetchMediaList();
+        fetchUsers(); fetchReportedReviews(); fetchMediaList(); fetchMozikList();
         if (refreshApp) refreshApp();
     };
 
     useEffect(() => { refreshAllData(); }, []);
 
-    // --- ÚJ: HÁTTÉR GÖRGETÉSÉNEK LETILTÁSA ---
+    // HÁTTÉR GÖRGETÉSÉNEK LETILTÁSA
     const isAnyModalOpen = editingMedia || editingUser || showDeleteModal || showMediaDeleteModal || showReviewDeleteModal;
     useEffect(() => {
         const bgContainer = document.querySelector('.neo-admin-bg');
@@ -88,6 +90,15 @@ export default function AdminDashboard({ refreshApp }) {
         } catch (err) { showNotification("Hiba a tartalmak lekérésekor.", "error"); }
     };
 
+    const fetchMozikList = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/mozik', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok) setMozikList(data); 
+        } catch (err) { console.error("Hiba a mozik lekérésekor", err); }
+    };
+
     const handleUploadSubmit = async (e) => {
         e.preventDefault(); 
         const token = localStorage.getItem('token');
@@ -112,7 +123,8 @@ export default function AdminDashboard({ refreshApp }) {
             megjelenes_ev_start: media.megjelenes_ev_start || '', megjelenes_ev_end: media.megjelenes_ev_end || '', 
             evadok_szama: media.evadok_szama || '', hossz_perc: media.hossz_perc || '', 
             alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || 'akcio',
-            rendezo_nev: media.rendezo_nev || '', nemzetiseg_nev: media.nemzetiseg_nev || '', platform_id: media.platform_id || ''
+            rendezo_nev: media.rendezo_nev || '', nemzetiseg_nev: media.nemzetiseg_nev || '', platform_id: media.platform_id || '',
+            mozi_ids: media.mozi_ids || []
         });
     };
 
@@ -176,13 +188,53 @@ export default function AdminDashboard({ refreshApp }) {
                     <option value="sorozat">Sorozat</option>
                 </select>
             </div>
+            
+            {/* ÚJ: KIBŐVÍTETT PLATFORM LISTA */}
             <div className="neo-input-group">
                 <label><i className="fas fa-tv"></i> Streaming Platform</label>
                 <select value={uploadData.platform_id} onChange={(e) => setUploadData({...uploadData, platform_id: e.target.value})} className="neo-input">
-                    <option value="">Nincs megadva</option>
-                    <option value="1">Netflix</option><option value="2">HBO Max</option><option value="3">Disney+</option><option value="4">Prime Video</option><option value="5">Apple TV+</option>
+                    <option value="">Nincs megadva (Csak Mozi)</option>
+                    <option value="1">Netflix</option>
+                    <option value="2">HBO Max (Max)</option>
+                    <option value="3">Disney+</option>
+                    <option value="4">Prime Video</option>
+                    <option value="5">Apple TV+</option>
+                    <option value="6">SkyShowtime</option>
+                    <option value="7">Filmio</option>
+                    <option value="8">RTL+</option>
                 </select>
             </div>
+
+            {uploadData.tipus === 'film' && (
+                <div className="neo-input-group neo-full-width">
+                    <label><i className="fas fa-ticket-alt"></i> Vetítő Mozik (Többet is kiválaszthatsz)</label>
+                    <div className="neo-input" style={{ maxHeight: '150px', overflowY: 'auto', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(0,0,0,0.2)' }}>
+                        {mozikList.map(mozi => (
+                            <label key={mozi.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'normal', color: '#ccc' }}>
+                                <input 
+                                    type="checkbox" 
+                                    checked={uploadData.mozi_ids?.includes(mozi.id) || false}
+                                    onChange={(e) => {
+                                        const isChecked = e.target.checked;
+                                        setUploadData(prev => {
+                                            const currentIds = prev.mozi_ids || [];
+                                            return {
+                                                ...prev,
+                                                mozi_ids: isChecked 
+                                                    ? [...currentIds, mozi.id] 
+                                                    : currentIds.filter(id => id !== mozi.id)
+                                            };
+                                        });
+                                    }}
+                                    style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                                />
+                                {mozi.nev} ({mozi.varos})
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <div className="neo-input-group neo-full-width">
                 <label><i className="fas fa-tags"></i> Kategória</label>
                 <select value={uploadData.kategoria_id} onChange={(e) => setUploadData({...uploadData, kategoria_id: e.target.value})} className="neo-input">
@@ -400,7 +452,6 @@ export default function AdminDashboard({ refreshApp }) {
                                 </div>
                                 <div className="neo-input-group">
                                     <label>Új jelszó beállítása (Opcionális)</label>
-                                    {/* JS ÉS CSS JAVÍTÁS EGYÜTT -> pw-input-wrapper osztály */}
                                     <div className="pw-input-wrapper">
                                         <input 
                                             type={showUserPassword ? "text" : "password"} 
@@ -423,7 +474,6 @@ export default function AdminDashboard({ refreshApp }) {
 
                 <div style={{ marginTop: '60px', display: 'flex', justifyContent: 'center' }}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
-                        {/* JAVÍTOTT LILÁS GOMB */}
                         <button className="neo-btn-exit">
                             <i className="fas fa-home"></i> Kilépés a Főoldalra
                         </button>
