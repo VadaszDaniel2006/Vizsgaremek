@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: db:3306
--- Létrehozás ideje: 2026. Már 10. 10:24
+-- Létrehozás ideje: 2026. Már 10. 12:13
 -- Kiszolgáló verziója: 8.4.8
 -- PHP verzió: 8.3.30
 
@@ -194,44 +194,44 @@ INSERT INTO `media` (`id`, `tipus`, `cim`, `leiras`, `poszter_url`, `elozetes_ur
 (10, 'film', 'Zootropolis 2.', 'Judy és Nick új ügye.', 'https://m.media-amazon.com/images/I/71+v9fR7LAL._AC_UF894,1000_QL80_.jpg', '9S7F9T5D6j7', 2025, NULL, NULL, 108, 8.4, 8.4, 'animation', 1, '2025-11-20'),
 (11, 'film', 'Wicked', 'A boszorkányok története.', 'https://static.posters.cz/image/750/poszterek/wicked-i214789.jpg', '6S9S7F9T5D6', 2025, NULL, NULL, 160, 8.5, 8.5, 'fantasy', 12, '2025-11-27'),
 (12, 'film', 'Sonic, a sündisznó 3.', 'Sonic vs Shadow.', 'https://m.media-amazon.com/images/I/71Y7BqI0F8L._AC_UF894,1000_QL80_.jpg', 'qSu6i2i1fe4', 2025, NULL, NULL, 110, 8.2, 8.2, 'action', 4, '2025-12-25'),
-(13, 'film', 'Agymanók 2.', 'Riley és az új érzelmek.', 'https://static.posters.cz/image/750/poszterek/inside-out-2-i212345.jpg', 'LEjhY29S0U8', 2024, NULL, NULL, 96, 7.7, 7.7, 'animation', 1, '2024-06-13'),
-(14, 'film', 'Semmelweis', 'A magyar orvos drámája.', 'https://m.media-amazon.com/images/I/51ZpY0+N2NL._AC_.jpg', 'Tbd8shSndmQ', 2023, NULL, NULL, 127, 8.0, 8.0, 'drama', 15, '2023-11-30'),
-(15, 'film', 'Batman', 'Sötét lovag Gothamben.', 'https://static.posters.cz/image/750/poszterek/the-batman-2022-i122115.jpg', 'mqqZhf2V6v0', 2022, NULL, NULL, 176, 8.1, 8.1, 'action', 11, '2022-03-03'),
-(16, 'film', 'Avatar: A víz útja', 'Visszatérés Pandorára.', 'https://static.posters.cz/image/750/poszterek/avatar-the-way-of-water-i135678.jpg', 'd9MyW72ELq0', 2022, NULL, NULL, 192, 7.8, 7.8, 'scifi', 9, '2022-12-15'),
-(17, 'film', 'Top Gun: Maverick', 'Maverick újra repül.', 'https://static.posters.cz/image/750/poszterek/top-gun-maverick-i133556.jpg', 'giXcoBa8nMU', 2022, NULL, NULL, 130, 8.3, 8.3, 'action', 12, '2022-05-26'),
-(18, 'film', 'Barbie', 'A rózsaszín világ felfedezése.', 'https://static.posters.cz/image/750/poszterek/barbie-i143778.jpg', 'pBk4NYhWNMM', 2023, NULL, NULL, 114, 7.2, 7.2, 'comedy', 10, '2023-07-21'),
-(19, 'film', 'Kontroll', 'A metró alatti világ.', 'https://static.posters.cz/image/750/poszterek/kontroll-i1500.jpg', 'pA5kHwB0V4v', 2003, NULL, NULL, 111, 8.5, 8.5, 'thriller', 14, '2003-11-20'),
-(20, 'film', 'Csillagok között', 'Idő és tér hajlítása.', 'https://static.posters.cz/image/750/poszterek/interstellar-i23456.jpg', 'zSWdZVtXT7E', 2014, NULL, NULL, 169, 8.7, 8.7, 'scifi', 8, '2014-11-06'),
-(21, 'film', 'Eredet', 'Álmok mélyén.', 'https://static.posters.cz/image/750/poszterek/inception-i8563.jpg', 'YoHD9XEInc0', 2010, NULL, NULL, 148, 8.8, 8.8, 'scifi', 8, '2010-07-22'),
-(22, 'film', 'Élősködők', 'Koreai feszültség.', 'https://static.posters.cz/image/750/poszterek/parasite-i88556.jpg', '5xH0HfJH66M', 2019, NULL, NULL, 132, 8.6, 8.6, 'thriller', 3, '2019-05-30'),
-(23, 'film', 'Joker', 'Arthur Fleck drámája.', 'https://static.posters.cz/image/750/poszterek/joker-i78665.jpg', 't433PEQGE6U', 2019, NULL, NULL, 122, 8.4, 8.4, 'crime', 11, '2019-10-03'),
-(24, 'film', 'Pókember: Nincs hazaút', 'Multiverzum.', 'https://static.posters.cz/image/750/poszterek/spiderman-no-way-home-i123456.jpg', 'JfVOs4VSpmA', 2021, NULL, NULL, 148, 8.2, 8.2, 'action', 1, '2021-12-16'),
-(25, 'film', 'John Wick 4', 'A bérgyilkos visszatér.', 'https://static.posters.cz/image/750/poszterek/john-wick-4-i134567.jpg', 'qEVUrk48_4', 2023, NULL, NULL, 169, 7.7, 7.7, 'action', 4, '2023-03-23'),
-(26, 'film', 'Vaiana 2', 'Tengeri kaland.', 'https://m.media-amazon.com/images/I/71YyNjZkNzY.jpg', 'h_p9K8UvS0', 2024, NULL, NULL, 100, 7.9, 7.9, 'animation', 1, '2024-11-27'),
-(27, 'film', 'Alien: Romulus', 'Horror az űrben.', 'https://m.media-amazon.com/images/I/61NfR1fR9VL.jpg', 'x0XDE9jXas8', 2024, NULL, NULL, 119, 8.0, 8.0, 'horror', 6, '2024-08-15'),
-(28, 'film', 'Super Mario Bros.', 'A gombakirályság.', 'https://static.posters.cz/image/750/poszterek/super-mario-bros-movie-i143556.jpg', 'TnGl01Fk9zE', 2023, NULL, NULL, 92, 7.0, 7.0, 'animation', 1, '2023-04-05'),
-(29, 'film', 'Wonka', 'A gyáros ifjúkora.', 'https://static.posters.cz/image/750/poszterek/wonka-i167889.jpg', 'otNh9KoWY_o', 2023, NULL, NULL, 116, 7.5, 7.5, 'fantasy', 1, '2023-12-14'),
-(30, 'film', 'Dűne', 'Az Arrakis bolygó.', 'https://static.posters.cz/image/750/poszterek/dune-i112345.jpg', '8g18jFHCLXk', 2021, NULL, NULL, 155, 8.0, 8.0, 'scifi', 6, '2021-10-21'),
-(31, 'film', 'Tenet', 'Időinverzió.', 'https://static.posters.cz/image/750/poszterek/tenet-i95663.jpg', 'L3pk_TBkihU', 2020, NULL, NULL, 150, 7.4, 7.4, 'scifi', 8, '2020-08-26'),
-(32, 'film', 'Pókember: Irány a Pókverzum!', 'Az Oscar-díjas animáció.', 'https://static.posters.cz/image/750/poszterek/spider-man-into-the-spider-verse-i66889.jpg', 'tg52up16eq0', 2018, NULL, NULL, 117, 8.4, 8.4, 'animation', 2, '2018-12-13'),
-(33, 'film', 'A galaxis őrizői 3', 'Mordály múltja.', 'https://static.posters.cz/image/750/poszterek/guardians-of-the-galaxy-3-i142335.jpg', 'u3V5KDHRQWc', 2023, NULL, NULL, 150, 7.9, 7.9, 'action', 4, '2023-05-04'),
-(34, 'film', 'A bálna', 'Dráma a szobában.', 'https://m.media-amazon.com/images/I/71YyNjZkNzY.jpg', 'D30707S-tAk', 2022, NULL, NULL, 117, 7.7, 7.7, 'drama', 1, '2022-12-21'),
-(35, 'film', 'Minden, mindenhol, mindenkor', 'Multiverzum.', 'https://m.media-amazon.com/images/I/81S6UId783L.jpg', 'wxN1T1uxQ2g', 2022, NULL, NULL, 139, 7.8, 7.8, 'scifi', 1, '2022-06-23'),
-(36, 'film', 'Elvis', 'A király élete.', 'https://static.posters.cz/image/750/poszterek/elvis-i133556.jpg', 'wBDLRvjHVOY', 2022, NULL, NULL, 159, 7.3, 7.3, 'drama', 1, '2022-06-23'),
-(37, 'film', 'A Gucci-ház', 'Divat és gyilkosság.', 'https://static.posters.cz/image/750/poszterek/house-of-gucci-i123456.jpg', 'pGi3Bgn7U5U', 2021, NULL, NULL, 158, 6.6, 6.6, 'crime', 7, '2021-11-25'),
-(38, 'film', 'Encanto', 'A Madrigal család.', 'https://static.posters.cz/image/750/poszterek/encanto-i124556.jpg', 'CaimKeHIkao', 2021, NULL, NULL, 102, 7.7, 7.7, 'animation', 1, '2021-11-24'),
-(39, 'film', 'Szörnyella', 'Pancsoló divatdiktátor.', 'https://static.posters.cz/image/750/poszterek/cruella-i112345.jpg', 'gmRKv7n2UX8', 2021, NULL, NULL, 134, 7.4, 7.4, 'comedy', 1, '2021-05-28'),
-(40, 'film', 'Hang nélkül 2', 'Csendben túlélés.', 'https://static.posters.cz/image/750/poszterek/a-quiet-place-2-i99887.jpg', 'BpdDN9d9Jio', 2021, NULL, NULL, 97, 7.2, 7.2, 'horror', 1, '2021-05-28'),
-(41, 'film', 'Free Guy', 'NPC öntudat.', 'https://static.posters.cz/image/750/poszterek/free-guy-i113456.jpg', 'X2m-08c_u_c', 2021, NULL, NULL, 115, 7.1, 7.1, 'comedy', 12, '2021-08-13'),
-(42, 'film', 'Lelki ismeretek', 'Pixar jazz.', 'https://static.posters.cz/image/750/poszterek/soul-i100223.jpg', 'Gs--vX_1No8', 2020, NULL, NULL, 100, 8.1, 8.1, 'animation', 1, '2020-12-25'),
-(43, 'film', 'John Wick 3', 'Excommunicado.', 'https://static.posters.cz/image/750/poszterek/john-wick-3-parabellum-i72456.jpg', 'M7XM597XO94', 2019, NULL, NULL, 131, 7.4, 7.4, 'action', 4, '2019-05-17'),
-(44, 'film', 'Bosszúállók: Végjáték', 'Thanos vége.', 'https://static.posters.cz/image/750/poszterek/avengers-endgame-i73456.jpg', 'TcMBFSGVi1c', 2019, NULL, NULL, 181, 8.4, 8.4, 'action', 4, '2019-04-25'),
-(45, 'film', 'Pókember: Hazatérés', 'Peter Parker iskolás.', 'https://static.posters.cz/image/750/poszterek/spider-man-homecoming-i47223.jpg', 'nW948VaZE86', 2017, NULL, NULL, 133, 7.4, 7.4, 'action', 1, '2017-07-06'),
-(46, 'film', 'Mad Max: A harag útja', 'Vér és benzin.', 'https://static.posters.cz/image/750/poszterek/mad-max-fury-road-i24556.jpg', 'hXzcyx9V0xw', 2015, NULL, NULL, 120, 8.1, 8.1, 'action', 13, '2015-05-14'),
-(47, 'film', 'Whiplash', 'A dobfelszerelés mögött.', 'https://m.media-amazon.com/images/I/71YyNjZkNzY.jpg', '7d_jQycdQGo', 2014, NULL, NULL, 106, 8.5, 8.5, 'drama', 1, '2014-10-10'),
-(48, 'film', 'A Sötét Lovag: Felemelkedés', 'Bane elhozza a véget.', 'https://static.posters.cz/image/750/poszterek/the-dark-knight-rises-i13445.jpg', 'g8evyE9TuYk', 2012, NULL, NULL, 165, 8.4, 8.4, 'action', 8, '2012-07-26'),
-(49, 'film', 'Deadpool', 'A szájhős bérgyilkos.', 'https://static.posters.cz/image/750/poszterek/deadpool-i28445.jpg', 'ONHBaC-baS8', 2016, NULL, NULL, 108, 8.0, 8.0, 'action', 12, '2016-02-11'),
-(50, 'film', 'Érdekvédelmi terület', 'Súlyos történelem.', 'https://m.media-amazon.com/images/I/61NfR1fR9VL.jpg', 'r-vqcqBA_S0', 2023, NULL, NULL, 105, 7.5, 7.5, 'drama', 6, '2023-05-19'),
+(13, 'film', 'Agymanók 2.', 'Riley tinédzserkorba lép, ami a belső irányítóközpont teljes átalakításával jár. Derű és csapata mellé váratlan jövevények érkeznek: Szorongás, Irigység, Ciki és Uncsi, akik fenekestül felforgatják a lány érzelmi világát és emlékeit.', 'https://image.tmdb.org/t/p/original/c9gfJ422O4JrcGvmL37r6ylLx3s.jpg', 'Fp_LjpHI--k', 2024, NULL, NULL, 96, 7.7, 7.6, 'animation', 40, NULL),
+(14, 'film', 'Semmelweis', 'Bécs, 1847. Semmelweis Ignác, a fiatal magyar orvos a kórház szülészeti osztályán tomboló gyermekágyi láz okát kutatja. Miközben a vaskalapos orvosi vezetéssel és a bürokráciával harcol, egy korszakalkotó felfedezéssel próbálja megállítani a láthatatlan gyilkost, kiérdemelve az „anyák megmentője” nevet.', 'https://m.media-amazon.com/images/M/MV5BZTQ4MDVhY2EtZWJjMy00YzQ1LWFmMzItM2ZjY2VmMTU4ZWQwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'Dlgcc2bhj2o', 2023, NULL, NULL, 127, 8.0, 7.8, 'biography', 15, NULL),
+(15, 'film', 'Batman', 'Bruce Wayne a bűnüldözés második évében Gotham sötét alvilágába merül, hogy elkapja a Rébuszt, a szadista sorozatgyilkost. A nyomozás során kénytelen szembenézni családja múltjával és a város mélyen gyökerező korrupciójával.', 'https://media.posterstore.com/site_images/68631be292c536b9cc92b044_2010122803_WB0039-5.jpg?auto=compress%2Cformat&fit=max&w=3840', 'EonoOzD5v3M', 2022, NULL, NULL, 176, 8.1, 7.8, 'action', 11, NULL),
+(16, 'film', 'Avatar: A víz útja', 'Jake Sully és Neytiri családjukat védelmezve kénytelenek elhagyni erdei otthonukat, és a Metkayina klán zátonyai között keresni menedéket. Meg kell tanulniuk a víz útját, hogy szembeszálljanak a visszatérő földi fenyegetéssel egy minden eddiginél látványosabb háborúban.', 'https://m.blog.hu/dv/dvdnews/image/avatar_the_way_of_water_p3.png', 'VjimL6Yq0rA', 2022, NULL, NULL, 192, 7.8, 7.5, 'scifi', 9, NULL),
+(17, 'film', 'Top Gun: Maverick', 'Pete „Maverick” Mitchell harminc év szolgálat után is vakmerő tesztpilótaként dolgozik. Amikor azonban vissza kell térnie a Top Gunhoz, hogy kiképezzen egy elit osztagot egy lehetetlennek tűnő küldetésre, kénytelen szembenézni a múlt kísérteteivel és néhai barátja, Goose fiával is.', 'https://m.media-amazon.com/images/I/71BokibfVUL.jpg', 'HqsagXiW3WI', 2022, NULL, NULL, 130, 8.3, 8.2, 'action', 39, NULL),
+(18, 'film', 'Barbie', 'Barbie a tökéletes Barbielandben éli gondtalan életét, ám amikor váratlanul egzisztenciális válságba kerül, kénytelen átlépni a Való Világba. Ken kíséretében rájön, hogy a valóság sokkal bonyolultabb, mint a rózsaszín álomvilág, és közben önmaga valódi célját is keresi.', 'https://image.tmdb.org/t/p/original/dekMkQf0kqAmztUca9lX5e5Pjbp.jpg', 'S7qsTilxELA', 2023, NULL, NULL, 114, 7.2, 6.9, 'comedy', 10, NULL),
+(19, 'film', 'Kontroll', 'Bulcsú és különc ellenőr társai a budapesti metró labirintusában végzik munkájukat, ahol a dühös utasok és a szürreális helyzetek mindennaposak. A feszültség fokozódik, amikor egy titokzatos árnyék kezdi lökdösni az embereket a szerelvények alá, Bulcsúnak pedig szembe kell néznie saját belső sötétségével is.', 'https://m.media-amazon.com/images/M/MV5BMjA3Nzk5MTE4Nl5BMl5BanBnXkFtZTcwMzEwODgyMQ@@._V1_FMjpg_UX1000_.jpg', 'qultfnaMP50', 2003, NULL, NULL, 105, 8.5, 7.5, 'thriller', 14, NULL),
+(20, 'film', 'Csillagok között', 'A közeli jövőben a Föld haldoklik, ezért egy csapat kutató az ismeretlenbe indul, hogy egy frissen felfedezett féreglyukon át új otthont keressenek az emberiségnek. Coopernek, az ex-pilótának választania kell a gyermekei és a fajunk túlélése között egy téridőn átívelő utazás során.', 'https://dp8ij3ml0f16h.cloudfront.net/s3_files/styles/facebook/s3/film/plakat/csillagokkozott_800x1154_1.jpg.webp?itok=sKh-bjk1', 'u9GEcdg5QKc', 2014, NULL, NULL, 169, 8.7, 8.7, 'scifi', 8, NULL),
+(21, 'film', 'Eredet', 'Dom Cobb profi tolvaj, aki az álmokon keresztül lop titkokat az emberek tudatalattijából. Egy utolsó megbízás során nem lopnia kell, hanem egy gondolatot elültetnie egy célpont elméjében, miközben a valóság és az álom közti határ végzetesen elmosódik számára.', 'https://m.blog.hu/fi/filmek/image/2010/eredet/inception_poster_12.jpg', '0aGwmGUZlZE', 2010, NULL, NULL, 148, 8.8, 8.8, 'scifi', 8, NULL),
+(22, 'film', 'Élősködők', 'A mélyszegénységben élő Kim család fondorlatos módon beférkőzik a gazdag Park család bizalmába. A két társadalmi réteg találkozása egyre sötétebb fordulatokat vesz, míg végül egy megdöbbentő és véres eseménysorozatban csúcsosodik ki.', 'https://www.elozetesek.hu/img2/original/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg', 'IA2C7xil5-I', 2019, NULL, NULL, 132, 8.6, 8.5, 'thriller', 3, NULL),
+(23, 'film', 'Joker', 'Arthur Fleck, a magányos és mentális zavarokkal küzdő bohóc fokozatosan elszigetelődik Gotham kegyetlen társadalmától. A folyamatos mellőzöttség és megaláztatás hatására elméje végleg megbomlik, és megszületik az erőszakos káosz szimbóluma, a Joker.', 'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/1500x1500/products/89058/93685/Joker-2019-Final-Style-steps-Poster-buy-original-movie-posters-at-starstills__62518.1669120603.jpg?c=2', 'gpR7sWSD7iM', 2019, NULL, NULL, 122, 8.4, 8.4, 'drama', 38, NULL),
+(24, 'film', 'Pókember: Nincs hazaút', 'Miután Peter Parker kiléte lelepleződik, Doctor Strange segítségét kéri, ám a varázslat feltépi a multiverzumot. Peternek más világokból érkező legendás ellenségekkel kell megküzdenie, miközben rájön, mit is jelent valójában Pókembernek lenni.', 'https://dp8ij3ml0f16h.cloudfront.net/s3_files/styles/facebook/s3/film/plakat/PokHazaut_corvin_630x894px.jpg.webp?itok=KHHh7B0G', '9coHr2jyBBk', 2021, NULL, NULL, 148, 8.2, 8.2, 'action', 24, NULL),
+(25, 'film', 'John Wick 4', 'John Wick megtalálja a módot a Felső Kör legyőzésére, de a szabadsága előtt még szembe kell néznie egy új, hatalmas befolyással bíró ellenséggel. A hajsza New Yorktól Párizsig és Tokióig tart, ahol a régi barátokból is halálos ellenfelek válhatnak.', 'https://i.etsystatic.com/51729090/r/il/4a8b9b/5991845025/il_570xN.5991845025_5u87.jpg', 'cVf4hQ3F_2Q', 2023, NULL, NULL, 169, 7.7, 7.7, 'action', 26, NULL),
+(26, 'film', 'Vaiana 2', 'Vaiana váratlan hívást kap útkereső őseitől, ezért Mauival és egy új legénységgel az Óceánia távoli vizeire indul. Egy veszélyes kaland során kell megtörniük egy ősi átkot, hogy újra egyesítsék a tengeren szétszórt népeket.', 'https://dp8ij3ml0f16h.cloudfront.net/s3_files/styles/facebook/s3/film/plakat/Vaiana2_6V_main2_B1_preview.jpg.webp?itok=xW-aqfb-', 'HnJbyhEcnr4', 2024, NULL, NULL, 100, 7.9, 6.8, 'animation', 37, NULL),
+(27, 'film', 'Alien: Romulus', 'Fiatal űrkolonizálók egy csoportja egy elhagyatott űrállomást kutatva az univerzum legfélelmetesebb életformájával találja szemben magát. A kincsvadászatnak induló akció hamarosan véres túlélőtúrává válik a sötét és klausztrofób folyosókon.', 'https://lumiere-a.akamaihd.net/v1/images/romulus_payoff_poster_united_kingdom_38_6f863f1e.jpeg', 'bNnwc0OSTIs', 2024, NULL, NULL, 119, 8.0, 7.2, 'horror', 36, NULL),
+(28, 'film', 'Super Mario Bros.', 'Mario, a brooklyni vízszerelő egy mágikus csövön keresztül a Gombakirályságba kerül. Itt Peach hercegnővel és Toaddal összefogva kell megmentenie fogságba esett öccsét, Luigit, és megállítania a gonosz Bowser világuralmi törekvéseit.', 'https://m.media-amazon.com/images/I/71vdUbWfvLL._AC_UF894,1000_QL80_.jpg', 'z4zTnEyBeXQ', 2023, NULL, NULL, 92, 7.0, 7.1, 'animation', 35, NULL),
+(29, 'film', 'Wonka', 'A fiatal és álmodozó Willy Wonka kalandjai, mielőtt a világ leghíresebb csokoládégyárosa lett volna. Wonka elhatározza, hogy megreformálja az édességek világát, miközben szembenéz a kapzsi csokikartellel és megismeri az oompa-loompákat.', 'https://deadline.com/wp-content/uploads/2023/10/WONKA_INSTA_VERT_Willy_Wonka_1638x2048_DOM.jpg?w=800', 'opMbZbUTt0A', 2023, NULL, NULL, 116, 7.5, 7.0, 'fantasy', 34, NULL),
+(30, 'film', 'Dűne', 'Paul Atreides, egy különleges képességekkel megáldott ifjú az univerzum legveszélyesebb bolygójára, az Arrakisra utazik, hogy biztosítsa családja és népe jövőjét. A sivatagi világban a fűszerért folyó ádáz harc közepette Paulnak szembe kell néznie sorsával és a bolygó titokzatos lakóival.', 'https://www.movieposters.com/cdn/shop/products/dune_fzj9yoaw_1024x1024.jpg?v=1762968807', 'rd6fDarPBr4', 2021, NULL, NULL, 155, 8.0, 8.0, 'scifi', 6, NULL),
+(31, 'film', 'Tenet', 'Egy CIA-ügynöknek meg kell akadályoznia a harmadik világháború kitörését, ám ellensége nem a jelenből, hanem a jövőből érkezik. A küldetés során az idő „inverzióját” hívja segítségül, ahol a fizika törvényei megfordulnak, és a golyók visszarepülnek a fegyverbe.', 'https://i.etsystatic.com/15375993/r/il/b96ea1/2683400806/il_fullxfull.2683400806_nxti.jpg', 'k_ISj2zad3I', 2020, NULL, NULL, 150, 7.4, 7.3, 'scifi', 8, NULL),
+(32, 'film', 'Pókember: Irány a Pókverzum!', 'Miles Morales, a brooklyni tini rájön, hogy ő az új Pókember, miután egy radioaktív pók megcsípi. Hamarosan más dimenziókból érkező Pókemberekkel kell összefognia, hogy közösen mentsék meg a multiverzumot a pusztulástól.', 'https://www.kilencedik.hu/wp-content/uploads/2018/06/pokember-irany-a-pokverzum-poszter.jpg', 'URw57SB7UZU', 2018, NULL, NULL, 117, 8.4, 8.4, 'animation', 33, NULL),
+(33, 'film', 'A galaxis őrizői 3', 'Peter Quill és csapata egy utolsó, érzelmes küldetésre indul, hogy megmentsék Mordály életét a kegyetlen Evolúció Mesterétől. A galaxis őrzőinek szembe kell nézniük a múlttal, miközben újra összeállnak, hogy megvédjék az univerzumot és saját családjukat.', 'https://m.blog.hu/dv/dvdnews/image/gotg3_hun_p2.png', 'p8VHf8nfdUs', 2023, NULL, NULL, 150, 7.9, 7.9, 'action', 4, NULL),
+(34, 'film', 'A bálna', 'Charlie, a súlyosan elhízott és remeteéletet élő angoltanár egy utolsó esélyt keres a megváltásra. Megpróbálja újrafelépíteni a kapcsolatát elhidegült tizenéves lányával, miközben szembenéz saját múltjának kísérteteivel és romló egészségi állapotával.', 'https://upload.wikimedia.org/wikipedia/hu/9/92/A_b%C3%A1lna_filmplak%C3%A1t.jpg', 'm3eVWqA5vY', 2022, NULL, NULL, 117, 7.7, 7.7, 'drama', 32, NULL),
+(35, 'film', 'Minden, mindenhol, mindenkor', 'Evelyn, a kimerült mosodatulajdonos rájön, hogy képes átlépni a párhuzamos univerzumokba, és magába szívni más énjei tudását. A multiverzum sorsa az ő kezébe kerül, miközben próbálja rendezni kapcsolatát családjával és megmenteni a világot a káosztól.', 'https://www.mafab.hu/static/2022/82/13/594576_1648123670.6598.jpg', 'unJDTXIzEcI', 2022, NULL, NULL, 139, 7.8, 7.8, 'scifi', 31, NULL),
+(36, 'film', 'Elvis', 'Elvis Presley életútja a titokzatos menedzsere, Tom Parker ezredes szemszögéből. A film a rock ’n’ roll királyának felemelkedését és világsztárrá válását követi nyomon, bemutatva a siker árnyoldalait és az amerikai kultúrára gyakorolt óriási hatását.', 'https://i.etsystatic.com/41716657/r/il/9ac2ff/4694963082/il_fullxfull.4694963082_rxur.jpg', 'la_yfBQhTTw', 2022, NULL, NULL, 159, 7.3, 7.3, 'biography', 30, NULL),
+(37, 'film', 'A Gucci-ház', 'Patrizia Reggiani beházasodik a nagy múltú Gucci-dinasztiába, de féktelen becsvágya hamarosan családi viszályhoz, áruláshoz és végül egy sokkoló gyilkossághoz vezet. A film a divatbirodalom mögötti sötét titkokat és a hatalomvágy pusztító erejét mutatja be.', 'https://dp8ij3ml0f16h.cloudfront.net/s3_files/styles/facebook/s3/film/plakat/House_of_Gucci_16V_main_B1_preview.jpg.webp?itok=G0x0rB6t', 'AOQ2dQnzw0I', 2021, NULL, NULL, 158, 6.6, 6.6, 'biography', 7, NULL),
+(38, 'film', 'Encanto', 'A Madrigal család egy rejtett, mágikus helyen él Kolumbiában, ahol minden gyerek különleges képességet kap, kivéve Mirabelt. Amikor azonban a család varázsereje veszélybe kerül, az „átlagos” lánynak kell bebizonyítania, hogy ő az utolsó reményük a csoda megőrzésére.', 'https://m.media-amazon.com/images/I/81mvxMI7xSL.jpg', 'LjSK33SWqoM', 2021, NULL, NULL, 102, 7.7, 7.2, 'animation', 29, NULL),
+(39, 'film', 'Szörnyella', 'Az Abbott családnak el kell hagynia otthonát, hogy a külvilág néma borzalmaival szembenézve keressenek új menedéket. Hamar rájönnek, hogy a hangra vadászó lények mellett más, váratlan emberi fenyegetések is várnak rájuk a romok között.', 'https://media.port.hu/images/001/357/026.jpg', 'ubh2g4PPEdQ', 2021, NULL, NULL, 97, 7.4, 7.2, 'thriller', 28, NULL),
+(40, 'film', 'Hang nélkül 2', 'Az Abbott családnak el kell hagynia otthonát, hogy a külvilág néma borzalmaival szembenézve keressenek új menedéket. Hamar rájönnek, hogy a hangra vadászó lények mellett más, váratlan emberi fenyegetések is várnak rájuk a romok között.', 'https://lira.erbacdn.net/upload/M_28/rek1/611/2959611.jpg', '0Fu4Q5IH9G4', 2021, NULL, NULL, 97, 7.2, 7.2, 'horror', 28, NULL),
+(41, 'film', 'Free Guy', 'Guy, az open-world videojáték egyszerű mellékszereplője egy nap rájön az igazságra, és úgy dönt, saját kezébe veszi az irányítást. Kék inges hősként próbálja megmenteni digitális világát a végleges törléstől, miközben fenekestül felforgatja a fejlesztők terveit.', 'https://i.etsystatic.com/51729090/r/il/ad1fbe/5935873678/il_fullxfull.5935873678_oomm.jpg', '9NwYXO44lZA', 2021, NULL, NULL, 115, 7.1, 7.1, 'action', 12, NULL),
+(42, 'film', 'Lelki ismeretek', 'Joe Gardner, a középiskolai zenetanár egy baleset után a lelkek világában találja magát. Itt összeáll a lázadó 22-es lélekkel, hogy közösen fedezzék fel az élet apró örömeit és az emberi szenvedély valódi forrását.', 'https://play-lh.googleusercontent.com/guCzk52lX4rXZUqKN7ji28IQPp5be59dJs8Cfg2yCpeVF2k6jD-0oBmeoAn0ryHBw95KpwF6cRCIZXBOUe4', '5Qa4a0-ACEo', 2020, NULL, NULL, 101, 8.1, 8.1, 'animation', 27, NULL),
+(43, 'film', 'John Wick 3', 'John Wick fejére 14 millió dolláros vérdíjat tűznek ki, miután megszegi a bérgyilkoscéh legfőbb szabályát. A világ legképzettebb gyilkosaival a nyomában kell túlélnie, miközben minden szövetségesére és tudására szüksége van a meneküléshez.', 'https://m.media-amazon.com/images/M/MV5BYjdlNWFlZjEtM2U0NS00ZWU5LTk1M2EtZmQxNWFiZjk0MGM5XkEyXkFqcGc@._V1_.jpg', 'sJYzazQk3O4', 2019, NULL, NULL, 131, 7.4, 7.4, 'action', 26, NULL),
+(44, 'film', 'Bosszúállók: Végjáték', 'Thanos pusztító csettintése után a megmaradt Bosszúállók egy utolsó, kétségbeesett tervet eszelnek ki az univerzum helyreállítására. A hősöknek az idővel és saját múltjukkal is szembe kell nézniük, hogy visszahozzák az elveszetteket egy epikus végső összecsapásban.', 'https://static.posters.cz/image/1300/122136.jpg', '0iMRZ-P2yJA', 2019, NULL, NULL, 181, 8.4, 8.4, 'action', 25, NULL),
+(45, 'film', 'Pókember: Hazatérés', 'Peter Parker a Bosszúállók kalandja után próbál visszatérni a hétköznapi diákélethez, miközben Tony Stark mentorálja. Hamarosan azonban egy új, technológiával felszerelt gonosz, a Keselyű bukkan fel, Peternek pedig be kell bizonyítania, hogy képes valódi hőssé válni.', 'https://static.mozipremierek.hu/poster/1190-pokember-hazateres.18170.webp', 'NSbK565vPw4', 2017, NULL, NULL, 133, 7.4, 7.4, 'action', 24, NULL),
+(46, 'film', 'Mad Max: A harag útja', 'Egy posztapokaliptikus pusztaságban a hallgatag Max kénytelen összefogni a lázadó Furiosa imperátorral, aki a zsarnok Halhatatlan Joe feleségeit próbálja kimenekíteni. Egy monumentális, gázolajszagú üldözés veszi kezdetét a sivatagon át a szabadság reményében.', 'https://m.blog.hu/ae/aeonflux/image/201505/mad_max_poster_posse_02_a.jpg', 'rKxcEVNVU-E', 2015, NULL, NULL, 120, 8.1, 8.1, 'action', 13, NULL),
+(47, 'film', 'Whiplash', 'Andrew, a tehetséges jazzdobos bekerül a konzervatórium elit zenekarába, ahol a kíméletlen és maximalista Fletcher tanár kezei alá kerül. A mester brutális módszerei a végletekig hajszolják a fiút, aki a sikerért kész feláldozni a józan eszét is.', 'https://image.tmdb.org/t/p/original/7fn624j5lj3xTme2SgiLCeuedmO.jpg', 'JtWZOxlWHh4', 2014, NULL, NULL, 106, 8.5, 8.5, 'drama', 23, NULL),
+(48, 'film', 'A Sötét Lovag: Felemelkedés', 'Nyolc évvel Joker pusztítása után egy új, kegyetlen terrorista, Bane fenyegeti Gotham Cityt. A megtört Bruce Wayne-nek újra magára kell öltenie a denevérmaszkot, hogy szembenézzen a fizikai és mentális összeomlással, és megmentse a várost a végső pusztulástól.', 'https://www.rocky.hu/imgcache/223800/200.jpg', 'GokKUqLcvD8', 2012, NULL, NULL, 165, 8.4, 8.4, 'action', 8, NULL),
+(49, 'film', 'Deadpool', 'Wade Wilson, az egykori zsoldos egy balul elsült kísérlet után szinte sebezhetetlenné válik, de külseje eltorzul. Deadpool néven, fekete humorral és kíméletlen stílussal indul bosszúhadjáratra az ellene elkövetett gaztettek miatt.', 'https://m.media-amazon.com/images/M/MV5BNzY3ZWU5NGQtOTViNC00ZWVmLTliNjAtNzViNzlkZWQ4YzQ4XkEyXkFqcGc@._V1_.jpg', 'uwoo4RJAxZw', 2016, NULL, NULL, 108, 8.0, 8.0, 'action', 22, NULL),
+(50, 'film', 'Érdekvédelmi terület', 'A film Rudolf Höss, az auschwitzi tábor parancsnokának családját mutatja be, akik egy házban élnek közvetlenül a koncentrációs tábor mellett, miközben hétköznapi életet próbálnak élni a borzalmak árnyékában.', 'https://img2.topfilmek.hu/original/AbFtI353N2Pggl5TxfsI2VtpUt8.jpg', 'j3pGWlo4jwA', 2023, NULL, NULL, 105, 7.5, 7.5, 'drama', 21, NULL),
 (101, 'sorozat', 'Stranger Things', 'Titkos kísérletek és szörnyek Hawkingsban.', 'https://static.posters.cz/image/750/poszterek/stranger-things-summer-of-85-i76135.jpg', 'AfQ13jsLDms', 2016, '2026', 4, 50, 8.7, 8.7, 'horror', 18, NULL),
 (102, 'sorozat', 'Breaking Bad', 'A kémiatanár felemelkedése az alvilágba.', 'https://static.posters.cz/image/750/poszterek/breaking-bad-vamanos-pest-i17345.jpg', 'HhesaQXLuRY', 2008, '2013', 5, 49, 9.5, 9.5, 'crime', 19, NULL),
 (103, 'sorozat', 'The Mandalorian', 'Mando és Grogu kalandjai.', 'https://static.posters.cz/image/750/poszterek/star-wars-the-mandalorian-the-child-i84556.jpg', 'aOC8E8z_ifw', 2019, '', 3, 40, 8.7, 8.7, 'scifi', 16, NULL),
@@ -339,14 +339,6 @@ INSERT INTO `media_platformok` (`id`, `platform_id`, `kozvetlen_link`, `media_id
 (5, 3, 'https://disneyplus.com', 10),
 (6, 2, 'https://play.max.com', 11),
 (7, 2, 'https://play.max.com', 12),
-(8, 3, 'https://disneyplus.com', 13),
-(9, 8, 'https://rtlplusz.hu', 14),
-(10, 2, 'https://play.max.com', 15),
-(11, 3, 'https://disneyplus.com', 16),
-(12, 4, 'https://primevideo.com', 17),
-(13, 2, 'https://play.max.com', 18),
-(14, 7, 'https://filmio.hu', 19),
-(15, 1, 'https://netflix.com', 20),
 (16, 1, 'https://netflix.com', 101),
 (17, 1, 'https://netflix.com', 102),
 (18, 3, 'https://disneyplus.com', 103),
@@ -358,7 +350,44 @@ INSERT INTO `media_platformok` (`id`, `platform_id`, `kozvetlen_link`, `media_id
 (24, 2, 'https://play.max.com', 109),
 (25, 1, 'https://netflix.com', 110),
 (26, 3, 'https://disneyplus.com', 111),
-(27, 5, 'https://tv.apple.com', 112);
+(27, 5, 'https://tv.apple.com', 112),
+(28, 2, NULL, 50),
+(29, 3, NULL, 49),
+(30, 2, NULL, 48),
+(31, 1, NULL, 47),
+(32, 3, NULL, 44),
+(33, 3, NULL, 45),
+(36, 1, NULL, 43),
+(38, 3, NULL, 42),
+(40, 3, NULL, 41),
+(41, 1, NULL, 39),
+(42, 3, NULL, 40),
+(43, 3, NULL, 38),
+(44, 6, NULL, 37),
+(45, 2, NULL, 36),
+(46, 2, NULL, 35),
+(47, 2, NULL, 34),
+(48, 3, NULL, 33),
+(49, 3, NULL, 32),
+(50, 2, NULL, 31),
+(51, 2, NULL, 30),
+(52, 2, NULL, 29),
+(53, 6, NULL, 28),
+(54, 3, NULL, 27),
+(55, 3, NULL, 26),
+(56, 4, NULL, 25),
+(57, 3, NULL, 24),
+(58, 2, NULL, 23),
+(59, 2, NULL, 22),
+(60, 1, NULL, 21),
+(61, 1, NULL, 20),
+(62, 7, NULL, 19),
+(63, 2, NULL, 18),
+(64, 6, NULL, 17),
+(65, 3, NULL, 16),
+(66, 2, NULL, 15),
+(67, 1, NULL, 14),
+(68, 3, NULL, 13);
 
 -- --------------------------------------------------------
 
@@ -543,13 +572,13 @@ INSERT INTO `rendezok` (`id`, `nev`, `nemzetiseg`) VALUES
 (3, 'Bong Joon-ho', 'Dél-koreai'),
 (4, 'James Gunn', 'Amerikai'),
 (5, 'Dougal Wilson', 'Brit'),
-(6, 'Denis Villeneuve', 'Kanadai'),
-(7, 'Ridley Scott', 'Brit'),
+(6, 'Denis Villeneuve', 'Amerikai'),
+(7, 'Ridley Scott', 'Amerikai'),
 (8, 'Christopher Nolan', 'Brit-Amerikai'),
-(9, 'James Cameron', 'Kanadai'),
+(9, 'James Cameron', 'Amerikai'),
 (10, 'Greta Gerwig', 'Amerikai'),
 (11, 'Matt Reeves', 'Amerikai'),
-(12, 'Shawn Levy', 'Kanadai'),
+(12, 'Shawn Levy', 'Amerikai'),
 (13, 'George Miller', 'Ausztrál'),
 (14, 'Antal Nimród', 'Magyar'),
 (15, 'Lajos Koltai', 'Magyar'),
@@ -557,7 +586,27 @@ INSERT INTO `rendezok` (`id`, `nev`, `nemzetiseg`) VALUES
 (17, 'Craig Mazin', 'Amerikai'),
 (18, 'The Duffer Brothers', 'Amerikai'),
 (19, 'Vince Gilligan', 'Amerikai'),
-(20, 'David Benioff', 'Amerikai');
+(20, 'David Benioff', 'Amerikai'),
+(21, 'Jonathan Glazer', 'Brit'),
+(22, 'Tim Miller', 'K'),
+(23, 'Damien Chazelle', 'Amerikai'),
+(24, 'Jon Watts', 'Amerikai'),
+(25, 'Anthony és Joe Russo', 'Amerikai'),
+(26, 'Chad Stahelski', 'Amerikai'),
+(27, 'Pete Docter, Kemp Powers', 'Amerikai'),
+(28, 'John Krasinski', 'Amerikai'),
+(29, 'Jared Bush, Byron Howard', 'Amerikai'),
+(30, 'Baz Luhrmann', 'Amerikai'),
+(31, 'Daniel Kwan, Daniel Scheinert', 'Amerikai'),
+(32, 'Darren Aronofsky', 'Amerikai'),
+(33, 'B. Persichetti, P. Ramsey, R. Rothman', 'Amerikai'),
+(34, 'Paul King', 'Amerikai'),
+(35, 'Aaron Horvath, Michael Jelenic', 'Amerikai'),
+(36, 'Fede Álvarez', 'Amerikai'),
+(37, 'D. Derrick Jr., J. Hand, D. Ledoux Miller', 'Amerikai'),
+(38, 'Todd Phillips', 'Amerikai'),
+(39, 'Joseph Kosinski', 'Amerikai'),
+(40, 'Kelsey Mann', 'Amerikai');
 
 -- --------------------------------------------------------
 
@@ -766,7 +815,7 @@ ALTER TABLE `media_orszagok`
 -- AUTO_INCREMENT a táblához `media_platformok`
 --
 ALTER TABLE `media_platformok`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT a táblához `megtekintesek`
@@ -796,7 +845,7 @@ ALTER TABLE `platformok`
 -- AUTO_INCREMENT a táblához `rendezok`
 --
 ALTER TABLE `rendezok`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT a táblához `sajat_listak`
@@ -809,80 +858,6 @@ ALTER TABLE `sajat_listak`
 --
 ALTER TABLE `sajat_lista_elemek`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
-
---
--- Megkötések a kiírt táblákhoz
---
-
---
--- Megkötések a táblához `ertekelesek`
---
-ALTER TABLE `ertekelesek`
-  ADD CONSTRAINT `ertekelesek_ibfk_1` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `ertekelesek_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `kedvencek`
---
-ALTER TABLE `kedvencek`
-  ADD CONSTRAINT `kedvencek_ibfk_1` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `kedvencek_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `kedvenc_kategoriak`
---
-ALTER TABLE `kedvenc_kategoriak`
-  ADD CONSTRAINT `kedvenc_kat_fk` FOREIGN KEY (`kategoria_id`) REFERENCES `kategoriak` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `kedvenc_kategoriak_ibfk_1` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `media`
---
-ALTER TABLE `media`
-  ADD CONSTRAINT `fk_media_rendezo` FOREIGN KEY (`rendezo_id`) REFERENCES `rendezok` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Megkötések a táblához `media_mozik`
---
-ALTER TABLE `media_mozik`
-  ADD CONSTRAINT `media_mozik_ibfk_1` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `media_mozik_ibfk_2` FOREIGN KEY (`mozi_id`) REFERENCES `mozik` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `media_orszagok`
---
-ALTER TABLE `media_orszagok`
-  ADD CONSTRAINT `fk_mo_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_mo_nemzetiseg` FOREIGN KEY (`nemzetiseg_id`) REFERENCES `nemzetisegek` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `media_orszagok_ibfk_1` FOREIGN KEY (`nemzetiseg_id`) REFERENCES `nemzetisegek` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `media_orszagok_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `media_platformok`
---
-ALTER TABLE `media_platformok`
-  ADD CONSTRAINT `media_platformok_ibfk_1` FOREIGN KEY (`platform_id`) REFERENCES `platformok` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `media_platformok_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `megtekintesek`
---
-ALTER TABLE `megtekintesek`
-  ADD CONSTRAINT `megtekintesek_ibfk_1` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `megtekintesek_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `sajat_listak`
---
-ALTER TABLE `sajat_listak`
-  ADD CONSTRAINT `sajat_listak_ibfk_1` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE;
-
---
--- Megkötések a táblához `sajat_lista_elemek`
---
-ALTER TABLE `sajat_lista_elemek`
-  ADD CONSTRAINT `sajat_lista_elemek_ibfk_1` FOREIGN KEY (`lista_id`) REFERENCES `sajat_listak` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `sajat_lista_elemek_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

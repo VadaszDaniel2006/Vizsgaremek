@@ -21,4 +21,6 @@ router.delete('/media/:id', protect, adminController.deleteMedia);
 
 router.get('/mozik', adminController.getAllMozik);
 
+router.get('/categories', adminController.getAllCategories);
+
 module.exports = router;

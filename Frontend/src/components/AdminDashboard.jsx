@@ -10,7 +10,8 @@ export default function AdminDashboard({ refreshApp }) {
     const [users, setUsers] = useState([]);
     const [reportedReviews, setReportedReviews] = useState([]);
     const [mediaList, setMediaList] = useState([]);
-    const [mozikList, setMozikList] = useState([]); // Mozik listája
+    const [mozikList, setMozikList] = useState([]); 
+    const [categories, setCategories] = useState([]); // ÚJ: Kategóriák állapota
     const [error, setError] = useState('');
     const [toast, setToast] = useState(null);
 
@@ -30,13 +31,13 @@ export default function AdminDashboard({ refreshApp }) {
     const initialMediaForm = { 
         tipus: 'film', cim: '', leiras: '', poszter_url: '', elozetes_url: '', 
         megjelenes_ev_start: '', megjelenes_ev_end: '', evadok_szama: '', hossz_perc: '', 
-        alap_rating: 8.0, kategoria_id: 'akcio', rendezo_nev: '', nemzetiseg_nev: '', platform_id: '',
-        mozi_ids: [] // Mozik tárolása a formban
+        alap_rating: 8.0, kategoria_id: '', rendezo_nev: '', nemzetiseg_nev: '', platform_id: '',
+        mozi_ids: [] 
     };
     const [uploadData, setUploadData] = useState(initialMediaForm);
 
     const refreshAllData = () => {
-        fetchUsers(); fetchReportedReviews(); fetchMediaList(); fetchMozikList();
+        fetchUsers(); fetchReportedReviews(); fetchMediaList(); fetchMozikList(); fetchCategories(); // Frissítettük a hívást
         if (refreshApp) refreshApp();
     };
 
@@ -99,6 +100,16 @@ export default function AdminDashboard({ refreshApp }) {
         } catch (err) { console.error("Hiba a mozik lekérésekor", err); }
     };
 
+    // ÚJ: Kategóriák lekérése a backendről
+    const fetchCategories = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/categories', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok) setCategories(data); 
+        } catch (err) { console.error("Hiba a kategóriák lekérésekor", err); }
+    };
+
     const handleUploadSubmit = async (e) => {
         e.preventDefault(); 
         const token = localStorage.getItem('token');
@@ -122,7 +133,7 @@ export default function AdminDashboard({ refreshApp }) {
             poszter_url: media.poszter_url || '', elozetes_url: media.elozetes_url || '', 
             megjelenes_ev_start: media.megjelenes_ev_start || '', megjelenes_ev_end: media.megjelenes_ev_end || '', 
             evadok_szama: media.evadok_szama || '', hossz_perc: media.hossz_perc || '', 
-            alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || 'akcio',
+            alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || '',
             rendezo_nev: media.rendezo_nev || '', nemzetiseg_nev: media.nemzetiseg_nev || '', platform_id: media.platform_id || '',
             mozi_ids: media.mozi_ids || []
         });
@@ -189,7 +200,6 @@ export default function AdminDashboard({ refreshApp }) {
                 </select>
             </div>
             
-            {/* ÚJ: KIBŐVÍTETT PLATFORM LISTA */}
             <div className="neo-input-group">
                 <label><i className="fas fa-tv"></i> Streaming Platform</label>
                 <select value={uploadData.platform_id} onChange={(e) => setUploadData({...uploadData, platform_id: e.target.value})} className="neo-input">
@@ -237,8 +247,18 @@ export default function AdminDashboard({ refreshApp }) {
 
             <div className="neo-input-group neo-full-width">
                 <label><i className="fas fa-tags"></i> Kategória</label>
-                <select value={uploadData.kategoria_id} onChange={(e) => setUploadData({...uploadData, kategoria_id: e.target.value})} className="neo-input">
-                    <option value="akcio">Akció</option><option value="vigjatek">Vígjáték</option><option value="drama">Dráma</option><option value="scifi">Sci-Fi</option><option value="horror">Horror</option><option value="thriller">Thriller</option><option value="krimi">Krimi</option>
+                <select 
+                    value={uploadData.kategoria_id} 
+                    onChange={(e) => setUploadData({...uploadData, kategoria_id: e.target.value})} 
+                    className="neo-input"
+                    required
+                >
+                    <option value="">Válassz kategóriát...</option>
+                    {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>
+                            {cat.nev}
+                        </option>
+                    ))}
                 </select>
             </div>
             
@@ -433,7 +453,7 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* FELHASZNÁLÓ SZERKESZTŐ MODAL JAVÍTVA (SZEM IKON) */}
+                {/* FELHASZNÁLÓ SZERKESZTŐ MODAL */}
                 {editingUser && (
                     <div className="neo-modal-overlay" onClick={() => { setEditingUser(null); setShowUserPassword(false); }}>
                         <div className="neo-modal-content small" onClick={e => e.stopPropagation()}>

@@ -82,14 +82,26 @@ exports.getAllMozik = async (req, res) => {
     }
 };
 
+// ÚJ: Lekérdezi az összes kategóriát a legördülő menühöz
+exports.getAllCategories = async (req, res) => {
+    try {
+        const [kategoriak] = await db.query('SELECT id, nev FROM kategoriak ORDER BY nev ASC');
+        res.json(kategoriak);
+    } catch (error) {
+        console.error("Hiba a kategóriák lekérésekor:", error);
+        res.status(500).json({ message: 'Szerver hiba.' });
+    }
+};
+
 exports.getAllMedia = async (req, res) => {
     try {
         const sql = `
-            SELECT m.*, r.nev AS rendezo_nev, r.nemzetiseg AS nemzetiseg_nev,
+            SELECT m.*, r.nev AS rendezo_nev, r.nemzetiseg AS nemzetiseg_nev, k.nev AS kategoria_nev,
                    (SELECT platform_id FROM media_platformok WHERE media_id = m.id LIMIT 1) AS platform_id,
                    (SELECT GROUP_CONCAT(mozi_id) FROM media_mozik WHERE media_id = m.id) AS mozi_ids_raw
             FROM media m 
             LEFT JOIN rendezok r ON m.rendezo_id = r.id 
+            LEFT JOIN kategoriak k ON m.kategoria_id = k.id
             ORDER BY m.id DESC
         `;
         const [media] = await db.query(sql);
