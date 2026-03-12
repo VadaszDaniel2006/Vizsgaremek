@@ -11,7 +11,7 @@ const MovieCard = ({
   onAddToList, 
   onRemoveFromList,
   onOpenReviews,
-  interactionUpdate // <--- ÚJ PROP
+  interactionUpdate 
 }) => {
   
   const [status, setStatus] = useState({
@@ -20,12 +20,11 @@ const MovieCard = ({
     listed: false
   });
 
-  // Státusz ellenőrzése (Most már az interactionUpdate-re is figyel!)
   useEffect(() => {
     if (user && movie) {
         fetchStatus();
     }
-  }, [user, movie, interactionUpdate]); // <--- ITT A VÁLTOZÁS
+  }, [user, movie, interactionUpdate]);
 
   const fetchStatus = async () => {
     try {
@@ -80,25 +79,31 @@ const MovieCard = ({
       if (onOpenReviews) onOpenReviews(movie);
   };
 
-  const activeStyle = { color: '#00e676', fontWeight: 'bold' }; 
+  // --- JAVÍTÁS 1: Elegáns gomb aktív állapot, ami NEM nyomja szét a dobozt ---
+  const activeStyle = { 
+      color: '#00e676', 
+      borderColor: '#00e676', 
+      backgroundColor: 'rgba(15, 21, 43, 0.95)' 
+  }; 
 
   if (!movie) return null;
 
   return (
-    <div className="movie-card-container">
+    // JAVÍTÁS 2: A kártya magassága fixen kitölti a flex/grid dobozt
+    <div className="movie-card-container" style={{ height: '100%' }}>
       <div 
         className="movie-card" 
         onClick={() => onOpenTrailer && onOpenTrailer(movie.elozetes_url, movie.cim)}
+        style={{ flexShrink: 0 }} // JAVÍTÁS 3: A kép sosem nyomódhat össze
       >
         <div className="card-image">
-          <img src={movie.poszter_url || movie.poster} alt={movie.cim} />
+          <img src={movie.poszter_url || movie.poster} alt={movie.cim} loading="lazy" />
           <div className="card-overlay">
             <i className="fas fa-play-circle"></i>
           </div>
         </div>
 
         <div className="user-interactions" onClick={(e) => e.stopPropagation()}>
-            
             <button 
                 className="btn-icon reviews" 
                 onClick={handleReviewClick} 
@@ -114,54 +119,56 @@ const MovieCard = ({
                         className="btn-fav" 
                         onClick={handleFavClick} 
                         title="Kedvencek"
+                        style={status.favorite ? activeStyle : {}}
                     >
-                        <i 
-                            className="fas fa-heart"
-                            style={status.favorite ? activeStyle : {}}
-                        ></i>
+                        <i className="fas fa-heart"></i>
                     </button>
                     <button 
                         className="btn-add-list" 
                         onClick={handleListClick} 
                         title="Saját lista"
+                        style={status.listed ? activeStyle : {}}
                     >
-                        <i 
-                            className="fas fa-plus"
-                            style={status.listed ? activeStyle : {}}
-                        ></i>
+                        <i className="fas fa-plus"></i>
                     </button>
                 </>
             )}
         </div>
       </div>
 
-      <div className="card-details">
-        <h4>{movie.cim || movie.title}</h4>
-        <div className="card-meta">
+      {/* JAVÍTÁS 4: Inline védelem a szövegeknek, hogy F5 esetén is megmaradjon a formájuk */}
+      <div className="card-details" style={{ padding: '15px', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <h4 style={{ fontSize: '16px', lineHeight: '1.2', margin: '0 0 8px 0', color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 'bold' }}>
+            {movie.cim || movie.title}
+        </h4>
+        <div className="card-meta" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#aaa', lineHeight: '1' }}>
           <span>{movie.megjelenes_ev || movie.year}</span>
-          <span><i className="fas fa-star"></i> {movie.rating}</span>
+          <span><i className="fas fa-star" style={{ color: '#fbbf24', marginRight: '4px' }}></i> {movie.rating}</span>
         </div>
       </div>
 
-      <div className="card-buttons">
+      {/* JAVÍTÁS 5: A gombok fix szélessége és magassága inline rögzítve */}
+      <div className="card-buttons top50-action-row" style={{ display: 'flex', gap: '10px', marginTop: 'auto', padding: '12px' }}>
         <button 
             className="btn-card-play" 
+            style={{ flex: 1, whiteSpace: 'nowrap', height: '40px', padding: '0 10px' }}
             onClick={(e) => { 
                 e.stopPropagation(); 
                 if (onOpenStreaming) onOpenStreaming(movie); 
             }}
         >
-          <i className="fas fa-play"></i> Megnézem
+          <i className="fas fa-play" style={{ marginRight: '6px' }}></i> Megnézem
         </button>
         
         <button 
             className="btn-card-info" 
+            style={{ flex: 1, whiteSpace: 'nowrap', height: '40px', padding: '0 10px' }}
             onClick={(e) => { 
                 e.stopPropagation(); 
                 if (onOpenInfo) onOpenInfo(movie); 
             }}
         >
-          <i className="fas fa-info-circle"></i> Részletek
+          <i className="fas fa-info-circle" style={{ marginRight: '6px' }}></i> Részletek
         </button>
       </div>
     </div>

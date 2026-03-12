@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function ModalManager({ 
   trailerModal, closeTrailer, 
@@ -6,23 +6,53 @@ export default function ModalManager({
   streamingModal, closeStreaming 
 }) {
 
-  // Segédfüggvény: Streaming adatok egységesítése és szűrése (JAVÍTVA)
-  const getPlatformList = (movie) => {
-    if (!movie) return [];
-    const platforms = movie.platform_lista || movie.platformok || [];
-    // Csak a valós névvel rendelkező platformokat engedjük át, az "üreseket" nem!
-    return platforms.filter(p => p.nev && p.nev !== 'null' && p.nev.trim() !== '');
-  };
+  const [liveMozik, setLiveMozik] = useState([]);
+  const [liveStreaming, setLiveStreaming] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Segédfüggvény: Mozi adatok lekérése a backendről érkező objektumból
-  const getMoziList = (movie) => {
-    if (!movie) return [];
-    return movie.mozi_lista || [];
-  };
+  useEffect(() => {
+    const isAnyModalOpen = trailerModal.isOpen || infoModal.isOpen || streamingModal.isOpen;
+    if (isAnyModalOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [trailerModal.isOpen, infoModal.isOpen, streamingModal.isOpen]);
+
+  useEffect(() => {
+    const fetchLiveAdatok = async () => {
+      if (streamingModal.isOpen && streamingModal.movie) {
+        setIsLoading(true);
+        try {
+          const mediaId = streamingModal.movie.id;
+          const [mozikRes, streamingRes] = await Promise.all([
+            fetch(`http://localhost:5000/api/mozik/${mediaId}/mozik`),
+            fetch(`http://localhost:5000/api/mozik/${mediaId}/platformok`)
+          ]);
+
+          if (mozikRes.ok) setLiveMozik(await mozikRes.json());
+          if (streamingRes.ok) setLiveStreaming(await streamingRes.json());
+        } catch (error) {
+          console.error("Hiba az élő adatok lekérésekor:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setLiveMozik([]);
+        setLiveStreaming([]);
+      }
+    };
+    fetchLiveAdatok();
+  }, [streamingModal.isOpen, streamingModal.movie]);
 
   return (
     <>
-      {/* 1. TRAILER MODAL */}
       {trailerModal.isOpen && (
         <div className="modal active" onClick={closeTrailer}>
           <div className="modal-content modal-lg" onClick={e => e.stopPropagation()}>
@@ -41,7 +71,6 @@ export default function ModalManager({
         </div>
       )}
 
-      {/* 2. INFO MODAL */}
       {infoModal.isOpen && infoModal.movie && (
         <div className="modal active" onClick={closeInfo}>
           <div className="modal-content modal-md" onClick={e => e.stopPropagation()}>
@@ -75,7 +104,6 @@ export default function ModalManager({
         </div>
       )}
 
-      {/* 3. STREAMING & MOZI MODAL */}
       {streamingModal.isOpen && streamingModal.movie && (
         <div className="modal active" onClick={closeStreaming}>
           <div className="modal-content modal-sm" onClick={e => e.stopPropagation()}>
@@ -86,79 +114,101 @@ export default function ModalManager({
             
             <div className="streaming-services-container" style={{ padding: '10px' }}>
               
-              {/* --- STREAMING SZEKCIÓ --- */}
-              {getPlatformList(streamingModal.movie).length > 0 && (
-                <div className="platforms-section" style={{ marginBottom: getMoziList(streamingModal.movie).length > 0 ? '20px' : '0' }}>
-                  <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Streaming</h4>
-                  <div className="streaming-services">
-                    {getPlatformList(streamingModal.movie).map((platform, index) => {
-                      const logoSrc = platform.logo || platform.logo_url;
-                      const webUrl = platform.url || platform.weboldal_url;
-
-                      return (
-                        <div 
-                            key={`plat-${index}`}
-                            className="streaming-service" 
-                            onClick={() => window.open(webUrl, '_blank')}
-                        >
-                            <div className="service-logo">
-                                {logoSrc ? (
-                                    <img src={logoSrc} alt={platform.nev} />
-                                ) : (
-                                    <i className="fas fa-tv"></i>
-                                )}
+              {isLoading ? (
+                <p style={{textAlign: 'center', padding:'20px', color:'#ccc'}}>Adatok betöltése...</p>
+              ) : (
+                <>
+                  {liveStreaming.length > 0 && (
+                    <div className="platforms-section" style={{ marginBottom: liveMozik.length > 0 ? '20px' : '0' }}>
+                      <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Streaming</h4>
+                      <div className="streaming-services">
+                        {liveStreaming.map((platform, index) => {
+                          const logoSrc = platform.logo || platform.logo_url;
+                          const webUrl = platform.kozvetlen_link || platform.weboldal_url || '#';
+                          return (
+                            <div key={`plat-${index}`} className="streaming-service" onClick={() => window.open(webUrl, '_blank')}>
+                                <div className="service-logo">{logoSrc ? <img src={logoSrc} alt={platform.nev} /> : <i className="fas fa-tv"></i>}</div>
+                                <span>{platform.nev}</span>
+                                <i className="fas fa-external-link-alt" style={{marginLeft:'auto', color:'#888'}}></i>
                             </div>
-                            <span>{platform.nev}</span>
-                            <i className="fas fa-external-link-alt" style={{marginLeft:'auto', color:'#888'}}></i>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {(() => {
+                    const ma = new Date();
+                    const premier = streamingModal.movie.premier_datum ? new Date(streamingModal.movie.premier_datum) : null;
+                    const isJovobeli = premier && premier > ma;
+
+                    if (isJovobeli) {
+                      return (
+                        <div className="coming-soon-section" style={{ textAlign: 'center', padding: '20px', background: 'rgba(255,180,0,0.1)', borderRadius: '12px', border: '1px dashed #ffb400' }}>
+                          <h4 style={{ color: '#ffb400', marginBottom: '5px' }}><i className="fas fa-calendar-alt"></i> Hamarosan a mozikban!</h4>
+                          <p style={{ color: '#ccc', fontSize: '14px' }}>Várható premier: {new Date(streamingModal.movie.premier_datum).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                         </div>
                       );
-                    })}
-                  </div>
-                </div>
+                    }
+
+                    if (liveMozik.length > 0) {
+                      return (
+                        <div className="cinemas-section">
+                          <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase' }}>Mozikban</h4>
+                          <div className="streaming-services modern-scrollbar" style={{ maxHeight: '350px', overflowY: 'auto', paddingRight: '5px' }}>
+                            {liveMozik.map((mozi, index) => {
+                                // JAVÍTÁS: A '|' jel mentén kettévágjuk a kapott stringet
+                                let nap = "Mai műsor";
+                                let idopontokTomb = [];
+                                
+                                if (mozi.idopontok && mozi.idopontok.includes('|')) {
+                                    const parts = mozi.idopontok.split('|');
+                                    nap = parts[0];
+                                    idopontokTomb = parts[1].split(',');
+                                } else if (mozi.idopontok) {
+                                    idopontokTomb = mozi.idopontok.split(',');
+                                }
+
+                                return (
+                                  <div key={`mozi-${index}`} className="streaming-service" onClick={() => mozi.url && window.open(mozi.url, '_blank')} style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
+                                    
+                                    <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                        <div className="service-logo" style={{ color: '#ffb400', width: '25px', height: '25px' }}><i className="fas fa-ticket-alt"></i></div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px' }}>
+                                            <span style={{ fontWeight: 'bold' }}>{mozi.nev}</span>
+                                            <span style={{ fontSize: '12px', color: '#888' }}>{mozi.varos}</span>
+                                        </div>
+                                        <i className="fas fa-external-link-alt" style={{ marginLeft: 'auto', color: '#888' }}></i>
+                                    </div>
+                                    
+                                    {idopontokTomb.length > 0 && (
+                                        <div style={{ paddingLeft: '35px', width: '100%' }}>
+                                            <span style={{ fontSize: '11px', color: '#ffb400', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '6px' }}>{nap}</span>
+                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                {idopontokTomb.map((time, idx) => (
+                                                    <span key={idx} style={{ background: 'rgba(62, 80, 255, 0.2)', color: '#8c9eff', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', border: '1px solid rgba(62, 80, 255, 0.3)' }}>
+                                                        {time.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                  </div>
+                                );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+
+                  {liveStreaming.length === 0 && liveMozik.length === 0 && (
+                    <p style={{textAlign: 'center', padding:'20px', color:'#ccc'}}>Nincs elérhető megtekintési adat ehhez a filmhez.</p>
+                  )}
+                </>
               )}
-
-              {/* --- MOZIK / HAMAROSAN SZEKCIÓ --- */}
-{(() => {
-  const ma = new Date('2026-03-10'); // Fix dátum a teszteléshez (a vizsga napja)
-  const premier = streamingModal.movie.premier_datum ? new Date(streamingModal.movie.premier_datum) : null;
-  const isJovobeli = premier && premier > ma;
-
-  if (isJovobeli) {
-    return (
-      <div className="coming-soon-section" style={{ textAlign: 'center', padding: '20px', background: 'rgba(255,180,0,0.1)', borderRadius: '12px', border: '1px dashed #ffb400' }}>
-        <h4 style={{ color: '#ffb400', marginBottom: '5px' }}><i className="fas fa-calendar-alt"></i> Hamarosan a mozikban!</h4>
-        <p style={{ color: '#ccc', fontSize: '14px' }}>Várható premier: {new Date(streamingModal.movie.premier_datum).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-      </div>
-    );
-  }
-
-  // Ha már megjelent, akkor mutatjuk a mozikat (az eredeti kódod)
-  if (getMoziList(streamingModal.movie).length > 0) {
-    return (
-      <div className="cinemas-section">
-        <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase' }}>Mozikban</h4>
-        <div className="streaming-services">
-          {getMoziList(streamingModal.movie).map((mozi, index) => (
-            <div key={`mozi-${index}`} className="streaming-service" onClick={() => mozi.url && window.open(mozi.url, '_blank')}>
-              <div className="service-logo" style={{ color: '#ffb400' }}><i className="fas fa-ticket-alt"></i></div>
-              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px' }}>
-                <span style={{ fontWeight: 'bold' }}>{mozi.nev}</span>
-                <span style={{ fontSize: '12px', color: '#888' }}>{mozi.varos}</span>
-              </div>
-              <i className="fas fa-external-link-alt" style={{ marginLeft: 'auto', color: '#888' }}></i>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-})()}
-              {/* --- HA EGYIK SINCS --- */}
-              {getPlatformList(streamingModal.movie).length === 0 && getMoziList(streamingModal.movie).length === 0 && (
-                <p style={{textAlign: 'center', padding:'20px', color:'#ccc'}}>Nincs elérhető megtekintési adat ehhez a filmhez.</p>
-              )}
-
             </div>
           </div>
         </div>

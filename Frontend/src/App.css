@@ -112,11 +112,11 @@ nav {
 .search-box-capsule input {
     background: none; border: none; color: white; padding: 0 10px;
     outline: none; width: 100%; font-size: 1rem; opacity: 0; transition: 0.3s;
-    pointer-events: none; /* AMÍG ZÁRVA VAN, NEM LEHET RÁKATTINTANI */
+    pointer-events: none; 
 }
 .search-box-capsule.active input { 
     opacity: 1; 
-    pointer-events: auto; /* HA KINYÍLT, ÚJRA LEHET KATTINTANI */
+    pointer-events: auto; 
 }
 
 .search-dropdown-modern {
@@ -282,7 +282,6 @@ main { width: 100%; margin-top: 90px; }
 .play-btn-on-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 50%; color: white; font-size: 2rem; cursor: pointer; z-index: 100; backdrop-filter: blur(5px); box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; padding-left: 5px; transition: 0.3s; }
 .play-btn-on-image:hover { transform: translate(-50%, -50%) scale(1.1); background: white; color: var(--primary); border-color: white;}
 
-/* --- JAVÍTOTT SLIDER NYILAK --- */
 .slider-arrow { 
     position: absolute; 
     top: 50%; 
@@ -307,29 +306,104 @@ main { width: 100%; margin-top: 90px; }
 .slider-arrow.left { left: 255px; } 
 .slider-arrow.right { right: 255px; }
 
-/* --- 5. LISTÁK --- */
+/* ====================================================== */
+/* --- 5. LISTÁK ÉS KÁRTYÁK (VASBETON STABILITÁS) --- */
+/* ====================================================== */
 .content-container { width: 100%; padding: 0 30px 60px 30px; }
 .more-movies-section h2, .content-container h2 { font-size: 2rem; margin-top: 50px; margin-bottom: 50px; text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
-.movies-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px; width: 100%; }
-.movie-card-container { background: #131a38; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.3s; display: flex; flex-direction: column; will-change: transform, box-shadow, border-color; backface-visibility: hidden;}
-.movie-card-container:hover { transform: translateY(-10px); z-index: 10; box-shadow: 0 15px 40px rgba(0,0,0,0.7); border: 1px solid var(--primary); }
-.movie-card { position: relative; cursor: pointer; aspect-ratio: 2/3; }
-.card-image { position: relative; height: 100%; overflow: hidden; }
-.card-image img { width: 100%; height: 100%; object-fit: cover; }
+
+.movies-grid { 
+    display: grid; 
+    grid-template-columns: repeat(6, 1fr); 
+    gap: 30px; 
+    width: 100%; 
+    align-items: stretch; /* Garantálja, hogy egy sorban minden kártya azonos magas legyen */
+}
+
+.movie-card-container { 
+    background: #131a38; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; 
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; /* Flexbox kitölti a grid cellát */
+    border: 1px solid transparent;
+    will-change: transform; 
+    backface-visibility: hidden;
+}
+
+.movie-card-container:hover { 
+    transform: translateY(-10px); 
+    z-index: 10; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7); 
+    border-color: var(--primary); 
+}
+
+/* KÉP KONTÉNER - Ez felel azért, hogy a kép soha ne nyomódjon össze */
+.movie-card { 
+    position: relative; 
+    cursor: pointer; 
+    width: 100%;
+    aspect-ratio: 2 / 3; 
+    flex-shrink: 0; /* LÉTFONTOSSÁGÚ: Megtiltja az F5-ös összenyomódást! */
+}
+
+.card-image { 
+    position: absolute; 
+    top: 0; left: 0; width: 100%; height: 100%; 
+    overflow: hidden; 
+}
+
+.card-image img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block; /* Eltünteti a képek alatti üres teret */
+}
+
 .card-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; opacity: 0; transition: 0.2s; z-index: 5; }
 .movie-card:hover .card-overlay { opacity: 1; }
 .card-overlay i { font-size: 3.5rem; color: white; filter: drop-shadow(0 0 10px var(--primary)); }
-.user-interactions { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 20; opacity: 0; transition: opacity 0.3s ease; }
+
+/* Gombok és Ikonok */
+.user-interactions { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 20; opacity: 0; transition: opacity 0.3s ease; min-height: 32px; }
 .movie-card:hover .user-interactions { opacity: 1; }
 .btn-fav, .btn-add-list, .btn-icon { background-color: rgba(0, 0, 0, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.3); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; font-size: 14px; backdrop-filter: blur(4px); }
 .btn-fav:hover, .btn-icon:hover { background-color: rgba(229, 9, 20, 0.9); border-color: #e50914; transform: scale(1.1); }
 .btn-add-list:hover { background-color: white; color: black; transform: scale(1.1); }
-.card-details { padding: 15px; flex-grow: 1; }
-.card-details h4 { font-size: 1.1rem; margin: 0 0 8px 0; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
-.card-meta { display: flex; justify-content: space-between; font-size: 0.95rem; color: #aaa; }
+
+/* SZÖVEGES RÉSZ */
+.card-details { 
+    padding: 15px !important; 
+    flex-grow: 1; /* Kitölti a kép alatti maradék helyet */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 85px !important; 
+}
+
+/* Szuper-specifikus szelektor a Címnek, hogy a Top50 vagy más oldal ne írja felül F5-nél! */
+div.movie-card-container div.card-details h4 { 
+    font-family: 'Inter', sans-serif !important;
+    font-size: 16px !important; 
+    line-height: 1.2 !important;
+    margin: 0 0 8px 0 !important; 
+    color: white !important; 
+    white-space: nowrap !important; 
+    overflow: hidden !important; 
+    text-overflow: ellipsis !important; 
+    font-weight: 700 !important; 
+    letter-spacing: normal !important;
+}
+
+.card-meta { display: flex; justify-content: space-between; font-size: 14px !important; color: #aaa; line-height: 1 !important;}
 .card-meta i { color: #f5c518; margin-right: 4px; }
+
+/* KÁRTYA ALJÁN LÉVŐ GOMBOK */
 .card-buttons { padding: 12px; display: flex; gap: 10px; margin-top: auto; background: #0f152b; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 100; }
-.card-buttons button { flex: 1; border: none; padding: 10px 0; border-radius: 6px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; transition: 0.2s; }
+.card-buttons button { flex: 1; border: none; padding: 10px 0; border-radius: 6px; font-size: 14px !important; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; transition: 0.2s; }
 .btn-card-play { background: var(--primary); color: white; }
 .btn-card-play:hover { background: #2c3bb7; }
 .btn-card-info { background: rgba(255,255,255,0.1); color: white; }
@@ -1522,7 +1596,6 @@ select.neo-input { appearance: none; background-image: url("data:image/svg+xml,%
 /* --- TÖKÉLETES MODAL: BELSŐ GÖRGETÉS ÉS NAVBAR VÉDELEM --- */
 /* ====================================================== */
 
-/* Az overlay (fekete háttér) fixált, NEM görgethető! */
 .neo-modal-overlay {
     position: fixed; 
     top: 0; 
@@ -1533,15 +1606,13 @@ select.neo-input { appearance: none; background-image: url("data:image/svg+xml,%
     backdrop-filter: blur(5px);
     z-index: 10000;
     
-    /* Középre igazítjuk a dobozt, de hagyunk helyet felül a Navbarnak! */
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    padding-top: 100px; /* Bőven a Navbar (90px) alá toljuk */
+    padding-top: 100px; 
     padding-bottom: 30px;
 }
 
-/* Maga a doboz: Ennek lesz SAJÁT görgetősávja! */
 .neo-modal-content {
     background: var(--modal-bg); 
     border: 1px solid rgba(255,255,255,0.1); 
@@ -1552,39 +1623,89 @@ select.neo-input { appearance: none; background-image: url("data:image/svg+xml,%
     box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     animation: neoFadeUp 0.3s ease-out;
 
-    /* A doboz sosem lehet magasabb, mint a képernyő (mínusz a navbar és a padding) */
     max-height: calc(100vh - 150px); 
-    
-    /* Ha a tartalom hosszabb, BELSŐ görgetősáv jelenik meg a doboz jobb szélén! */
     overflow-y: auto; 
 }
 
-/* Kisebb modal (pl. Törlés, User szerkesztés) */
 .neo-modal-content.small { 
     max-width: 450px; 
 }
 
-/* --- EGYEDI GÖRGETŐSÁV A MODAL DOBOZRA --- */
-.neo-modal-content::-webkit-scrollbar { 
-    width: 8px; 
-}
-.neo-modal-content::-webkit-scrollbar-track { 
-    background: rgba(0,0,0,0.2); 
-    border-radius: 8px; 
-    margin: 10px 0; /* Ne érjen teljesen a doboz tetejéhez/aljához */
-}
-.neo-modal-content::-webkit-scrollbar-thumb { 
-    background: #444; 
-    border-radius: 8px; 
-}
-.neo-modal-content::-webkit-scrollbar-thumb:hover { 
-    background: var(--primary); 
-}
+.neo-modal-content::-webkit-scrollbar { width: 8px; }
+.neo-modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 8px; margin: 10px 0; }
+.neo-modal-content::-webkit-scrollbar-thumb { background: #444; border-radius: 8px; }
+.neo-modal-content::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-/* Sub-tabs */
 .neo-sub-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
 .neo-sub-tab { background: rgba(255,255,255,0.05); color: #aaa; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: bold; font-size: 0.9rem; }
 .neo-sub-tab.active { background: rgba(62, 80, 255, 0.2); color: white; border: 1px solid var(--primary); }
 
 @keyframes neoFadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes neoFadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- MODERNEBB GÖRGETŐSÁV A MODALOKHOZ --- */
+.modal-content::-webkit-scrollbar { width: 6px; }
+.modal-content::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; margin: 10px 0; }
+.modal-content::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), #2c3bb7); border-radius: 10px; }
+.modal-content::-webkit-scrollbar-thumb:hover { background: #5c6cff; }
+
+/* Modern belső görgetősáv a mozik listájához */
+.modern-scrollbar::-webkit-scrollbar { width: 6px; }
+.modern-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+.modern-scrollbar::-webkit-scrollbar-thumb { background: #3e50ff; border-radius: 10px; }
+.modern-scrollbar::-webkit-scrollbar-thumb:hover { background: #2c3bb7; }
+.modern-scrollbar { scrollbar-width: thin; scrollbar-color: #3e50ff rgba(255, 255, 255, 0.05); }
+
+/* ====================================================== */
+/* --- KÁRTYA GOMBOK STABILIZÁLÁSA (FLEX FIX) --- */
+/* ====================================================== */
+
+/* Garantálja, hogy a kártya belső flexboxa ne nyomja el a gombokat */
+.movie-card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Kitölti a grid magasságát */
+}
+
+/* A szöveges tartalom fix mérete */
+.card-details {
+    flex-grow: 1; /* Kitölti az üres helyet a gombok FELETT */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* A gombok sorának fixálása */
+.top50-action-row,
+.card-buttons {
+    margin-top: auto; /* Garantáltan leragasztja az aljára */
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.card-buttons button,
+.btn-main-action.small, 
+.btn-secondary-action.small {
+    flex: 1; /* Minden gomb egyenletesen osztja el a helyet */
+    white-space: nowrap; /* Nem törhet 2 sorba a szöveg */
+    height: 40px !important; /* Fix magasság */
+    padding: 0 10px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top50-icons-group {
+    display: flex;
+    gap: 8px;
+    margin-left: auto; /* Mindig jobbra tolja a kis ikonokat */
+}
+
+.btn-circle-action.small {
+    width: 40px !important;
+    height: 40px !important;
+    flex-shrink: 0; /* Soha nem nyomódhat oválisra! */
+}

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-const getWeekNumber = (d) => {
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+// Garantálja a heti fix filmeket F5 után is
+const getCurrentFixedWeek = () => {
+    const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    return Math.floor(daysSinceEpoch / 7);
 };
 
 const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, openInfo, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) => {
@@ -44,11 +43,7 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
         else { setStatus(prev => ({ ...prev, listed: true })); handleAddToMyList(item); }
     };
 
-    const activeStyle = { 
-    color: '#00e676', 
-    borderColor: '#00e676', 
-    backgroundColor: 'rgba(15, 21, 43, 0.95)' // Ez egy sötét, de jól látható háttér
-};
+    const activeStyle = { color: '#00e676', borderColor: '#00e676', backgroundColor: 'rgba(15, 21, 43, 0.95)' };
 
     return (
         <div className="movie-card-container" onClick={() => openInfo(item)}>
@@ -79,10 +74,11 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
                 <h4>{item.cim}</h4>
                 <div className="card-meta">
                     <span>{item.megjelenes_ev || item.megjelenes_ev_start}</span>
+                    {/* ITT FRISSÜL MAJD A PONTSZÁM AZONNAL: */}
                     <span><i className="fas fa-star" style={{color: '#fbbf24'}}></i> {item.rating}</span>
                 </div>
             </div>
-            <div className="card-buttons">
+            <div className="card-buttons top50-action-row">
                 <button className="btn-card-play" onClick={(e) => { e.stopPropagation(); openStreaming(item); }}>
                     <i className="fas fa-play"></i> Megnézem
                 </button>
@@ -100,32 +96,83 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    // 1. ELSŐ BETÖLTÉS: Fix lista kiosztása (nem mozdul F5-re)
+    useEffect(() => {
         const fetchRecommendations = async () => {
             try {
+                // A cache: 'no-store' nagyon fontos, különben a régi adatot kapjuk!
                 const [moviesRes, seriesRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/filmek'),
-                    fetch('http://localhost:5000/api/sorozatok')
+                    fetch('http://localhost:5000/api/filmek', { cache: 'no-store' }),
+                    fetch('http://localhost:5000/api/sorozatok', { cache: 'no-store' })
                 ]);
                 const moviesData = await moviesRes.json();
                 const seriesData = await seriesRes.json();
+                
                 let combined = [];
-                if (moviesData.data) combined = [...combined, ...moviesData.data.filter(m => parseFloat(m.rating) > 7.5)];
-                if (seriesData.data) combined = [...combined, ...seriesData.data.filter(s => parseFloat(s.rating) > 7.5)];
-                combined.sort((a, b) => a.id - b.id);
+                if (moviesData.data) combined = [...combined, ...moviesData.data.filter(m => parseFloat(m.rating) > 7.0)];
+                if (seriesData.data) combined = [...combined, ...seriesData.data.filter(s => parseFloat(s.rating) > 7.0)];
+                
+                combined.sort((a, b) => {
+                    const cimA = a.cim || a.title || '';
+                    const cimB = b.cim || b.title || '';
+                    return cimA.localeCompare(cimB);
+                });
+                
                 if (combined.length > 0) {
-                    const currentWeek = getWeekNumber(new Date());
-                    const startIndex = (currentWeek * 7) % combined.length;
+                    const currentWeek = getCurrentFixedWeek(); 
+                    const startIndex = currentWeek % combined.length; 
+                    
                     let weeklySelection = [];
-                    for (let i = 0; i < 6; i++) { // 1 kiemelt + 5 lenti kép
+                    for (let i = 0; i < 6; i++) { 
                         weeklySelection.push(combined[(startIndex + i) % combined.length]);
                     }
+                    
                     setRecommendations({ featured: weeklySelection[0], list: weeklySelection.slice(1) });
                 }
             } catch (error) { console.error(error); } finally { setLoading(false); }
         };
         fetchRecommendations();
-    }, [interactionUpdate]);
+    }, []); // Üres tömb -> csak egyszer fut le!
 
+    // --- 2. CSENDES FRISSÍTŐ (A KULCS A MEGOLDÁSHOZ!) ---
+    // Ha írsz egy véleményt, lefut, és CSAK a kártyákon lévő "rating" értéket írja át a legújabbra!
+    useEffect(() => {
+        if (interactionUpdate === 0 || !recommendations.featured) return;
+
+        const updateRatingsSilently = async () => {
+            try {
+                const [moviesRes, seriesRes] = await Promise.all([
+                    fetch('http://localhost:5000/api/filmek', { cache: 'no-store' }),
+                    fetch('http://localhost:5000/api/sorozatok', { cache: 'no-store' })
+                ]);
+                const moviesData = await moviesRes.json();
+                const seriesData = await seriesRes.json();
+                const allData = [...(moviesData.data || []), ...(seriesData.data || [])];
+
+                setRecommendations(prev => {
+                    if (!prev.featured) return prev;
+
+                    const frissFeatured = allData.find(m => m.id === prev.featured.id) || prev.featured;
+                    const frissList = prev.list.map(item => {
+                        const frissItem = allData.find(m => m.id === item.id);
+                        return frissItem ? { ...item, rating: frissItem.rating } : item;
+                    });
+
+                    return {
+                        featured: { ...prev.featured, rating: frissFeatured.rating },
+                        list: frissList
+                    };
+                });
+            } catch (error) { console.error("Hiba a csendes frissítéskor:", error); }
+        };
+
+        updateRatingsSilently();
+    }, [interactionUpdate]); 
+
+    // Gombok státusza a fenti nagy kártyához
     useEffect(() => {
         const fetchStatus = async () => {
             if (!user || !recommendations.featured) return;
@@ -144,15 +191,23 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
         fetchStatus();
     }, [user, recommendations.featured, interactionUpdate]);
 
-    if (loading) return <div className="loading-screen"><h2>Ajánlások betöltése...</h2></div>;
-    if (!recommendations.featured) return <div className="loading-screen"><h2>Nincs ajánlat.</h2></div>;
+    const toggleFeaturedFav = () => {
+        if (!user) { handleAddToFav(recommendations.featured); return; }
+        if (status.favorite) { setStatus(p => ({ ...p, favorite: false })); handleRemoveFromFav(recommendations.featured); }
+        else { setStatus(p => ({ ...p, favorite: true })); handleAddToFav(recommendations.featured); }
+    };
+
+    const toggleFeaturedList = () => {
+        if (!user) { handleAddToMyList(recommendations.featured); return; }
+        if (status.listed) { setStatus(p => ({ ...p, listed: false })); handleRemoveFromList(recommendations.featured); }
+        else { setStatus(p => ({ ...p, listed: true })); handleAddToMyList(recommendations.featured); }
+    };
+
+    if (loading) return <div className="loading-screen" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}><h2>Ajánlások betöltése...</h2></div>;
+    if (!recommendations.featured) return <div className="loading-screen" style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}><h2>Nincs ajánlat.</h2></div>;
 
     const { featured, list } = recommendations;
-    const activeStyle = { 
-    color: '#00e676', 
-    borderColor: '#00e676', 
-    backgroundColor: 'rgba(15, 21, 43, 0.95)' // Ez egy sötét, de jól látható háttér
-};
+    const activeStyle = { color: '#00e676', borderColor: '#00e676', backgroundColor: 'rgba(15, 21, 43, 0.95)' };
 
     return (
         <div className="weekly-container">
@@ -178,8 +233,8 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
                             {user && (
                                 <>
                                     <div className="icon-separator"></div>
-                                    <button className={`btn-circle-action ${status.favorite ? 'active' : ''}`} onClick={() => handleAddToFav(featured)}><i className="fas fa-heart"></i></button>
-                                    <button className={`btn-circle-action ${status.listed ? 'active' : ''}`} onClick={() => handleAddToMyList(featured)}><i className="fas fa-plus"></i></button>
+                                    <button className={`btn-circle-action ${status.favorite ? 'active' : ''}`} onClick={toggleFeaturedFav}><i className="fas fa-heart"></i></button>
+                                    <button className={`btn-circle-action ${status.listed ? 'active' : ''}`} onClick={toggleFeaturedList}><i className="fas fa-plus"></i></button>
                                 </>
                             )}
                         </div>
@@ -193,7 +248,7 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
             <h3 className="weekly-subtitle">További izgalmas címek a hétre</h3>
             <div className="movies-grid">
                 {list.map((item, index) => (
-                    <WeeklyListCard key={`${item.id}-${index}`} item={item} user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />
+                    <WeeklyListCard key={`${item.id || item._id}-${index}`} item={item} user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />
                 ))}
             </div>
         </div>

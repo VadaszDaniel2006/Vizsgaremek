@@ -20,7 +20,7 @@ import CinemaMap from './pages/CinemaMap';
 
 import './App.css'; 
 
-// --- HERO SLIDE (Itt kapta meg az openReviews propot) ---
+// --- HERO SLIDE ---
 const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, openTrailer, interactionUpdate, openReviews }) => {
     const [status, setStatus] = useState({ favorite: false, listed: false });
 
@@ -74,7 +74,6 @@ const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handl
                         <button className="btn-watch" onClick={() => openStreaming(movie)}><i className="fas fa-play"></i> Megnézem</button>
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.favorite ? activeStyle : {}) }} onClick={toggleFav}><i className="fas fa-heart"></i></button>
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.listed ? activeStyle : {}) }} onClick={toggleList}><i className="fas fa-plus"></i></button>
-                        {/* ÚJ KOMMENT GOMB A HERO SZEKCIÓBAN */}
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px' }} onClick={() => openReviews(movie)}><i className="fas fa-comment-alt"></i></button>
                     </div>
                 </div>
@@ -163,9 +162,42 @@ function App() {
 
   const showNotification = (message, type = 'success') => { setToast({ message, type }); };
   
-  const handleReviewChange = () => { 
-      fetchAllData(user ? user.id : ''); 
+  // --- JAVÍTVA: Csendes frissítés az értékelésekhez (Sorrend marad, szám változik!) ---
+  const handleReviewChange = async () => { 
       setInteractionUpdate(prev => prev + 1); 
+      
+      const uid = user ? user.id : '';
+      try {
+          // A { cache: 'no-store' } KÖTELEZŐ, különben a böngésző a régi pontszámot adja vissza F5 nélkül is!
+          const [movieRes, seriesRes] = await Promise.all([
+              fetch(`http://localhost:5000/api/filmek?userId=${uid}`, { cache: 'no-store' }),
+              fetch(`http://localhost:5000/api/sorozatok?userId=${uid}`, { cache: 'no-store' })
+          ]);
+          
+          const movieJson = await movieRes.json();
+          const seriesJson = await seriesRes.json();
+
+          if (movieJson.data) {
+              setMoviesData(prev => prev.map(m => {
+                  const friss = movieJson.data.find(fm => fm.id === m.id);
+                  return friss ? { ...m, rating: friss.rating } : m;
+              }));
+              
+              setFeaturedMovies(prev => prev.map(m => {
+                  const friss = movieJson.data.find(fm => fm.id === m.id);
+                  return friss ? { ...m, rating: friss.rating } : m;
+              }));
+          }
+          
+          if (seriesJson.data) {
+              setSeriesData(prev => prev.map(s => {
+                  const friss = seriesJson.data.find(fs => fs.id === s.id);
+                  return friss ? { ...s, rating: friss.rating } : s;
+              }));
+          }
+      } catch (error) {
+          console.error("Nem sikerült frissíteni az értékeléseket:", error);
+      }
   };
 
   const fetchSidebarData = async (type) => {
@@ -205,12 +237,20 @@ function App() {
   const openInfo = (movie) => setInfoModal({ isOpen: true, movie });
   const closeInfo = () => setInfoModal({ ...infoModal, isOpen: false });
 
+  // --- JAVÍTOTT RÉSZ: Garantálja a helyes Media ID átadását a Sidebarból! ---
   const handleSidebarItemClick = (partialItem) => {
-      const fullMovie = moviesData.find(m => m.id == partialItem.id) || seriesData.find(s => s.id == partialItem.id);
+      // 1. Kiszedjük a valós azonosítót, akárhogy is nevezte el az adatbázis JOIN-ja
+      const realMediaId = partialItem.media_id || partialItem.film_id || partialItem.sorozat_id || partialItem.id || partialItem._id;
+      
+      const fullMovie = moviesData.find(m => m.id == realMediaId) || seriesData.find(s => s.id == realMediaId);
+      
       if (fullMovie) {
-          const mergedMovie = { ...fullMovie, platformok: (partialItem.platformok && partialItem.platformok.length > 0) ? partialItem.platformok : fullMovie.platformok };
+          const mergedMovie = { ...fullMovie, ...partialItem, id: realMediaId };
           openInfo(mergedMovie);
-      } else { openInfo(partialItem); }
+      } else { 
+          // 2. Biztosítjuk, hogy a 'Megnézem' gombnak már a jó id kerüljön át
+          openInfo({ ...partialItem, id: realMediaId }); 
+      }
   };
 
   const handleAddToFav = async (movie) => {
@@ -335,7 +375,7 @@ function App() {
                                         handleRemoveFromList={handleRemoveFromList}
                                         openTrailer={openTrailer}
                                         interactionUpdate={interactionUpdate}
-                                        openReviews={openReviews} /* ITT ADJUK ÁT A FUNKCIÓT A HERO SLIDE-NAK */
+                                        openReviews={openReviews}
                                     />
                                 ))}
                             </div>
