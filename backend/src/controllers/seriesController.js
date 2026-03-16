@@ -15,7 +15,7 @@ exports.getAllSeries = async (req, res) => {
                     k.nev AS kategoria, 
                     r.nev AS rendezo,
                     GROUP_CONCAT(
-                        DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
+                        DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '#')) 
                         SEPARATOR ';;;'
                     ) AS platform_raw
                 FROM media m
@@ -110,7 +110,7 @@ exports.getTop50Series = async (req, res) => {
                 k.nev AS kategoria,
                 r.nev AS rendezo,
                 GROUP_CONCAT(
-                    DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '')) 
+                    DISTINCT CONCAT_WS('|||', p.nev, IFNULL(p.logo_url, ''), IFNULL(p.weboldal_url, '#')) 
                     SEPARATOR ';;;'
                 ) AS platform_raw
             FROM media m

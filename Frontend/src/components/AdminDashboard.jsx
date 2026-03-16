@@ -47,18 +47,19 @@ export default function AdminDashboard({ refreshApp }) {
     const isAnyModalOpen = editingMedia || editingUser || showDeleteModal || showMediaDeleteModal || showReviewDeleteModal;
     useEffect(() => {
         const bgContainer = document.querySelector('.neo-admin-bg');
-        if (bgContainer) {
-            if (isAnyModalOpen) {
-                bgContainer.classList.add('admin-dashboard-modal-open');
-                document.body.style.overflow = 'hidden';
-            } else {
-                bgContainer.classList.remove('admin-dashboard-modal-open');
-                document.body.style.overflow = 'auto';
-            }
+        if (isAnyModalOpen) {
+            if (bgContainer) bgContainer.classList.add('admin-dashboard-modal-open');
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden'; // A HTML taget is le kell zárni!
+        } else {
+            if (bgContainer) bgContainer.classList.remove('admin-dashboard-modal-open');
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         }
         return () => { 
             if (bgContainer) bgContainer.classList.remove('admin-dashboard-modal-open');
-            document.body.style.overflow = 'auto'; 
+            document.body.style.overflow = ''; 
+            document.documentElement.style.overflow = ''; 
         };
     }, [isAnyModalOpen]);
 
@@ -96,7 +97,11 @@ export default function AdminDashboard({ refreshApp }) {
         try { 
             const res = await fetch('http://localhost:5000/api/admin/mozik', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
             const data = await res.json(); 
-            if (res.ok) setMozikList(data); 
+            if (res.ok) {
+                // JAVÍTÁS: Kiszűrjük a duplikált mozikat, hogy a szerkesztőben egy mozi csak egyszer szerepeljen
+                const uniqueMozik = Array.from(new Map(data.map(m => [m.id, m])).values());
+                setMozikList(uniqueMozik); 
+            }
         } catch (err) { console.error("Hiba a mozik lekérésekor", err); }
     };
 
@@ -128,6 +133,16 @@ export default function AdminDashboard({ refreshApp }) {
 
     const openEditMediaModal = (media) => {
         setEditingMedia(media);
+
+        // JAVÍTÁS: Biztosítjuk, hogy a mozi azonosítók tiszta, duplikációmentes tömbben legyenek
+        let parsedMoziIds = [];
+        if (Array.isArray(media.mozi_ids)) {
+            parsedMoziIds = media.mozi_ids;
+        } else if (typeof media.mozi_ids === 'string' && media.mozi_ids.trim() !== '') {
+            parsedMoziIds = media.mozi_ids.split(',').map(id => parseInt(id.trim(), 10));
+        }
+        parsedMoziIds = [...new Set(parsedMoziIds)]; // Duplikációk kigyomlálása
+
         setUploadData({ 
             tipus: media.tipus || 'film', cim: media.cim || '', leiras: media.leiras || '', 
             poszter_url: media.poszter_url || '', elozetes_url: media.elozetes_url || '', 
@@ -135,7 +150,7 @@ export default function AdminDashboard({ refreshApp }) {
             evadok_szama: media.evadok_szama || '', hossz_perc: media.hossz_perc || '', 
             alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || '',
             rendezo_nev: media.rendezo_nev || '', nemzetiseg_nev: media.nemzetiseg_nev || '', platform_id: media.platform_id || '',
-            mozi_ids: media.mozi_ids || []
+            mozi_ids: parsedMoziIds
         });
     };
 
@@ -218,12 +233,12 @@ export default function AdminDashboard({ refreshApp }) {
             {uploadData.tipus === 'film' && (
                 <div className="neo-input-group neo-full-width">
                     <label><i className="fas fa-ticket-alt"></i> Vetítő Mozik (Többet is kiválaszthatsz)</label>
-                    <div className="neo-input" style={{ maxHeight: '150px', overflowY: 'auto', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(0,0,0,0.2)' }}>
+                    <div className="neo-input modern-scrollbar" style={{ maxHeight: '350px', overflowY: 'auto', padding: '15px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', background: 'rgba(0,0,0,0.2)' }}>
                         {mozikList.map(mozi => (
                             <label key={mozi.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'normal', color: '#ccc' }}>
                                 <input 
                                     type="checkbox" 
-                                    checked={uploadData.mozi_ids?.includes(mozi.id) || false}
+                                    checked={uploadData.mozi_ids?.includes(mozi.id) || uploadData.mozi_ids?.includes(String(mozi.id)) || false}
                                     onChange={(e) => {
                                         const isChecked = e.target.checked;
                                         setUploadData(prev => {
@@ -231,8 +246,8 @@ export default function AdminDashboard({ refreshApp }) {
                                             return {
                                                 ...prev,
                                                 mozi_ids: isChecked 
-                                                    ? [...currentIds, mozi.id] 
-                                                    : currentIds.filter(id => id !== mozi.id)
+                                                    ? [...new Set([...currentIds, mozi.id])] 
+                                                    : currentIds.filter(id => id !== mozi.id && id !== String(mozi.id))
                                             };
                                         });
                                     }}

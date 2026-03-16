@@ -97,7 +97,7 @@ const MovieCard = ({
         style={{ flexShrink: 0 }} // JAVÍTÁS 3: A kép sosem nyomódhat össze
       >
         <div className="card-image">
-          <img src={movie.poszter_url || movie.poster} alt={movie.cim} loading="lazy" />
+          <img src={movie.poszter_url || movie.poster} alt={movie.cim} loading="lazy" decoding="async" />
           <div className="card-overlay">
             <i className="fas fa-play-circle"></i>
           </div>

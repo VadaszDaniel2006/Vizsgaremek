@@ -36,7 +36,7 @@ const Top50ListItem = ({ item, index, type, user, openStreaming, openTrailer, op
         <div className="top50-list-item">
             <div className="top50-rank-column">#{index + 1}</div>
             
-            <img src={item.poszter_url} alt={item.cim} className="top50-poster-wide" style={{ cursor: 'default' }} />
+            <img src={item.poszter_url} alt={item.cim} className="top50-poster-wide" style={{ cursor: 'default' }} loading="lazy" decoding="async" />
             
             <div className="top50-details-column">
                 <h2 style={{ cursor: 'default' }}>{item.cim}</h2>

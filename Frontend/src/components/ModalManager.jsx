@@ -114,28 +114,40 @@ export default function ModalManager({
             
             <div className="streaming-services-container" style={{ padding: '10px' }}>
               
-              {isLoading ? (
-                <p style={{textAlign: 'center', padding:'20px', color:'#ccc'}}>Adatok betöltése...</p>
-              ) : (
-                <>
-                  {liveStreaming.length > 0 && (
-                    <div className="platforms-section" style={{ marginBottom: liveMozik.length > 0 ? '20px' : '0' }}>
-                      <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Streaming</h4>
-                      <div className="streaming-services">
-                        {liveStreaming.map((platform, index) => {
-                          const logoSrc = platform.logo || platform.logo_url;
-                          const webUrl = platform.kozvetlen_link || platform.weboldal_url || '#';
-                          return (
-                            <div key={`plat-${index}`} className="streaming-service" onClick={() => window.open(webUrl, '_blank')}>
-                                <div className="service-logo">{logoSrc ? <img src={logoSrc} alt={platform.nev} /> : <i className="fas fa-tv"></i>}</div>
-                                <span>{platform.nev}</span>
-                                <i className="fas fa-external-link-alt" style={{marginLeft:'auto', color:'#888'}}></i>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
+              {/* Nem blokkoljuk a felületet! Azonnal mutatjuk a streaminget, a mozi pedig csendben tölt be. */}
+              <>
+                  {isLoading && <p style={{textAlign: 'center', fontSize: '0.85rem', color:'#3e50ff', margin: '5px 0'}}><i className="fas fa-spinner fa-spin"></i> Élő moziműsor frissítése...</p>}
+                  {(() => {
+                    // Szigorú szűrő: Csak a valós, névvel rendelkező platformokat engedjük át!
+                    const activePlatforms = (liveStreaming.length > 0 ? liveStreaming : (streamingModal.movie?.platform_lista || [])).filter(p => p && p.nev && p.nev.trim() !== '');
+                    
+                    if (activePlatforms.length > 0) {
+                      return (
+                        <div className="platforms-section" style={{ marginBottom: liveMozik.length > 0 ? '20px' : '0' }}>
+                          <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Streaming</h4>
+                          <div className="streaming-services">
+                            {activePlatforms.map((platform, index) => {
+                              const logoSrc = platform.logo || platform.logo_url;
+                              let webUrl = platform.url || platform.weboldal_url || platform.link || '#';
+                              
+                              if (webUrl !== '#' && !webUrl.startsWith('http://') && !webUrl.startsWith('https://')) {
+                                  webUrl = 'https://' + webUrl;
+                              }
+
+                              return (
+                                <div key={`plat-${index}`} className="streaming-service" onClick={(e) => { e.stopPropagation(); if (webUrl !== '#') window.open(webUrl, '_blank'); }}>
+                                    <div className="service-logo">{logoSrc ? <img src={logoSrc} alt={platform.nev} /> : <i className="fas fa-tv"></i>}</div>
+                                    <span>{platform.nev}</span>
+                                    <i className="fas fa-external-link-alt" style={{marginLeft:'auto', color:'#888'}}></i>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   {(() => {
                     const ma = new Date();
@@ -204,11 +216,26 @@ export default function ModalManager({
                     return null;
                   })()}
 
-                  {liveStreaming.length === 0 && liveMozik.length === 0 && (
-                    <p style={{textAlign: 'center', padding:'20px', color:'#ccc'}}>Nincs elérhető megtekintési adat ehhez a filmhez.</p>
-                  )}
+                  {(() => {
+                    const activePlatforms = (liveStreaming.length > 0 ? liveStreaming : (streamingModal.movie?.platform_lista || [])).filter(p => p && p.nev && p.nev.trim() !== '');
+                    const hasStreaming = activePlatforms.length > 0;
+                    const hasCinema = liveMozik.length > 0;
+                    const ma = new Date();
+                    const premier = streamingModal.movie.premier_datum ? new Date(streamingModal.movie.premier_datum) : null;
+                    const isJovobeli = premier && premier > ma;
+
+                    if (!hasStreaming && !hasCinema && !isJovobeli) {
+                      return (
+                        <div style={{ textAlign: 'center', padding: '30px 20px', color: '#ccc', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.1)', marginTop: '10px' }}>
+                            <i className="fas fa-video-slash" style={{ fontSize: '2.5rem', color: '#555', marginBottom: '15px' }}></i>
+                            <h4 style={{ color: '#eee', marginBottom: '10px', fontSize: '1.2rem' }}>Ma már nem elérhető</h4>
+                            <p style={{ fontSize: '0.95rem', lineHeight: '1.5', margin: 0 }}>Sajnos a mai napra már minden mozielőadás lement, és jelenleg egyetlen streaming platformon sem található meg.</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </>
-              )}
             </div>
           </div>
         </div>

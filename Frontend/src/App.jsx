@@ -78,7 +78,7 @@ const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handl
                     </div>
                 </div>
                 <div className="slide-right-image-frame">
-                    <img src={movie.poszter_url} alt={movie.cim} />
+                    <img src={movie.poszter_url} alt={movie.cim} loading={isActive ? "eager" : "lazy"} decoding="async" fetchpriority={isActive ? "high" : "low"} />
                     <button className="play-btn-on-image" onClick={() => openTrailer(movie.elozetes_url, movie.cim)}><i className="fas fa-play"></i></button>
                 </div>
             </div>
