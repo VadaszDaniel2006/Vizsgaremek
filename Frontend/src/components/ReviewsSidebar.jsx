@@ -63,7 +63,7 @@ const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRe
             const res = await fetch(`http://localhost:5000/api/interactions/reviews/${reviewToReport}/report`, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ reason: reportReason }) 
+                body: JSON.stringify({ reason: reportReason, userId: user ? user.id : null }) 
             });
             const data = await res.json();
             if(onShowNotification) onShowNotification(data.message, res.ok ? "success" : "error");

@@ -38,7 +38,20 @@ exports.updateUser = async (req, res) => {
 
 exports.getReportedReviews = async (req, res) => {
     try {
-        const sql = `SELECT r.id, r.szoveg as comment, r.pontszam as rating, r.letrehozva as created_at, r.jelentes_oka as report_reason, u.felhasznalonev as username, m.cim as media_title FROM ertekelesek r JOIN felhasznalok u ON r.felhasznalo_id = u.id JOIN media m ON r.media_id = m.id WHERE r.jelentve = 1 ORDER BY r.letrehozva DESC`;
+        const sql = `
+            SELECT 
+                r.id, r.szoveg as comment, r.pontszam as rating, r.letrehozva as created_at, 
+                r.jelentes_oka as report_reason, 
+                u.felhasznalonev as username, 
+                m.cim as media_title,
+                reporter_user.felhasznalonev AS reporter_username
+            FROM ertekelesek r 
+            JOIN felhasznalok u ON r.felhasznalo_id = u.id 
+            JOIN media m ON r.media_id = m.id 
+            LEFT JOIN felhasznalok reporter_user ON r.jelento_id = reporter_user.id
+            WHERE r.jelentve = 1 
+            ORDER BY r.letrehozva DESC
+        `;
         const [reviews] = await db.query(sql); res.json(reviews);
     } catch (error) { res.status(500).json({ message: 'Szerver hiba.' }); }
 };

@@ -394,14 +394,19 @@ export default function AdminDashboard({ refreshApp }) {
                             </div>
                         ) : (
                             <table className="neo-table">
-                                <thead><tr><th>Jelentett Tartalom</th><th>Felhasználó</th><th>Vélemény</th><th style={{textAlign: 'right'}}>Döntés</th></tr></thead>
+                                <thead><tr><th>Jelentett Tartalom</th><th>Érintett (Szerző)</th><th>Jelentette</th><th>Vélemény</th><th style={{textAlign: 'right'}}>Döntés</th></tr></thead>
                                 <tbody>{reportedReviews.map(review => (
                                     <tr key={review.id}>
                                         <td>
                                             <div className="neo-item-title" style={{color: '#8c9eff'}}>{review.media_title}</div>
                                             <div className="neo-item-sub" style={{color: '#e74c3c', marginTop: '5px', fontWeight: 'bold'}}><i className="fas fa-exclamation-triangle"></i> Ok: {review.report_reason || 'Nincs megadva'}</div>
                                         </td>
-                                        <td><span className="neo-badge tag">@{review.username}</span></td>
+                                        <td>
+                                            <span className="neo-badge tag">@{review.username}</span>
+                                        </td>
+                                        <td>
+                                            <span className="neo-badge admin">@{review.reporter_username || 'Ismeretlen'}</span>
+                                        </td>
                                         <td style={{ maxWidth: '350px' }}>
                                             <div style={{ color: '#f5c518', marginBottom: '8px', fontSize: '0.95rem', fontWeight: 'bold' }}><i className="fas fa-star"></i> {review.rating}/10</div>
                                             <div style={{ color: '#ccc', fontStyle: 'italic', lineHeight: 1.6 }}>"{review.comment}"</div>

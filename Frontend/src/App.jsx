@@ -22,7 +22,7 @@ import './App.css';
 
 // --- HERO SLIDE ---
 const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, openTrailer, interactionUpdate, openReviews }) => {
-    const [status, setStatus] = useState({ favorite: false, listed: false });
+    const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -74,7 +74,7 @@ const HeroSlide = ({ movie, isActive, user, openStreaming, handleAddToFav, handl
                         <button className="btn-watch" onClick={() => openStreaming(movie)}><i className="fas fa-play"></i> Megnézem</button>
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.favorite ? activeStyle : {}) }} onClick={toggleFav}><i className="fas fa-heart"></i></button>
                         <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.listed ? activeStyle : {}) }} onClick={toggleList}><i className="fas fa-plus"></i></button>
-                        <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px' }} onClick={() => openReviews(movie)}><i className="fas fa-comment-alt"></i></button>
+                        <button className="btn-watch" style={{ background: 'rgba(255,255,255,0.2)', marginLeft:'10px', ...(status.reviewed ? activeStyle : {}) }} onClick={() => openReviews(movie)}><i className="fas fa-comment-alt"></i></button>
                     </div>
                 </div>
                 <div className="slide-right-image-frame">

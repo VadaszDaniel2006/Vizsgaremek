@@ -165,10 +165,10 @@ exports.checkStatus = async (req, res) => {
 // --- BIZTONSÁGOS JELENTÉS BEKÜLDÉSE (FALLBACK-KEL) ---
 exports.reportReview = async (req, res) => {
     const { reviewId } = req.params;
-    const { reason } = req.body; 
+    const { reason, userId } = req.body; 
     try {
         // 1. Megpróbáljuk a módosított adatbázis szerint (indoklással) menteni
-        await db.query('UPDATE ertekelesek SET jelentve = 1, jelentes_oka = ? WHERE id = ?', [reason || 'Egyéb', reviewId]);
+        await db.query('UPDATE ertekelesek SET jelentve = 1, jelentes_oka = ?, jelento_id = ? WHERE id = ?', [reason || 'Egyéb', userId || null, reviewId]);
         res.status(200).json({ message: "Köszönjük! A véleményt jelentetted az adminoknak." });
     } catch (err) { 
         console.error("Hiba az indoklás mentésénél (hiányzó Docker oszlop?):", err.message);
