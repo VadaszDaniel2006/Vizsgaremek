@@ -2,6 +2,7 @@ const db = require('../config/db');
 
 exports.getAllSeries = async (req, res) => {
     const userId = req.query.userId;
+    const isRandom = req.query.random === 'true';
 
     try {
         let query = "";
@@ -30,8 +31,11 @@ exports.getAllSeries = async (req, res) => {
                 ) AS user_prefs ON m.kategoria_id = user_prefs.kategoria_id
                 WHERE m.tipus = 'sorozat'
                 GROUP BY m.id, user_prefs.kategoria_id
-                ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC
-                LIMIT 12
+                ${isRandom 
+                    ? "ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC"
+                    : "ORDER BY CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 1 ELSE 0 END DESC, m.rating DESC, m.id DESC"
+                }
+                LIMIT 50
             `;
             params.push(userId);
         } else {
@@ -51,8 +55,11 @@ exports.getAllSeries = async (req, res) => {
                 LEFT JOIN platformok p ON mp.platform_id = p.id
                 WHERE m.tipus = 'sorozat'
                 GROUP BY m.id
-                ORDER BY RAND()
-                LIMIT 12
+                ${isRandom 
+                    ? "ORDER BY RAND()"
+                    : "ORDER BY m.rating DESC, m.id DESC"
+                }
+                LIMIT 50
             `;
         }
 

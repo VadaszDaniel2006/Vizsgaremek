@@ -2,6 +2,7 @@ const db = require('../config/db');
 
 exports.getAllMovies = async (req, res) => {
     const userId = req.query.userId;
+    const isRandom = req.query.random === 'true'; // Megnézzük, kér-e keverést a frontend
 
     try {
         let query = "";
@@ -38,9 +39,11 @@ exports.getAllMovies = async (req, res) => {
                 ) AS user_prefs ON m.kategoria_id = user_prefs.kategoria_id
                 WHERE m.tipus = 'film'
                 GROUP BY m.id, user_prefs.kategoria_id
-                -- 3-szoros esély a kedvenceknek, de a többi is bekerülhet (kevert lista!)
-                ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC
-                LIMIT 17
+                ${isRandom 
+                    ? "ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC"
+                    : "ORDER BY CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 1 ELSE 0 END DESC, m.rating DESC, m.id DESC"
+                }
+                LIMIT 50
             `;
             params.push(userId);
         } else {
@@ -68,8 +71,11 @@ exports.getAllMovies = async (req, res) => {
                 LEFT JOIN mozik mo ON mm.mozi_id = mo.id
                 WHERE m.tipus = 'film'
                 GROUP BY m.id
-                ORDER BY RAND()
-                LIMIT 17
+                ${isRandom 
+                    ? "ORDER BY RAND()"
+                    : "ORDER BY m.rating DESC, m.id DESC"
+                }
+                LIMIT 50
             `;
         }
 

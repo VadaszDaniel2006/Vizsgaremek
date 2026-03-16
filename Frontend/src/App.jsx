@@ -111,10 +111,10 @@ function App() {
   const fetchAllData = useCallback(async (currentUserId = '') => {
       const uid = typeof currentUserId === 'object' ? '' : currentUserId;
       try {
-        const movieResponse = await fetch(`http://localhost:5000/api/filmek?userId=${uid}`, { cache: 'no-store' });
+        const movieResponse = await fetch(`http://localhost:5000/api/filmek?userId=${uid}&random=true`, { cache: 'no-store' });
         const movieJson = await movieResponse.json();
         
-        const seriesResponse = await fetch(`http://localhost:5000/api/sorozatok?userId=${uid}`, { cache: 'no-store' });
+        const seriesResponse = await fetch(`http://localhost:5000/api/sorozatok?userId=${uid}&random=true`, { cache: 'no-store' });
         const seriesJson = await seriesResponse.json();
         
         if(movieJson.data) { 

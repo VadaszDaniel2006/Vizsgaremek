@@ -6,6 +6,29 @@ const getCurrentFixedWeek = () => {
     return Math.floor(daysSinceEpoch / 7);
 };
 
+// Robusztus PRNG (Mulberry32) - 100% stabil minden böngészőben és újratöltéskor!
+const mulberry32 = (a) => {
+    return function() {
+      var t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+};
+
+// Tömb megkeverése a stabil seed alapján (Fisher-Yates)
+const shuffleArray = (array, seed) => {
+    const random = mulberry32(seed); // Stabil generátor a heti seedből
+    let m = array.length, t, i;
+    while (m) {
+        i = Math.floor(random() * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+    }
+    return array;
+};
+
 const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, openInfo, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) => {
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
     const isSeries = item.evadok_szama !== undefined || item.sorozat_id !== undefined || !item.megjelenes_ev;
@@ -115,19 +138,35 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
                 if (moviesData.data) combined = [...combined, ...moviesData.data.filter(m => parseFloat(m.rating) > 7.0)];
                 if (seriesData.data) combined = [...combined, ...seriesData.data.filter(s => parseFloat(s.rating) > 7.0)];
                 
+                // Szigorú stabilizálás Típus, ID és Cím alapján, hogy az F5 soha ne tudjon más sorrendet csinálni!
                 combined.sort((a, b) => {
+                    const typeA = a.tipus || (a.evadok_szama !== undefined ? 'sorozat' : 'film');
+                    const typeB = b.tipus || (b.evadok_szama !== undefined ? 'sorozat' : 'film');
+                    if (typeA !== typeB) return typeA.localeCompare(typeB);
+
+                    const idA = parseInt(a.id || a._id || 0, 10);
+                    const idB = parseInt(b.id || b._id || 0, 10);
+                    if (idA !== idB) return idA - idB;
+                    
                     const cimA = a.cim || a.title || '';
                     const cimB = b.cim || b.title || '';
                     return cimA.localeCompare(cimB);
                 });
+
+                // DEBUG: Ellenőrizzük, hogy a Backend ugyanazokat az adatokat küldi-e F5-önként!
+                console.log("ÖSSZES BEÉRKEZETT (7.0 feletti) ELEM SZÁMA:", combined.length);
+                console.log("ELSŐ 5 ELEM ID-JA (Miután a React sorba rakta):", combined.slice(0, 5).map(i => i.id || i._id));
                 
                 if (combined.length > 0) {
-                    const currentWeek = getCurrentFixedWeek(); 
-                    const startIndex = currentWeek % combined.length; 
+                    const currentWeek = getCurrentFixedWeek();
+                    
+                    // Megkeverjük a tömböt a heti "seed" alapján, így garantáltan csak hetente változik
+                    const shuffled = shuffleArray([...combined], currentWeek);
                     
                     let weeklySelection = [];
-                    for (let i = 0; i < 6; i++) { 
-                        weeklySelection.push(combined[(startIndex + i) % combined.length]);
+                    for (let i = 0; i < 6; i++) {
+                        // Ha kevesebb mint 6 elem van összesen, akkor ismétlődéssel töltjük fel
+                        weeklySelection.push(shuffled[i % shuffled.length]);
                     }
                     
                     setRecommendations({ featured: weeklySelection[0], list: weeklySelection.slice(1) });
@@ -155,9 +194,11 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
                 setRecommendations(prev => {
                     if (!prev.featured) return prev;
 
-                    const frissFeatured = allData.find(m => m.id === prev.featured.id) || prev.featured;
+                    const getTargetType = (item) => item.tipus || (item.evadok_szama !== undefined ? 'sorozat' : 'film');
+
+                    const frissFeatured = allData.find(m => m.id === prev.featured.id && getTargetType(m) === getTargetType(prev.featured)) || prev.featured;
                     const frissList = prev.list.map(item => {
-                        const frissItem = allData.find(m => m.id === item.id);
+                        const frissItem = allData.find(m => m.id === item.id && getTargetType(m) === getTargetType(item));
                         return frissItem ? { ...item, rating: frissItem.rating } : item;
                     });
 
