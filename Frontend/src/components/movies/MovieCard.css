@@ -19,7 +19,7 @@
 .card-overlay i { font-size: 3.5rem; color: white; filter: drop-shadow(0 0 10px var(--primary)); }
 
 /* Gombok és Ikonok a képen */
-.user-interactions { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 20; opacity: 0; transition: opacity 0.3s ease; min-height: 32px; }
+.user-interactions { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: row !important; flex-wrap: nowrap !important; gap: 8px; z-index: 20; opacity: 0; transition: opacity 0.3s ease; min-height: 32px; }
 .movie-card:hover .user-interactions { opacity: 1; }
 .btn-fav, .btn-add-list, .btn-icon { background-color: rgba(0, 0, 0, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.3); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; font-size: 14px; backdrop-filter: blur(4px); }
 .btn-fav:hover, .btn-icon:hover { background-color: rgba(229, 9, 20, 0.9); border-color: #e50914; transform: scale(1.1); }
@@ -33,9 +33,20 @@ div.movie-card-container div.card-details h4 { font-family: 'Inter', sans-serif 
 .card-meta i { color: #f5c518; margin-right: 4px; }
 
 /* Kártya alján lévő gombok */
-.card-buttons { padding: 12px; display: flex; gap: 10px; margin-top: auto; background: #0f152b; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 100; align-items: center; width: 100%; }
+.card-buttons { padding: 12px; display: flex; gap: 10px; margin-top: auto; background: #0f152b; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 100; align-items: center; width: 100%; flex-shrink: 0; }
 .card-buttons button { flex: 1; border: none; padding: 0 10px !important; height: 40px !important; border-radius: 6px; font-size: 14px !important; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; }
 .btn-card-play { background: var(--primary); color: white; }
 .btn-card-play:hover { background: #2c3bb7; }
 .btn-card-info { background: rgba(255,255,255,0.1); color: white; }
 .btn-card-info:hover { background: rgba(255,255,255,0.25); color: white; }
+
+/* Globális kiegészítés a Top 50 és egyedi gombok egymás mellé rendezéséhez szűk grid esetén is */
+.user-interactions, .top50-icons-group, .top50-action-row {
+    flex-wrap: nowrap !important;
+}
+
+/* Felugró ablakok (Modal) biztosítása a rétegrend tetején, hogy sose legyenek láthatatlanok */
+[class*="modal-overlay"], .modal-overlay, div[class*="modal"] {
+    z-index: 99999 !important;
+    visibility: visible !important;
+}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Modal.css'; // <--- EZ A SOR KERÜLT BELE JAVÍTÁSKÉNT!
 
 export default function ModalManager({ 
   trailerModal, closeTrailer, 

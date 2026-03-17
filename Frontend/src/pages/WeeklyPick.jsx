@@ -33,6 +33,8 @@ const shuffleArray = (array, seed) => {
 const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, openInfo, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) => {
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
     const isSeries = item.evadok_szama !== undefined || item.sorozat_id !== undefined || !item.megjelenes_ev;
+    
+    const safeItem = { ...item, tipus: item.tipus || (isSeries ? 'sorozat' : 'film') };
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -55,22 +57,22 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
 
     const toggleFav = (e) => {
         e.preventDefault(); e.stopPropagation();
-        if (!user) return handleAddToFav(item);
-        if (status.favorite) { setStatus(prev => ({ ...prev, favorite: false })); handleRemoveFromFav(item); }
-        else { setStatus(prev => ({ ...prev, favorite: true })); handleAddToFav(item); }
+        if (!user) return handleAddToFav(safeItem);
+        if (status.favorite) { setStatus(prev => ({ ...prev, favorite: false })); handleRemoveFromFav(safeItem); }
+        else { setStatus(prev => ({ ...prev, favorite: true })); handleAddToFav(safeItem); }
     };
 
     const toggleList = (e) => {
         e.preventDefault(); e.stopPropagation();
-        if (!user) return handleAddToMyList(item);
-        if (status.listed) { setStatus(prev => ({ ...prev, listed: false })); handleRemoveFromList(item); }
-        else { setStatus(prev => ({ ...prev, listed: true })); handleAddToMyList(item); }
+        if (!user) return handleAddToMyList(safeItem);
+        if (status.listed) { setStatus(prev => ({ ...prev, listed: false })); handleRemoveFromList(safeItem); }
+        else { setStatus(prev => ({ ...prev, listed: true })); handleAddToMyList(safeItem); }
     };
 
     const activeStyle = { color: '#00e676', borderColor: '#00e676', backgroundColor: 'rgba(15, 21, 43, 0.95)' };
 
     return (
-        <div className="movie-card-container" onClick={() => openInfo(item)}>
+        <div className="movie-card-container" onClick={() => openInfo(safeItem)}>
             <div className="movie-card">
                 <div className="card-image">
                     <img src={item.poszter_url} alt={item.cim} loading="lazy" />
@@ -78,7 +80,7 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
                         <i className="fas fa-play-circle"></i>
                     </div>
                     <div className="user-interactions">
-                        <button className="btn-icon" onClick={(e) => { e.stopPropagation(); openReviews(item); }} style={status.reviewed ? activeStyle : {}}>
+                        <button className="btn-icon" onClick={(e) => { e.stopPropagation(); openReviews(safeItem); }} style={status.reviewed ? activeStyle : {}}>
                             <i className="fas fa-comment-alt"></i>
                         </button>
                         {user && (
@@ -103,10 +105,10 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
                 </div>
             </div>
             <div className="card-buttons top50-action-row">
-                <button className="btn-card-play" onClick={(e) => { e.stopPropagation(); openStreaming(item); }}>
+                <button className="btn-card-play" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openStreaming(safeItem); }}>
                     <i className="fas fa-play"></i> Megnézem
                 </button>
-                <button className="btn-card-info" onClick={(e) => { e.stopPropagation(); openInfo(item); }}>
+                <button className="btn-card-info" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openInfo(safeItem); }}>
                     <i className="fas fa-info-circle"></i> Részletek
                 </button>
             </div>
@@ -251,6 +253,9 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
     const { featured, list } = recommendations;
     const activeStyle = { color: '#00e676', borderColor: '#00e676', backgroundColor: 'rgba(15, 21, 43, 0.95)' };
 
+    // Biztosítjuk a típust a fő kiemelt film/sorozat számára is
+    const safeFeatured = { ...featured, tipus: featured.tipus || ((featured.evadok_szama !== undefined || featured.sorozat_id !== undefined) ? 'sorozat' : 'film') };
+
     return (
         <div className="weekly-container">
             <h1 className="weekly-main-title">Ezen a héten ajánljuk</h1>
@@ -270,13 +275,13 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
                             <p style={{ marginTop: '10px' }}><strong>Rendező:</strong> {featured.rendezo || 'Ismeretlen'}</p>
                         </div>
                         <div className="featured-actions">
-                            <button className="btn-main-action" onClick={() => openStreaming(featured)}><i className="fas fa-play"></i> Megnézem</button>
-                            <button className="btn-secondary-action" onClick={() => openReviews(featured)} style={status.reviewed ? activeStyle : {}}><i className="fas fa-comment-alt"></i> Vélemények</button>
+                        <button className="btn-main-action" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openStreaming(safeFeatured); }}><i className="fas fa-play"></i> Megnézem</button>
+                        <button className="btn-secondary-action" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openReviews(safeFeatured); }} style={status.reviewed ? activeStyle : {}}><i className="fas fa-comment-alt"></i> Vélemények</button>
                             {user && (
                                 <>
                                     <div className="icon-separator"></div>
-                                    <button className={`btn-circle-action ${status.favorite ? 'active' : ''}`} onClick={toggleFeaturedFav}><i className="fas fa-heart"></i></button>
-                                    <button className={`btn-circle-action ${status.listed ? 'active' : ''}`} onClick={toggleFeaturedList}><i className="fas fa-plus"></i></button>
+                                <button className={`btn-circle-action ${status.favorite ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFeaturedFav(); }}><i className="fas fa-heart"></i></button>
+                                <button className={`btn-circle-action ${status.listed ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFeaturedList(); }}><i className="fas fa-plus"></i></button>
                                 </>
                             )}
                         </div>

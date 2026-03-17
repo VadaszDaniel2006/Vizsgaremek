@@ -5,13 +5,17 @@ const MovieCard = ({
   movie, 
   user, 
   onOpenInfo, 
+  openInfo,
   onOpenTrailer, 
+  openTrailer,
   onOpenStreaming, 
+  openStreaming,
   onAddToFav, 
   onRemoveFromFav, 
   onAddToList, 
   onRemoveFromList,
   onOpenReviews,
+  openReviews,
   interactionUpdate 
 }) => {
   
@@ -20,6 +24,9 @@ const MovieCard = ({
     favorite: false,
     listed: false
   });
+
+  // BIZTOSÍTÉK: Kényszerítjük a 'tipus' attribútumot, hogy a felugró ablak sose maradjon láthatatlan adat hiányában
+  const safeMovie = movie ? { ...movie, tipus: movie.tipus || ((movie.evadok_szama !== undefined || movie.sorozat_id !== undefined) ? 'sorozat' : 'film') } : null;
 
   useEffect(() => {
     if (user && movie) {
@@ -50,34 +57,38 @@ const MovieCard = ({
   };
 
   const handleFavClick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      if (!user) return onAddToFav(movie); 
+      if (!user) return onAddToFav(safeMovie); 
 
       if (status.favorite) {
           setStatus(prev => ({ ...prev, favorite: false }));
-          onRemoveFromFav(movie);
+          onRemoveFromFav(safeMovie);
       } else {
           setStatus(prev => ({ ...prev, favorite: true }));
-          onAddToFav(movie);
+          onAddToFav(safeMovie);
       }
   };
 
   const handleListClick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      if (!user) return onAddToList(movie);
+      if (!user) return onAddToList(safeMovie);
 
       if (status.listed) {
           setStatus(prev => ({ ...prev, listed: false }));
-          onRemoveFromList(movie);
+          onRemoveFromList(safeMovie);
       } else {
           setStatus(prev => ({ ...prev, listed: true }));
-          onAddToList(movie);
+          onAddToList(safeMovie);
       }
   };
 
   const handleReviewClick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      if (onOpenReviews) onOpenReviews(movie);
+      const finalOpenReviews = onOpenReviews || openReviews;
+      if (finalOpenReviews) finalOpenReviews(safeMovie);
   };
 
   // --- JAVÍTÁS 1: Elegáns gomb aktív állapot, ami NEM nyomja szét a dobozt ---
@@ -94,7 +105,11 @@ const MovieCard = ({
     <div className="movie-card-container" style={{ height: '100%' }}>
       <div 
         className="movie-card" 
-        onClick={() => onOpenTrailer && onOpenTrailer(movie.elozetes_url, movie.cim)}
+        onClick={(e) => {
+            e.preventDefault();
+            const finalOpenTrailer = onOpenTrailer || openTrailer;
+            if (finalOpenTrailer) finalOpenTrailer(safeMovie.elozetes_url, safeMovie.cim);
+        }}
         style={{ flexShrink: 0 }} // JAVÍTÁS 3: A kép sosem nyomódhat össze
       >
         <div className="card-image">
@@ -154,8 +169,10 @@ const MovieCard = ({
             className="btn-card-play" 
             style={{ flex: 1, whiteSpace: 'nowrap', height: '40px', padding: '0 10px' }}
             onClick={(e) => { 
+                e.preventDefault();
                 e.stopPropagation(); 
-                if (onOpenStreaming) onOpenStreaming(movie); 
+                const finalOpenStreaming = onOpenStreaming || openStreaming;
+                if (finalOpenStreaming) finalOpenStreaming(safeMovie); 
             }}
         >
           <i className="fas fa-play" style={{ marginRight: '6px' }}></i> Megnézem
@@ -165,8 +182,10 @@ const MovieCard = ({
             className="btn-card-info" 
             style={{ flex: 1, whiteSpace: 'nowrap', height: '40px', padding: '0 10px' }}
             onClick={(e) => { 
+                e.preventDefault();
                 e.stopPropagation(); 
-                if (onOpenInfo) onOpenInfo(movie); 
+                const finalOpenInfo = onOpenInfo || openInfo;
+                if (finalOpenInfo) finalOpenInfo(safeMovie); 
             }}
         >
           <i className="fas fa-info-circle" style={{ marginRight: '6px' }}></i> Részletek

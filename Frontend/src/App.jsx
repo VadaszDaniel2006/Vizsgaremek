@@ -102,6 +102,21 @@ function App() {
   useEffect(() => { if (featuredMovies.length === 0) return; const interval = setInterval(() => { setCurrentSlide((prev) => (prev + 1) % featuredMovies.length); }, 8000); return () => clearInterval(interval); }, [featuredMovies]);
   useEffect(() => { window.onscroll = () => setScrolled(window.pageYOffset > 50); return () => (window.onscroll = null); }, []);
 
+  // --- GÖRGETÉS LETILTÁSA OLDALSÁVOK ÉS MODALOK NYITVA TARTÁSAKOR ---
+  useEffect(() => {
+      if (isSidebarOpen || reviewsSidebarOpen || authModalOpen || profileModalOpen || showLogoutConfirm) {
+          document.body.style.overflow = 'hidden';
+          document.documentElement.style.overflow = 'hidden';
+      } else {
+          document.body.style.overflow = '';
+          document.documentElement.style.overflow = '';
+      }
+      return () => {
+          document.body.style.overflow = '';
+          document.documentElement.style.overflow = '';
+      };
+  }, [isSidebarOpen, reviewsSidebarOpen, authModalOpen, profileModalOpen, showLogoutConfirm]);
+
   const showNotification = (message, type = 'success') => { setToast({ message, type }); };
   
   const handleReviewChange = async () => { 
@@ -170,7 +185,21 @@ function App() {
   };
 
   const openReviews = (movie) => { setReviewMovie(movie); setReviewsSidebarOpen(true); };
-  const openTrailer = (videoId, title) => setTrailerModal({ isOpen: true, videoId, title });
+  
+  // --- JAVÍTOTT OPENTRAILER FÜGGVÉNY ---
+  const openTrailer = (url, title) => {
+      let videoId = url;
+      // Okosan kiszedjük az azonosítót a különféle Youtube formátumokból
+      if (url && url.includes('v=')) {
+          videoId = url.split('v=')[1].substring(0, 11);
+      } else if (url && url.includes('youtu.be/')) {
+          videoId = url.split('youtu.be/')[1].substring(0, 11);
+      } else if (url && url.includes('embed/')) {
+          videoId = url.split('embed/')[1].substring(0, 11);
+      }
+      setTrailerModal({ isOpen: true, videoId, title });
+  };
+  
   const closeTrailer = () => setTrailerModal({ ...trailerModal, isOpen: false });
   const openStreaming = (movie) => { setInfoModal({ ...infoModal, isOpen: false }); setStreamingModal({ isOpen: true, movie }); };
   const closeStreaming = () => setStreamingModal({ ...streamingModal, isOpen: false });
@@ -359,8 +388,8 @@ function App() {
             <Route path="/film/:id" element={<MediaDetails type="film" openStreaming={openStreaming} openTrailer={openTrailer} user={user} onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav} onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList} onOpenReviews={openReviews} interactionUpdate={interactionUpdate} />} />
             <Route path="/sorozat/:id" element={<MediaDetails type="sorozat" openStreaming={openStreaming} openTrailer={openTrailer} user={user} onAddToFav={handleAddToFav} onRemoveFromFav={handleRemoveFromFav} onAddToList={handleAddToMyList} onRemoveFromList={handleRemoveFromList} onOpenReviews={openReviews} interactionUpdate={interactionUpdate} />} />
             
-            <Route path="/top-50-filmek" element={<Top50Page type="film" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
-            <Route path="/top-50-sorozatok" element={<Top50Page type="sorozat" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
+            <Route path="/top-50-filmek" element={<Top50Page type="film" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
+            <Route path="/top-50-sorozatok" element={<Top50Page type="sorozat" user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
 
             <Route path="/heti-ajanlo" element={<WeeklyPick user={user} openStreaming={openStreaming} openTrailer={openTrailer} openReviews={openReviews} openInfo={openInfo} handleAddToFav={handleAddToFav} handleRemoveFromFav={handleRemoveFromFav} handleAddToMyList={handleAddToMyList} handleRemoveFromList={handleRemoveFromList} interactionUpdate={interactionUpdate} />} />
             <Route path="/mozik-terkep" element={<CinemaMap />} />

@@ -53,31 +53,31 @@ const Top50ListItem = ({ item, index, type, user, openStreaming, openTrailer, op
                 
                 <p className="top50-desc-text">{item.leiras}</p>
                 
-                <div className="top50-action-row">
-                    <button className="btn-main-action small" onClick={() => openStreaming(item)}>
+                <div className="top50-action-row" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
+                    <button className="btn-main-action small" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openStreaming({...item, tipus: type}); }}>
                         <i className="fas fa-play"></i> Megnézem
                     </button>
                     
                     {item.elozetes_url && (
-                        <button className="btn-secondary-action small" onClick={() => openTrailer(item.elozetes_url, item.cim)}>
+                        <button className="btn-secondary-action small" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openTrailer(item.elozetes_url, item.cim); }}>
                             <i className="fas fa-film"></i> Előzetes
                         </button>
                     )}
 
                     <button 
                         className="btn-secondary-action small" 
-                        onClick={() => openReviews(item)}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); openReviews({...item, tipus: type}); }}
                         style={status.reviewed ? { color: '#00e676', borderColor: '#00e676', backgroundColor: 'rgba(0, 230, 118, 0.1)' } : {}}
                     >
                         <i className="fas fa-comment-alt"></i> Vélemények
                     </button>
                     
                     {user && (
-                        <div className="top50-icons-group">
-                            <button className={`btn-circle-action small ${status.favorite ? 'active' : ''}`} onClick={toggleFav}>
+                        <div className="top50-icons-group" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', gap: '10px', alignItems: 'center' }}>
+                            <button className={`btn-circle-action small ${status.favorite ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFav(); }}>
                                 <i className="fas fa-heart"></i>
                             </button>
-                            <button className={`btn-circle-action small ${status.listed ? 'active' : ''}`} onClick={toggleList}>
+                            <button className={`btn-circle-action small ${status.listed ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleList(); }}>
                                 <i className="fas fa-plus"></i>
                             </button>
                         </div>
@@ -116,6 +116,22 @@ export default function Top50Page({ type, user, openStreaming, openTrailer, open
 
     return (
         <div className="top50-container-wide">
+            <style>{`
+                .top50-poster-wide {
+                    width: 200px !important;
+                    height: 300px !important;
+                    object-fit: cover !important;
+                    border-radius: 12px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+                    flex-shrink: 0;
+                }
+                @media (max-width: 768px) {
+                    .top50-poster-wide {
+                        width: 130px !important;
+                        height: 195px !important;
+                    }
+                }
+            `}</style>
             <h1 className="top50-title-modern">
                 Top 50 {type === 'film' ? 'Film' : 'Sorozat'}
             </h1>
