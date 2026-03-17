@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Toast from './Toast';
+import Toast from '../ui/Toast';
 import './AuthModal.css';
 
 // Kategóriák listája

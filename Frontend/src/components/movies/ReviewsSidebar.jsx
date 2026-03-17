@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ConfirmModal from './ConfirmModal'; 
+import ConfirmModal from '../ui/ConfirmModal'; 
 import './ReviewsSidebar.css';
 
 const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRefreshData }) => {
