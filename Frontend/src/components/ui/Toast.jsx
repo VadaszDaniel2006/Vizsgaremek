@@ -1,6 +1,6 @@
 // src/components/Toast.jsx
 import React, { useEffect } from 'react';
-import '../App.css'; // Biztosítjuk, hogy a stílusok betöltődjenek
+import './Toast.css';
 
 export default function Toast({ message, type, onClose }) {
   useEffect(() => {

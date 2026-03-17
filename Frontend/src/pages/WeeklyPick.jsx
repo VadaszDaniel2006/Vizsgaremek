@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './WeeklyPick.css';
 
 // Garantálja a heti fix filmeket F5 után is
 const getCurrentFixedWeek = () => {

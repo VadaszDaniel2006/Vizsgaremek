@@ -1,0 +1,13 @@
+/* MovieRow.css */
+.content-container { width: 100%; padding: 0 30px 60px 30px; }
+
+.more-movies-section h2, .content-container h2 { 
+    font-size: 2rem; margin-top: 50px; margin-bottom: 50px; text-align: center; 
+    font-weight: 900; text-transform: uppercase; letter-spacing: 2px; 
+    color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.8); 
+}
+
+.movies-grid { 
+    display: grid; grid-template-columns: repeat(6, 1fr); 
+    gap: 30px; width: 100%; align-items: stretch; 
+}

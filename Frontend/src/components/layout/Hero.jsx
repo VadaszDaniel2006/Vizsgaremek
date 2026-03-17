@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import './Hero.css';
 
 export default function Hero({ movies, currentSlide, setCurrentSlide, onOpenTrailer, onOpenInfo, onOpenStreaming }) {
   

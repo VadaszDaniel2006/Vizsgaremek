@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'; 
-import logoImg from '../logo.png'; 
-import ProfilDropdown from './ProfilDropdown';
+import logoImg from '../../assets/logo.png'; // Frissített útvonal (ha az assets-ben van) vagy ahol a logód van
+import ProfilDropdown from '../auth/ProfilDropdown'; // Frissített útvonal, ha a ProfilDropdown-t betetted az auth mappába
+import './Navbar.css'; // <--- EZ A LÉNYEG, ITT IMPORTÁLJUK A DEDIKÁLT CSS-T
 
 export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateProfile, onOpenFavorites, onOpenMyList }) {
   const [searchActive, setSearchActive] = useState(false);

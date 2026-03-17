@@ -1,0 +1,72 @@
+/* Modal.css */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; }
+.modal-content { background: var(--modal-bg); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+.modal-lg { width: 100%; max-width: 1000px; } .modal-md { width: 100%; max-width: 750px; } .modal-sm { width: 100%; max-width: 500px; } 
+.modal-header { padding: 15px 25px; background: #0f152b; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.modal-header h3 { margin: 0; font-size: 1.4rem; color: white; }
+.close-modal { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+.info-layout { display: flex; gap: 30px; padding: 30px; }
+.info-poster img { width: 200px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.info-text { flex: 1; color: #ddd; }
+.info-text h2 { font-size: 2rem; margin-bottom: 10px; color: white; }
+.info-meta { margin-bottom: 15px; font-size: 1rem; color: var(--primary); font-weight: 600; display: flex; gap: 15px; }
+.info-desc { line-height: 1.6; margin-bottom: 20px; font-size: 1rem; }
+.btn-modal-action { display: block; width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(62, 80, 255, 0.3); text-align: center; margin-top: 15px; transition: 0.3s; }
+.btn-modal-action:hover { background: #2c3bb7; transform: translateY(-2px); }
+
+.streaming-services { padding: 30px; display: flex; flex-direction: column; gap: 10px; }
+.streaming-service { display: flex; align-items: center; gap: 15px; background: #232d4b; padding: 15px; border-radius: 8px; color: white; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+.streaming-service:hover { background: #2f3b61; border-color: var(--primary); transform: translateX(5px); }
+.service-logo { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; }
+.service-logo img { width: 100%; height: 100%; object-fit: contain; }
+.video-container { position: relative; padding-bottom: 56.25%; height: 0; }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.user-menu { display: flex; align-items: center; gap: 15px; }
+
+/* TÖKÉLETES MODAL / NEO MODAL */
+.neo-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10000; display: flex; justify-content: center; align-items: center; padding-top: 100px; padding-bottom: 30px; }
+.neo-modal-content { background: var(--modal-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 100%; max-width: 800px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); animation: neoFadeUp 0.3s ease-out; max-height: calc(100vh - 150px); overflow-y: auto; }
+.neo-modal-content.small { max-width: 450px; }
+.neo-modal-content::-webkit-scrollbar { width: 8px; }
+.neo-modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 8px; margin: 10px 0; }
+.neo-modal-content::-webkit-scrollbar-thumb { background: #444; border-radius: 8px; }
+.neo-modal-content::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+.neo-sub-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+.neo-sub-tab { background: rgba(255,255,255,0.05); color: #aaa; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: bold; font-size: 0.9rem; }
+.neo-sub-tab.active { background: rgba(62, 80, 255, 0.2); color: white; border: 1px solid var(--primary); }
+
+@keyframes neoFadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes neoFadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* MODERN GÖRGETŐSÁV A MODALOKHOZ ÉS A MOZIK LISTÁJÁHOZ */
+.modal-content::-webkit-scrollbar { width: 6px; }
+.modal-content::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; margin: 10px 0; }
+.modal-content::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), #2c3bb7); border-radius: 10px; }
+.modal-content::-webkit-scrollbar-thumb:hover { background: #5c6cff; }
+.modern-scrollbar::-webkit-scrollbar { width: 6px; }
+.modern-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+.modern-scrollbar::-webkit-scrollbar-thumb { background: #3e50ff; border-radius: 10px; }
+.modern-scrollbar::-webkit-scrollbar-thumb:hover { background: #2c3bb7; }
+.modern-scrollbar { scrollbar-width: thin; scrollbar-color: #3e50ff rgba(255, 255, 255, 0.05); }
+
+/* PRÉMIUM KOMMENT JELENTÉSE MODAL */
+.premium-report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 10005; display: flex; justify-content: center; align-items: center; animation: fadeIn 0.2s ease-out; padding: 20px; }
+.premium-report-card { background: linear-gradient(145deg, #161b2e 0%, #0b0f2b 100%); width: 100%; max-width: 460px; padding: 40px 30px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 30px rgba(239, 68, 68, 0.05); text-align: center; position: relative; overflow: hidden; }
+.premium-report-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+.premium-report-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; }
+.premium-report-icon { width: 65px; height: 65px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin-bottom: 15px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+.premium-report-header h2 { margin: 0 0 8px 0; color: white; font-size: 1.6rem; font-weight: 800; letter-spacing: 0.5px; }
+.premium-report-header p { margin: 0; color: #94a3b8; font-size: 0.95rem; line-height: 1.5; }
+.premium-options-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 35px; text-align: left; }
+.premium-option-card { background: rgba(255, 255, 255, 0.03); border: 2px solid rgba(255, 255, 255, 0.05); padding: 16px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease; color: #cbd5e1; font-weight: 500; font-size: 1rem; }
+.premium-option-card:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.1); color: white; }
+.premium-option-card.selected { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; color: white; }
+.premium-radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #64748b; position: relative; transition: 0.2s; }
+.premium-option-card.selected .premium-radio { border-color: #ef4444; }
+.premium-option-card.selected .premium-radio::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: #ef4444; border-radius: 50%; }
+.premium-btn-submit { width: 100%; padding: 16px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3); }
+.premium-btn-submit:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5); }
+.premium-btn-cancel { width: 100%; background: transparent; border: none; color: #64748b; padding: 15px 0 0 0; margin-top: 10px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+.premium-btn-cancel:hover { color: white; text-decoration: underline; }

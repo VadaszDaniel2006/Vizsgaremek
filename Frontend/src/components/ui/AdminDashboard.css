@@ -1,0 +1,65 @@
+/* AdminDashboard.css */
+.neo-admin-bg { min-height: 100vh; background-color: var(--dark); padding: 120px 20px 80px; color: #e2e8f0; font-family: 'Inter', sans-serif; position: relative; overflow-x: hidden; }
+.neo-admin-bg.admin-dashboard-modal-open { overflow: hidden; }
+.neo-admin-bg::before { content: ''; position: absolute; top: -10%; left: 40%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(62, 80, 255, 0.1) 0%, transparent 70%); filter: blur(40px); z-index: 0; pointer-events: none; }
+.neo-admin-wrapper { max-width: 1400px; margin: 0 auto; position: relative; z-index: 10; }
+
+.neo-header { text-align: center; margin-bottom: 40px; animation: neoFadeDown 0.5s ease-out; }
+.neo-header h1 { font-size: 3rem; font-weight: 900; color: white; margin-bottom: 10px; text-shadow: 0 4px 20px rgba(62, 80, 255, 0.4); }
+.neo-header p { color: #94a3b8; font-size: 1.1rem; }
+
+/* Kapszula Menü */
+.neo-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); width: fit-content; margin-left: auto; margin-right: auto; flex-wrap: wrap; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.neo-tab { padding: 10px 20px; border-radius: 100px; color: #aaa; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+.neo-tab:hover { color: white; background: rgba(255,255,255,0.05); }
+.neo-tab.active { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(62, 80, 255, 0.4); }
+
+/* Kártya és Táblázat */
+.neo-card { background: var(--modal-bg); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); overflow-x: auto; }
+.neo-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 800px; }
+.neo-table th { padding: 0 20px 10px; color: #888; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.neo-table td { padding: 15px 20px; background: rgba(255,255,255,0.02); vertical-align: middle; border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
+.neo-table tr td:first-child { border-radius: 10px 0 0 10px; border-left: 2px solid transparent; }
+.neo-table tr td:last-child { border-radius: 0 10px 10px 0; }
+.neo-table tr:hover td { background: rgba(255,255,255,0.05); }
+.neo-table tr:hover td:first-child { border-left-color: var(--primary); }
+
+.neo-item-title { font-weight: bold; font-size: 1.1rem; color: white; margin-bottom: 4px; }
+.neo-item-sub { font-size: 0.85rem; color: #aaa; }
+.neo-poster { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+
+/* Badgek és Gombok */
+.neo-badge { padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; display: inline-block;}
+.neo-badge.admin { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
+.neo-badge.user { background: rgba(62, 80, 255, 0.2); color: #8c9eff; border: 1px solid rgba(62, 80, 255, 0.3); }
+.neo-badge.tag { background: rgba(255, 255, 255, 0.1); color: #ccc; border: 1px solid rgba(255, 255, 255, 0.2); }
+
+.neo-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.neo-action-btn { width: 36px; height: 36px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.05); color: #aaa; }
+.neo-action-btn.edit:hover { background: #f39c12; color: white; transform: translateY(-2px); }
+.neo-action-btn.delete:hover { background: #e74c3c; color: white; transform: translateY(-2px); }
+.neo-action-btn.approve:hover { background: #2ecc71; color: white; transform: translateY(-2px); }
+
+/* Űrlapok */
+.neo-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+.neo-full-width { grid-column: span 2; }
+@media (max-width: 768px) { .neo-form-grid { grid-template-columns: 1fr; } .neo-full-width { grid-column: span 1; } }
+
+.neo-input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; width: 100%; }
+.neo-input-group label { color: #ccc; font-size: 0.85rem; font-weight: bold; }
+.neo-input-group label i { color: var(--primary); margin-right: 5px; }
+
+.neo-input { background: var(--input-bg); border: 1px solid rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 8px; color: white; font-size: 0.95rem; transition: 0.3s; outline: none; width: 100%; font-family: inherit; box-sizing: border-box; }
+.neo-input:focus { border-color: var(--primary); background: #1a233a; }
+.neo-input.textarea { min-height: 90px; resize: vertical; }
+
+select.neo-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23aaa' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; }
+.neo-input-short { max-width: 150px !important; width: 100%; margin-right: auto; }
+
+.form-actions-row { display: flex; justify-content: flex-end; gap: 15px; margin-top: 10px; width: 100%; }
+.neo-btn-primary { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(62, 80, 255, 0.4); }
+.neo-btn-primary:hover { background: #2c3bb7; transform: translateY(-2px); }
+.neo-btn-secondary { background: transparent; color: #ccc; border: 1px solid #555; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.neo-btn-secondary:hover { color: white; background: rgba(255,255,255,0.1); border-color: white; }
+.neo-btn-exit { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); color: white; border: none; padding: 15px 40px; border-radius: 100px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3); }
+.neo-btn-exit:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(168, 85, 247, 0.5); }

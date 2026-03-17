@@ -1,5 +1,5 @@
 import React from 'react';
-import '../App.css'; 
+import './Sidebar.css';
 
 const Sidebar = ({ isOpen, onClose, title, items, onItemClick, onDeleteItem }) => {
   const safeItems = Array.isArray(items) ? items : [];

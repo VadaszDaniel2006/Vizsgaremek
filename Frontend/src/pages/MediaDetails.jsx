@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import './MediaDetails.css';
 
 export default function MediaDetails({ type, openStreaming, openTrailer, user, onAddToFav, onRemoveFromFav, onAddToList, onRemoveFromList, onOpenReviews, interactionUpdate }) {
     const { id } = useParams();

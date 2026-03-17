@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ProfileEditor.css';
 
 const CATEGORIES = [
     { id: 'action', name: 'Akció', icon: '🔥' },

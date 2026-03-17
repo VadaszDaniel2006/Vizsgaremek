@@ -1,5 +1,6 @@
 // src/components/Modal.jsx
 import React, { useEffect } from 'react';
+import './Modal.css';
 
 export default function Modal({ videoId, onClose }) {
   

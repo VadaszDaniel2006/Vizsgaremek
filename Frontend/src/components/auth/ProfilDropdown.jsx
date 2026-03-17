@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // <--- EZT NE FELEJTSD EL!
+import './ProfilDropdown.css';
 
 // SZÓTÁR A MAGYARÍTÁSHOZ
 const CATEGORY_NAMES = {

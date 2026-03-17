@@ -1,0 +1,9 @@
+/* Search.css */
+.search-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
+.search-result-card { position: relative; background: #131a38; border: 2px solid transparent; border-radius: 10px; overflow: hidden; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); will-change: transform, box-shadow, border-color; backface-visibility: hidden; }
+.search-result-card:hover { transform: scale(1.05); border-color: var(--primary); box-shadow: 0 10px 30px rgba(62, 80, 255, 0.5); z-index: 10; }
+.card-img-wrapper { width: 100%; aspect-ratio: 2/3; }
+.card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.search-card-info { padding: 12px; }
+.search-card-info h4 { margin: 0 0 5px 0; font-size: 1rem; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search-card-info span { font-size: 0.8rem; color: #aaa; }

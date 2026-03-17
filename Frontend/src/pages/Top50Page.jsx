@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Top50Page.css';
 
 const Top50ListItem = ({ item, index, type, user, openStreaming, openTrailer, openReviews, handleAddToFav, handleRemoveFromFav, handleAddToMyList, handleRemoveFromList, interactionUpdate }) => {
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });

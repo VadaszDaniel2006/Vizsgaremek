@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
 import Toast from './Toast';
+import './AdminDashboard.css';
 
 export default function AdminDashboard({ refreshApp }) {
     const [activeTab, setActiveTab] = useState('users'); 

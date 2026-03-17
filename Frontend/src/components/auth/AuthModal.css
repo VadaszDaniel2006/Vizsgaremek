@@ -1,0 +1,27 @@
+/* AuthModal.css */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+.auth-card { background: #161b22; width: 100%; max-width: 500px; padding: 50px; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); position: relative; text-align: center; }
+.close-auth { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: #888; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+.close-auth:hover { color: white; }
+.auth-header h2 { font-size: 2.2rem; margin-bottom: 10px; color: white; }
+.auth-header p { color: #aaa; margin-bottom: 30px; font-size: 1.1rem; }
+
+.input-group { position: relative; margin-bottom: 25px; text-align: left; }
+.input-group input { width: 100%; padding: 15px; background: var(--input-bg); border: 2px solid transparent; border-radius: 8px; color: white; font-size: 1.1rem; outline: none; transition: 0.3s; }
+.input-group input:focus { border-color: var(--primary); background: #1a233a; }
+.input-group label { position: absolute; left: 15px; top: 15px; color: #888; pointer-events: none; transition: 0.3s; font-size: 1rem; }
+.input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label { top: -10px; left: 10px; font-size: 0.8rem; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; }
+
+.btn-submit-auth { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; letter-spacing: 1px; }
+.btn-submit-auth:hover { background: #2c3bb7; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(62, 80, 255, 0.3); }
+
+.auth-footer { margin-top: 30px; color: #ccc; font-size: 1rem; }
+.auth-footer span { color: var(--primary); font-weight: bold; cursor: pointer; margin-left: 5px; }
+.auth-footer span:hover { text-decoration: underline; }
+.auth-error { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #e74c3c; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem; text-align: center; }
+
+/* Jelszó mező szem ikonja */
+.pw-input-wrapper { position: relative; display: flex; width: 100%; align-items: center; }
+.pw-input-wrapper input { width: 100%; padding-right: 45px !important; }
+.pw-toggle-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem; z-index: 10; transition: 0.2s; padding: 0; display: flex; align-items: center; justify-content: center; }
+.pw-toggle-btn:hover { color: white; }
