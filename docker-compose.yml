@@ -27,6 +27,13 @@ services:
       - db_data:/var/lib/mysql
       # EZ A SOR TÖLTI BE AZ SQL FÁJLT A db_init MAPPÁBÓL:
       - ./db_init:/docker-entrypoint-initdb.d:ro 
+    # --- ÚJ RÉSZ KEZDETE ---
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpw"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # --- ÚJ RÉSZ VÉGE ---
 
   # 3. PHPMYADMIN (Adatbázis kezelő)
   phpmyadmin:
@@ -49,8 +56,11 @@ services:
       dockerfile: Dockerfile
     container_name: mozi_api
     restart: unless-stopped
+    # --- MÓDOSÍTOTT RÉSZ KEZDETE ---
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    # --- MÓDOSÍTOTT RÉSZ VÉGE ---
     environment:
       # Átadjuk az adatokat a Node.js kódnak
       DB_HOST: db

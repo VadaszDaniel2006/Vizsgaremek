@@ -1,13 +1,20 @@
-// Beimportáljuk a kontrollert, amit tesztelni akarunk
-const movieController = require('../src/controllers/movieController');
-// Beimportáljuk az adatbázis kapcsolatot (ezt fogjuk kigúnyolni)
-const db = require('../src/config/db');
+// Beimportáljuk a kontrollert, amit tesztelni akarunk (két szintet lépünk vissza a test/controllers-ből)
+const movieController = require('../../src/controllers/movieController');
+
+// Beimportáljuk az adatbázis kapcsolatot (két szintet lépünk vissza, majd be az src/config mappába)
+const db = require('../../src/config/db');
 
 // Megmondjuk a Jest-nek, hogy a 'db' modult helyettesítse egy hamis (mock) verzióval
-jest.mock('../src/config/db');
+jest.mock('../../src/config/db');
 
 describe('Movie Controller - getAllMovies', () => {
     
+    // Ezzel némítjuk el a console.error hibaüzeneteket a tesztek futása alatt, 
+    // hogy szép tiszta maradjon a terminál kimenete.
+    beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
     // Minden teszt után kitisztítjuk a mockokat, hogy ne zavarják egymást
     afterEach(() => {
         jest.clearAllMocks();
@@ -18,11 +25,12 @@ describe('Movie Controller - getAllMovies', () => {
         const mockMoviesFromDB = [
             { id: 1, tipus: 'film', cim: 'Teszt Film', kategoria_id: 1, megjelenes_ev_start: 2023 }
         ];
+        
         // Amikor a db.query lefut, ezt a tömböt adja vissza (ugyanolyan formában, ahogy a mysql2 teszi)
         db.query.mockResolvedValue([mockMoviesFromDB]);
 
         // Elkészítjük a kamu Request (req) és Response (res) objektumokat
-        const req = {
+        const req = { 
             query: { userId: null } // Szimuláljuk, hogy nincs bejelentkezve
         };
         const res = {
