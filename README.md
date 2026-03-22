@@ -6,15 +6,15 @@
 ---
 
 ## Tartalomjegyzék
-1. [Vizsgaremek célkitűzése](#vizsgaremek-célkitűzése)
-2. [Feladat leírása és bemutatása](#feladat-leírása-és-bemutatása)
-3. [A fejlesztés menete és a projekt háttere](#a-fejlesztés-menete-és-a-projekt-háttere)
-4. [Tervezett vállalásaink és feladatkörök](#tervezett-vállalásaink-és-feladatkörök)
+1. [Vizsgaremek célkitűzése](#1-vizsgaremek-célkitűzése)
+2. [Feladat leírása és bemutatása](#2-feladat-leírása-és-bemutatása)
+3. [A fejlesztés menete és a projekt háttere](#3-a-fejlesztés-menete-és-a-projekt-háttere)
+4. [Tervezett vállalásaink és feladatkörök](#4-tervezett-vállalásaink-és-feladatkörök)
    - [Vadász Dániel – Frontend és Backend fejlesztés](#vadász-dániel--frontend-és-backend-fejlesztés)
    - [Palkovics Tamás Tibor – Frontend és Backend fejlesztés](#palkovics-tamás-tibor--frontend-és-backend-fejlesztés)
-5. [Közös munkafolyamatok](#közös-munkafolyamatok)
-6. [Felhasznált programok és eszközök](#felhasznált-programok-és-eszközök)
-7. [Fejlesztési környezet](#fejlesztési-környezet)
+5. [Közös munkafolyamatok](#5-közös-munkafolyamatok)
+6. [Felhasznált programok és eszközök](#6-felhasznált-programok-és-eszközök)
+7. [Fejlesztési környezet](#7-fejlesztési-környezet)
 
 ---
 
