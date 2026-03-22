@@ -70,7 +70,7 @@ Ebben a fejezetben a MoziPont projekt technikai hátterét, az adatbázis felép
     ## Szerveroldali architektúra (Node.js & Express)
 
     ### Biztonsági Middleware (authMiddleware.js)
-    A rendszer JWT (JSON Web Token) alapú hitelesítést használ. Az `authMiddleware.js` felel a tokenek ellenőrzéséért.
+    A rendszer JWT (JSON Web Token) alapú hitelesítést használ.
 
     ```javascript
     const jwt = require('jsonwebtoken');
@@ -92,35 +92,41 @@ Ebben a fejezetben a MoziPont projekt technikai hátterét, az adatbázis felép
     };
     ```
 
-    ### Útvonalak (movieRoutes.js)
-    ```javascript
-    const express = require('express');
-    const router = express.Router();
-    const movieController = require('../controllers/movieController');
+    ### 🤖 Automatizált Adatgyűjtés (Cinema Scraper Robot)
 
-    router.get('/', movieController.getAllMovies);
-    router.get('/top50', movieController.getTop50Movies);
+    A projekt egyik legfejlettebb funkciója a `cinemaScraper.js`, amely hibrid technológiával gyűjti össze az országos moziműsort.
 
-    module.exports = router;
-    ```
-
-    ### Kontroller és Ajánlórendszer (movieController.js)
-    A `movieController.js` tartalmazza a komplex SQL lekérdezéseket. Ha a felhasználó be van jelentkezve, a rendszer a kedvenc kategóriáit súlyozva (3.0 szorzó) listázza a filmeket:
+    #### 1. Hibrid lekérdezési stratégia
+    A rendszer alkalmazkodik a céloldal technológiájához: a nagy hálózatoknál (Cinema City) közvetlen API hívásokat használ, míg a független moziknál HTML elemzést (Scraping) végez.
 
     ```javascript
-    query = `
-        SELECT m.*, k.nev AS kategoria, r.nev AS rendezo
-        FROM media m
-        LEFT JOIN kategoriak k ON m.kategoria_id = k.id
-        LEFT JOIN (
-            SELECT DISTINCT kategoria_id FROM kedvenc_kategoriak WHERE felhasznalo_id = ?
-        ) AS user_prefs ON m.kategoria_id = user_prefs.kategoria_id
-        WHERE m.tipus = 'film'
-        GROUP BY m.id
-        ORDER BY (RAND() * CASE WHEN user_prefs.kategoria_id IS NOT NULL THEN 3.0 ELSE 1.0 END) DESC
-        LIMIT 50
-    `;
+    // Példa: Cinema City API alapú lekérdezése
+    const apiUrl = `https://www.cinemacity.hu/hu/data-api-service/v1/quickbook/10102/film-events/in-cinema/${internalId}/at-date/${date}`;
+    const response = await axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
     ```
+
+    #### 2. Intelligens szövegfeldolgozás
+    A robot egyedi normalizáló algoritmust használ, hogy a weboldalakon talált eltérő filmcímeket (pl. névelők, ékezetek különbsége) párosítani tudja az adatbázissal.
+
+    ```javascript
+    const normalizeText = (text) => {
+        return text.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Ékezetek eltávolítása
+            .replace(/[^a-z0-9]+/g, ' ') // Speciális karakterek törlése
+            .trim();
+    };
+    ```
+
+    #### 3. Regex alapú időpont-szűrés
+    Az univerzális scraper egy kőkemény reguláris kifejezéssel választja le a vetítési időpontokat a zavaró számoktól (pl. játékidő vagy dátumok).
+
+    ```javascript
+    // Csak a valódi mozi időpontokat (pl. 18:30) találja meg
+    const timeRegex = /(?<!\d[\.\-])\b(?:[01]?[0-9]|2[0-3])[:.][0-5][0-9]\b(?!\.)(?!\s*perc|\s*p\b)/gi;
+    ```
+
+    #### 4. Teljesítmény és Hibatűrés
+    Annak érdekében, hogy ne terhelje túl a szervereket és elkerülje az IP-tiltást, a robot **5-ös csomagokban (chunks)** dolgozza fel a mozikat, rövid szünetekkel. A kis mozik SSL hibáit a `rejectUnauthorized: false` kapcsolóval küszöböli ki.
 
   </TabItem>
 
@@ -150,7 +156,6 @@ Ebben a fejezetben a MoziPont projekt technikai hátterét, az adatbázis felép
                     fetch(`http://localhost:5000/api/mozik/${mediaId}/mozik`),
                     fetch(`http://localhost:5000/api/mozik/${mediaId}/platformok`)
                 ]);
-                // ... adatok mentése ...
             }
         };
         fetchLiveAdatok();
@@ -159,11 +164,6 @@ Ebben a fejezetben a MoziPont projekt technikai hátterét, az adatbázis felép
 
     ### 3. CinemaMap: GPS és Távolság
     A térkép a `react-leaflet` könyvtárat használja. A legközelebbi mozi kiszámításához a **Haversine-formulát** alkalmazzuk:
-
-    ```text
-    Távolság számítása (km):
-    d = 2R * atan2(sqrt(a), sqrt(1-a))
-    ```
 
     ```javascript
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -182,7 +182,7 @@ Ebben a fejezetben a MoziPont projekt technikai hátterét, az adatbázis felép
 
     ## Automatizált tesztek (Jest)
 
-    A projekt megbízhatóságát egységtesztek garantálják. A tesztelés az `authController`, `authMiddleware` és `cinemaScraper` fájlokra terjed ki.
+    A projekt megbízhatóságát egységtesztek garantálják. A tesztelés például az `authController`, `authMiddleware` és `cinemaScraper` fájlokra terjed ki. Ezekből mutatunk pár példát.
 
     ### Példa: Auth Controller Teszt
     ```javascript
@@ -246,5 +246,3 @@ Ebben a fejezetben a MoziPont projekt technikai hátterét, az adatbázis felép
 
   </TabItem>
 </Tabs>
-
----

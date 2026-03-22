@@ -7,9 +7,6 @@ export default function FejlesztesiNaplo() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // A 'sha=main' biztosítja, hogy a fő ágat nézzük
-    // A 'per_page=100' lekéri az utolsó 100 változtatást
-    // A 't=' paraméter pedig megakadályozza, hogy a böngésző a régi adatokat mutassa (cache-busting)
     const url = `https://api.github.com/repos/VadaszDaniel2006/Vizsgaremek/commits?sha=main&per_page=100&t=${new Date().getTime()}`;
 
     fetch(url)
@@ -21,7 +18,15 @@ export default function FejlesztesiNaplo() {
       })
       .then(data => {
         if (Array.isArray(data)) {
-          setCommits(data);
+          // --- JAVÍTÁS: Szigorú időrendi sorbarendezés ---
+          // A legfrissebb bejegyzés (legnagyobb dátumérték) kerül legfelülre
+          const sortedData = [...data].sort((a, b) => {
+            const dateA = new Date(a.commit.author.date);
+            const dateB = new Date(b.commit.author.date);
+            return dateB - dateA; // Csökkenő sorrend
+          });
+          
+          setCommits(sortedData);
         } else {
           setError("Érvénytelen adat érkezett a GitHub-tól.");
         }
@@ -60,7 +65,6 @@ export default function FejlesztesiNaplo() {
                 position: 'relative',
                 marginLeft: '15px'
               }}>
-                {/* Pont az idővonalon */}
                 <div style={{
                   width: '16px', height: '16px', background: 'var(--ifm-color-primary)',
                   borderRadius: '50%', position: 'absolute', left: '-10px', top: '0px',
