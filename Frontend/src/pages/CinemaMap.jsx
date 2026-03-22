@@ -48,10 +48,11 @@ const getCinemaFeatures = (nev) => {
   return features;
 };
 
-// Határok (Északra tágítva)
+// VÉGLEGES JAVÍTÁS: Pontosan Magyarország földrajzi kiterjedése
+// Így a "gumiszalag" azonnal aktiválódik föl-le húzásnál is!
 const hungaryBounds = [
-  [43.5, 13.5], 
-  [51.5, 25.5]  
+  [45.70, 16.10], // Délnyugati sarok (Horvát határ széle)
+  [48.60, 22.90]  // Északkeleti sarok (Ukrán határ széle)
 ];
 
 // --- MATEMATIKA: Távolság kiszámítása ---
@@ -71,7 +72,6 @@ const CinemaMap = () => {
   const [moziLista, setMoziLista] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // ÚJ: Állapot, ami figyeli, hogy épp rá vagyunk-e közelítve a legközelebbi mozira
   const [isLocated, setIsLocated] = useState(false);
   
   const mapRef = useRef(null);
@@ -90,18 +90,16 @@ const CinemaMap = () => {
   }, []);
 
   const handleLocateNearest = () => {
-    // HA MÁR RÁKÖZELÍTETTÜNK: Visszaállítjuk az eredeti (országos) nézetet
     if (isLocated) {
       if (mapRef.current) {
         mapRef.current.flyTo([47.1625, 19.5033], 7, {
           duration: 1.5
         });
       }
-      setIsLocated(false); // Átbillentjük a kapcsolót
+      setIsLocated(false); 
       return;
     }
 
-    // HA MÉG NEM KÖZELÍTETTÜNK RÁ: Lekérjük a GPS-t
     if (!navigator.geolocation) {
       alert("A böngésződ nem támogatja a helymeghatározást.");
       return;
@@ -128,7 +126,7 @@ const CinemaMap = () => {
             mapRef.current.flyTo([closestMozi.lat, closestMozi.lng], 13, {
               duration: 2.0
             });
-            setIsLocated(true); // Átbillentjük a kapcsolót, sikeresen odaértünk
+            setIsLocated(true); 
           }
         }
       },
@@ -176,8 +174,8 @@ const CinemaMap = () => {
               center={[47.1625, 19.5033]} 
               zoom={7} 
               minZoom={7} 
-              maxBounds={hungaryBounds} 
-              maxBoundsViscosity={0.5} 
+              maxBounds={hungaryBounds} /* Most már szorosan illeszkedik az országra */
+              maxBoundsViscosity={0.8}  /* A visszaugrós "gumiszalag" effektus */
               style={{ height: '600px', width: '100%', zIndex: 1 }} 
               ref={mapRef} 
             >
@@ -229,7 +227,6 @@ const CinemaMap = () => {
               })}
             </MapContainer>
 
-            {/* JAVÍTÁS: A gomb ikonja és szövege is megváltozik a kattintás után! */}
             <button 
               className="locate-btn" 
               onClick={handleLocateNearest} 
