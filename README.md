@@ -113,7 +113,8 @@ A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) felada
 **Adatbázis:**
 * **MySQL:** Mozik, vetítések, foglalások, felhasználók, értékelések és kedvencek relációs tárolása (Docker konténerben futtatva).
 
-**Letölthető fejlesztési fájlok:**
-*(Mivel a projekt aktív fejlesztés alatt áll, az alábbi linkek a megosztott mappára vagy verziókövetőre mutatnak, így garantáltan mindig a legfrissebb verzió érhető el.)*
-* 🐳 [**docker-compose.yml letöltése**](https://raw.githubusercontent.com/VadaszDaniel2006/Vizsgaremek/refs/heads/main/docker-compose.yml) 
-* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://raw.githubusercontent.com/VadaszDaniel2006/Vizsgaremek/refs/heads/main/db_init/mozipont_beta.sql) 
+**A fejlesztési környezet futtatásához szükséges fájlok azonnali letöltése:**
+*(A linkekre kattintva a böngésző azonnal letölti a legfrissebb fájlokat a projekt GitHub tárolójából.)*
+
+* 🐳 [**docker-compose.yml letöltése**](https://github.com/VadaszDaniel2006/Vizsgaremek/raw/main/docker-compose.yml) 
+* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://github.com/VadaszDaniel2006/Vizsgaremek/raw/main/mozipont_beta.sql)
