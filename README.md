@@ -115,5 +115,5 @@ A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) felada
 
 **Letölthető fejlesztési fájlok:**
 *(Mivel a projekt aktív fejlesztés alatt áll, az alábbi linkek a megosztott mappára vagy verziókövetőre mutatnak, így garantáltan mindig a legfrissebb verzió érhető el.)*
-* 🐳 [**docker-compose.yml letöltése / megtekintése**](#) *(Cseréld ki a '#' jelet a végleges GitHub vagy Google Drive linkedre)*
-* 💾 [**mozipont_beta.sql adatbázis letöltése / megtekintése**](#) *(Cseréld ki a '#' jelet a végleges GitHub vagy Google Drive linkedre)*
+* 🐳 [**docker-compose.yml letöltése**](https://raw.githubusercontent.com/VadaszDaniel2006/Vizsgaremek/refs/heads/main/docker-compose.yml) 
+* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://raw.githubusercontent.com/VadaszDaniel2006/Vizsgaremek/refs/heads/main/db_init/mozipont_beta.sql) 
