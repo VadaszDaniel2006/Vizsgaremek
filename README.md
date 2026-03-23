@@ -112,3 +112,8 @@ A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) felada
 
 **Adatbázis:**
 * **MySQL:** Mozik, vetítések, foglalások, felhasználók, értékelések és kedvencek relációs tárolása (Docker konténerben futtatva).
+
+**Letölthető fejlesztési fájlok:**
+*(Mivel a projekt aktív fejlesztés alatt áll, az alábbi linkek a megosztott mappára vagy verziókövetőre mutatnak, így garantáltan mindig a legfrissebb verzió érhető el.)*
+* 🐳 [**docker-compose.yml letöltése / megtekintése**](#) *(Cseréld ki a '#' jelet a végleges GitHub vagy Google Drive linkedre)*
+* 💾 [**mozipont_beta.sql adatbázis letöltése / megtekintése**](#) *(Cseréld ki a '#' jelet a végleges GitHub vagy Google Drive linkedre)*
