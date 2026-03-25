@@ -337,7 +337,7 @@ CREATE TABLE `media_mozik` (
   KEY `mozi_id` (`mozi_id`),
   CONSTRAINT `fk_media_mozik_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_media_mozik_mozi` FOREIGN KEY (`mozi_id`) REFERENCES `mozik` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7729 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7813 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,90 +346,90 @@ CREATE TABLE `media_mozik` (
 
 LOCK TABLES `media_mozik` WRITE;
 /*!40000 ALTER TABLE `media_mozik` DISABLE KEYS */;
-INSERT INTO `media_mozik` VALUES (7645,2,5,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7646,2,2,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7647,38,2,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7648,2,4,'Ma (03.25.)|19:30, 20:45');
-INSERT INTO `media_mozik` VALUES (7649,2,1,'Ma (03.25.)|18:20, 19:10, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7650,38,4,'Ma (03.25.)|18:30');
-INSERT INTO `media_mozik` VALUES (7651,2,3,'Ma (03.25.)|17:10, 18:00, 18:30, 19:10, 19:40, 20:00, 20:20, 20:50, 21:10, 21:40, 21:45, 22:15');
-INSERT INTO `media_mozik` VALUES (7652,36,1,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7653,36,3,'Ma (03.25.)|17:40, 20:00, 22:20');
-INSERT INTO `media_mozik` VALUES (7654,38,1,'Ma (03.25.)|17:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7655,38,3,'Ma (03.25.)|17:30, 18:00, 19:50, 22:10');
-INSERT INTO `media_mozik` VALUES (7656,2,10,'Ma (03.25.)|18:30, 20:00, 21:40');
-INSERT INTO `media_mozik` VALUES (7657,36,10,'Ma (03.25.)|20:15');
-INSERT INTO `media_mozik` VALUES (7658,38,10,'Ma (03.25.)|17:00, 19:20, 21:40');
-INSERT INTO `media_mozik` VALUES (7659,2,9,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7660,38,9,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7661,2,6,'Ma (03.25.)|18:20, 19:10, 20:00');
-INSERT INTO `media_mozik` VALUES (7662,36,6,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7663,38,6,'Ma (03.25.)|17:10, 20:10');
-INSERT INTO `media_mozik` VALUES (7664,2,7,'Ma (03.25.)|16:30, 17:30, 19:30, 19:45');
-INSERT INTO `media_mozik` VALUES (7665,2,13,'Ma (03.25.)|18:45, 20:00');
-INSERT INTO `media_mozik` VALUES (7666,36,13,'Ma (03.25.)|18:00');
-INSERT INTO `media_mozik` VALUES (7667,38,13,'Ma (03.25.)|19:00');
-INSERT INTO `media_mozik` VALUES (7668,2,12,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7669,36,12,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7670,38,12,'Ma (03.25.)|17:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7671,2,18,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7672,38,18,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7673,2,14,'Ma (03.25.)|14:30, 16:10, 17:05, 17:30, 18:00, 19:10, 19:40, 20:10');
-INSERT INTO `media_mozik` VALUES (7674,38,14,'Ma (03.25.)|19:10');
-INSERT INTO `media_mozik` VALUES (7675,2,20,'Ma (03.25.)|18:40, 20:00, 21:45');
-INSERT INTO `media_mozik` VALUES (7676,36,20,'Ma (03.25.)|20:15, 22:30');
-INSERT INTO `media_mozik` VALUES (7677,2,26,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7678,38,20,'Ma (03.25.)|18:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7679,36,26,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7680,38,26,'Ma (03.25.)|17:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7681,2,28,'Ma (03.25.)|17:00, 18:45, 19:10, 19:45, 20:15, 21:45, 22:15');
-INSERT INTO `media_mozik` VALUES (7682,36,28,'Ma (03.25.)|20:15, 22:30');
-INSERT INTO `media_mozik` VALUES (7683,38,28,'Ma (03.25.)|17:10, 19:30');
-INSERT INTO `media_mozik` VALUES (7684,2,19,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7685,36,19,'Ma (03.25.)|18:00');
-INSERT INTO `media_mozik` VALUES (7686,38,19,'Ma (03.25.)|17:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7687,2,27,'Ma (03.25.)|18:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7688,36,27,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7689,38,27,'Ma (03.25.)|18:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7690,2,29,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7691,38,29,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7692,2,31,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7693,36,31,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7694,38,31,'Ma (03.25.)|17:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7695,2,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
-INSERT INTO `media_mozik` VALUES (7696,38,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
-INSERT INTO `media_mozik` VALUES (7697,2,34,'Ma (03.25.)|14:20, 16:10, 17:00, 19:10, 19:20, 20:00');
-INSERT INTO `media_mozik` VALUES (7698,36,34,'Ma (03.25.)|20:30');
-INSERT INTO `media_mozik` VALUES (7699,2,38,'Ma (03.25.)|17:00, 19:30, 19:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7700,38,34,'Ma (03.25.)|17:50, 20:00, 20:10');
-INSERT INTO `media_mozik` VALUES (7701,2,36,'Ma (03.25.)|16:30, 17:15, 19:30, 20:00');
-INSERT INTO `media_mozik` VALUES (7702,38,38,'Ma (03.25.)|16:00, 20:10');
-INSERT INTO `media_mozik` VALUES (7703,38,36,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7704,2,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7705,36,37,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
-INSERT INTO `media_mozik` VALUES (7706,38,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7707,2,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7708,2,41,'Ma (03.25.)|17:00, 18:00, 21:05');
-INSERT INTO `media_mozik` VALUES (7709,36,40,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
-INSERT INTO `media_mozik` VALUES (7710,2,46,'Ma (03.25.)|17:45');
-INSERT INTO `media_mozik` VALUES (7711,38,41,'Ma (03.25.)|15:40, 18:10, 20:10');
-INSERT INTO `media_mozik` VALUES (7712,38,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7713,2,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
-INSERT INTO `media_mozik` VALUES (7714,2,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
-INSERT INTO `media_mozik` VALUES (7715,36,48,'Ma (03.25.)|16:45, 17:15, 17:30, 18:45, 19:15, 19:30, 20:15, 20:45');
-INSERT INTO `media_mozik` VALUES (7716,38,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
-INSERT INTO `media_mozik` VALUES (7717,38,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
-INSERT INTO `media_mozik` VALUES (7718,2,57,'Ma (03.25.)|14:45, 15:00, 16:00, 16:15, 16:30, 17:00, 17:45, 18:00, 18:15, 19:30, 19:45, 20:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7719,38,57,'Ma (03.25.)|16:00, 17:30, 17:45, 18:00, 19:45, 20:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7720,38,60,'Ma (03.25.)|18:00');
-INSERT INTO `media_mozik` VALUES (7721,2,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7722,38,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7723,2,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7724,36,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7725,38,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7726,2,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
-INSERT INTO `media_mozik` VALUES (7727,38,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
-INSERT INTO `media_mozik` VALUES (7728,2,71,'Ma (03.25.)|14:00, 16:20, 18:10');
+INSERT INTO `media_mozik` VALUES (7729,2,2,'Ma (03.25.)|19:50');
+INSERT INTO `media_mozik` VALUES (7730,38,2,'Ma (03.25.)|19:30');
+INSERT INTO `media_mozik` VALUES (7731,2,5,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7732,2,1,'Ma (03.25.)|18:20, 19:10, 19:15, 20:00');
+INSERT INTO `media_mozik` VALUES (7733,2,4,'Ma (03.25.)|19:30, 20:45');
+INSERT INTO `media_mozik` VALUES (7734,36,1,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7735,38,4,'Ma (03.25.)|18:30');
+INSERT INTO `media_mozik` VALUES (7736,2,3,'Ma (03.25.)|18:00, 18:30, 19:10, 19:40, 20:00, 20:20, 20:50, 21:10, 21:40, 21:45, 22:15');
+INSERT INTO `media_mozik` VALUES (7737,38,1,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7738,36,3,'Ma (03.25.)|20:00, 22:20');
+INSERT INTO `media_mozik` VALUES (7739,38,3,'Ma (03.25.)|18:00, 19:50, 22:10');
+INSERT INTO `media_mozik` VALUES (7740,2,10,'Ma (03.25.)|18:30, 20:00, 21:40');
+INSERT INTO `media_mozik` VALUES (7741,2,6,'Ma (03.25.)|18:20, 19:10, 20:00');
+INSERT INTO `media_mozik` VALUES (7742,2,9,'Ma (03.25.)|19:50');
+INSERT INTO `media_mozik` VALUES (7743,36,10,'Ma (03.25.)|20:15');
+INSERT INTO `media_mozik` VALUES (7744,38,9,'Ma (03.25.)|19:30');
+INSERT INTO `media_mozik` VALUES (7745,36,6,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7746,38,10,'Ma (03.25.)|19:20, 21:40');
+INSERT INTO `media_mozik` VALUES (7747,38,6,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7748,2,7,'Ma (03.25.)|16:30, 17:30, 19:30, 19:45');
+INSERT INTO `media_mozik` VALUES (7749,2,12,'Ma (03.25.)|18:40, 19:15, 20:00');
+INSERT INTO `media_mozik` VALUES (7750,2,13,'Ma (03.25.)|18:45, 20:00');
+INSERT INTO `media_mozik` VALUES (7751,2,18,'Ma (03.25.)|19:50');
+INSERT INTO `media_mozik` VALUES (7752,36,12,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7753,36,13,'Ma (03.25.)|18:00');
+INSERT INTO `media_mozik` VALUES (7754,38,12,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7755,38,18,'Ma (03.25.)|19:30');
+INSERT INTO `media_mozik` VALUES (7756,38,13,'Ma (03.25.)|19:00');
+INSERT INTO `media_mozik` VALUES (7757,2,14,'Ma (03.25.)|14:30, 16:10, 17:05, 17:30, 18:00, 19:10, 19:40, 20:10');
+INSERT INTO `media_mozik` VALUES (7758,38,14,'Ma (03.25.)|19:10');
+INSERT INTO `media_mozik` VALUES (7759,2,20,'Ma (03.25.)|18:40, 20:00, 21:45');
+INSERT INTO `media_mozik` VALUES (7760,2,26,'Ma (03.25.)|18:40, 19:15, 20:00');
+INSERT INTO `media_mozik` VALUES (7761,36,20,'Ma (03.25.)|20:15, 22:30');
+INSERT INTO `media_mozik` VALUES (7762,36,26,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7763,38,20,'Ma (03.25.)|18:00, 20:15');
+INSERT INTO `media_mozik` VALUES (7764,38,26,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7765,2,28,'Ma (03.25.)|18:45, 19:10, 19:45, 20:15, 21:45, 22:15');
+INSERT INTO `media_mozik` VALUES (7766,36,28,'Ma (03.25.)|20:15, 22:30');
+INSERT INTO `media_mozik` VALUES (7767,38,28,'Ma (03.25.)|19:30');
+INSERT INTO `media_mozik` VALUES (7768,2,19,'Ma (03.25.)|18:40, 19:15, 20:00');
+INSERT INTO `media_mozik` VALUES (7769,36,19,'Ma (03.25.)|18:00');
+INSERT INTO `media_mozik` VALUES (7770,2,27,'Ma (03.25.)|18:40, 20:00');
+INSERT INTO `media_mozik` VALUES (7771,38,19,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7772,36,27,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7773,38,27,'Ma (03.25.)|18:00, 20:15');
+INSERT INTO `media_mozik` VALUES (7774,2,29,'Ma (03.25.)|19:50');
+INSERT INTO `media_mozik` VALUES (7775,38,29,'Ma (03.25.)|19:30');
+INSERT INTO `media_mozik` VALUES (7776,2,31,'Ma (03.25.)|18:40, 19:15, 20:00');
+INSERT INTO `media_mozik` VALUES (7777,36,31,'Ma (03.25.)|20:10');
+INSERT INTO `media_mozik` VALUES (7778,38,31,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7779,2,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
+INSERT INTO `media_mozik` VALUES (7780,38,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
+INSERT INTO `media_mozik` VALUES (7781,2,38,'Ma (03.25.)|17:00, 19:30, 19:40, 20:00');
+INSERT INTO `media_mozik` VALUES (7782,2,36,'Ma (03.25.)|16:30, 17:15, 19:30, 20:00');
+INSERT INTO `media_mozik` VALUES (7783,38,38,'Ma (03.25.)|16:00, 20:10');
+INSERT INTO `media_mozik` VALUES (7784,2,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (7785,38,36,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (7786,36,37,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
+INSERT INTO `media_mozik` VALUES (7787,2,34,'Ma (03.25.)|14:20, 16:10, 17:00, 19:10, 19:20, 20:00');
+INSERT INTO `media_mozik` VALUES (7788,38,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (7789,36,34,'Ma (03.25.)|20:30');
+INSERT INTO `media_mozik` VALUES (7790,38,34,'Ma (03.25.)|17:50, 20:00, 20:10');
+INSERT INTO `media_mozik` VALUES (7791,2,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (7792,36,40,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
+INSERT INTO `media_mozik` VALUES (7793,38,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (7794,2,46,'Ma (03.25.)|17:45');
+INSERT INTO `media_mozik` VALUES (7795,2,41,'Ma (03.25.)|17:00, 18:00, 21:05');
+INSERT INTO `media_mozik` VALUES (7796,38,41,'Ma (03.25.)|15:40, 18:10, 20:10');
+INSERT INTO `media_mozik` VALUES (7797,2,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
+INSERT INTO `media_mozik` VALUES (7798,36,48,'Ma (03.25.)|16:45, 17:15, 17:30, 18:45, 19:15, 19:30, 20:15, 20:45');
+INSERT INTO `media_mozik` VALUES (7799,38,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
+INSERT INTO `media_mozik` VALUES (7800,2,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
+INSERT INTO `media_mozik` VALUES (7801,38,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
+INSERT INTO `media_mozik` VALUES (7802,2,57,'Ma (03.25.)|14:45, 15:00, 16:00, 16:15, 16:30, 17:00, 17:45, 18:00, 18:15, 19:30, 19:45, 20:00, 20:15');
+INSERT INTO `media_mozik` VALUES (7803,38,57,'Ma (03.25.)|16:00, 17:30, 17:45, 18:00, 19:45, 20:00, 20:15');
+INSERT INTO `media_mozik` VALUES (7804,38,60,'Ma (03.25.)|18:00');
+INSERT INTO `media_mozik` VALUES (7805,2,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (7806,36,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (7807,38,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (7808,2,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (7809,38,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (7810,2,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
+INSERT INTO `media_mozik` VALUES (7811,38,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
+INSERT INTO `media_mozik` VALUES (7812,2,71,'Ma (03.25.)|14:00, 16:20, 18:10');
 /*!40000 ALTER TABLE `media_mozik` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -560,35 +560,6 @@ INSERT INTO `media_platformok` VALUES (109,3,NULL,10104);
 INSERT INTO `media_platformok` VALUES (110,1,NULL,46);
 INSERT INTO `media_platformok` VALUES (111,2,NULL,34);
 /*!40000 ALTER TABLE `media_platformok` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `megtekintesek`
---
-
-DROP TABLE IF EXISTS `megtekintesek`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `megtekintesek` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `felhasznalo_id` int NOT NULL,
-  `megtekintve` datetime DEFAULT CURRENT_TIMESTAMP,
-  `media_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`felhasznalo_id`),
-  KEY `media_id` (`media_id`),
-  CONSTRAINT `fk_megtekintesek_felhasznalo` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_megtekintesek_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `megtekintesek`
---
-
-LOCK TABLES `megtekintesek` WRITE;
-/*!40000 ALTER TABLE `megtekintesek` DISABLE KEYS */;
-/*!40000 ALTER TABLE `megtekintesek` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -902,4 +873,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-25 16:12:26
+-- Dump completed on 2026-03-25 17:06:21

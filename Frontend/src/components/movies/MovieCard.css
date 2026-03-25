@@ -13,7 +13,7 @@
 
 @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-.card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-image img { width: 100%; height: 100%; object-fit: cover; display: block;position: relative;z-index: 2; }
 .card-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; opacity: 0; transition: 0.2s; z-index: 5; }
 .movie-card:hover .card-overlay { opacity: 1; }
 .card-overlay i { font-size: 3.5rem; color: white; filter: drop-shadow(0 0 10px var(--primary)); }
