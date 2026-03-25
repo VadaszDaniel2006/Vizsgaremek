@@ -95,7 +95,6 @@ exports.getAllMozik = async (req, res) => {
     }
 };
 
-// ÚJ: Lekérdezi az összes kategóriát a legördülő menühöz
 exports.getAllCategories = async (req, res) => {
     try {
         const [kategoriak] = await db.query('SELECT id, nev FROM kategoriak ORDER BY nev ASC');
@@ -143,10 +142,13 @@ exports.deleteMedia = async (req, res) => {
         await db.query('DELETE FROM sajat_lista_elemek WHERE media_id = ?', [id]); 
         await db.query('DELETE FROM media_platformok WHERE media_id = ?', [id]); 
         await db.query('DELETE FROM media_mozik WHERE media_id = ?', [id]); 
-        await db.query('DELETE FROM megtekintesek WHERE media_id = ?', [id]); 
+        // A megtekintések törlése innen sikeresen eltávolítva!
         await db.query('DELETE FROM media WHERE id = ?', [id]);
         res.json({ message: 'Tartalom sikeresen törölve.' });
-    } catch (error) { res.status(500).json({ message: 'Hiba a tartalom törlésekor.' }); }
+    } catch (error) { 
+        console.error("Hiba a tartalom törlésekor:", error);
+        res.status(500).json({ message: 'Hiba a tartalom törlésekor.' }); 
+    }
 };
 
 exports.addMedia = async (req, res) => {
@@ -157,13 +159,13 @@ exports.addMedia = async (req, res) => {
     }
     
     try {
-        let newId;
+       let newId;
         if (tipus === 'film') {
-            const [result] = await db.query("SELECT MAX(id) as maxId FROM media WHERE tipus = 'film' AND id < 10000");
+            const [result] = await db.query("SELECT MAX(id) as maxId FROM media WHERE tipus = 'film' AND id < 1000");
             newId = (result[0].maxId || 0) + 1;
         } else {
-            const [result] = await db.query("SELECT MAX(id) as maxId FROM media WHERE tipus = 'sorozat' AND id >= 10000");
-            newId = (result[0].maxId || 10100) + 1;
+            const [result] = await db.query("SELECT MAX(id) as maxId FROM media WHERE tipus = 'sorozat' AND id >= 1000");
+            newId = (result[0].maxId || 1000) + 1; 
         }
 
         let finalRendezoId = null;

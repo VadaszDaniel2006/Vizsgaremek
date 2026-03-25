@@ -30,8 +30,8 @@ const FeatureList = [
     emoji: '🧠',
     description: (
       <>
-        Nem tudod mit nézz? A rendszerünk elemzi a korábbi kedvenceidet és kereséseidet,
-        hogy személyre szabott ajánlásokat adjon neked.
+        Nem tudod mit nézz? A rendszerünk elemzi a korábbi kedvenc kategóriáidat 
+        ,hogy személyre szabott ajánlásokat adjon neked.
       </>
     ),
   },

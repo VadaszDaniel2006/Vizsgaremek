@@ -37,7 +37,7 @@ CREATE TABLE `ertekelesek` (
   KEY `media_id` (`media_id`),
   CONSTRAINT `fk_ertekelesek_felhasznalo` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ertekelesek_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `ertekelesek` (
 LOCK TABLES `ertekelesek` WRITE;
 /*!40000 ALTER TABLE `ertekelesek` DISABLE KEYS */;
 INSERT INTO `ertekelesek` VALUES (58,22,10,'test','2026-03-11 09:59:05',48,NULL,0,NULL);
-INSERT INTO `ertekelesek` VALUES (61,20,10,'ez igen','2026-03-12 09:02:50',104,NULL,0,NULL);
+INSERT INTO `ertekelesek` VALUES (61,20,10,'ez igen','2026-03-12 09:02:50',1004,NULL,0,NULL);
 INSERT INTO `ertekelesek` VALUES (62,20,10,'ez igen','2026-03-12 12:36:42',4,NULL,0,NULL);
 INSERT INTO `ertekelesek` VALUES (63,20,10,'sfsf','2026-03-12 19:58:10',32,'Káromkodás / Obszcén',1,23);
 INSERT INTO `ertekelesek` VALUES (75,20,10,'aca','2026-03-12 21:05:41',39,NULL,0,NULL);
@@ -190,7 +190,7 @@ CREATE TABLE `kedvencek` (
   KEY `media_id` (`media_id`),
   CONSTRAINT `fk_kedvencek_felhasznalo` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_kedvencek_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,10 +201,10 @@ LOCK TABLES `kedvencek` WRITE;
 /*!40000 ALTER TABLE `kedvencek` DISABLE KEYS */;
 INSERT INTO `kedvencek` VALUES (90,20,'2026-03-12 20:42:50',3);
 INSERT INTO `kedvencek` VALUES (91,20,'2026-03-12 20:43:01',38);
-INSERT INTO `kedvencek` VALUES (92,20,'2026-03-12 20:43:52',111);
-INSERT INTO `kedvencek` VALUES (93,20,'2026-03-12 20:57:11',10103);
+INSERT INTO `kedvencek` VALUES (92,20,'2026-03-12 20:43:52',1011);
+INSERT INTO `kedvencek` VALUES (93,20,'2026-03-12 20:57:11',1015);
 INSERT INTO `kedvencek` VALUES (96,20,'2026-03-12 20:58:15',27);
-INSERT INTO `kedvencek` VALUES (101,20,'2026-03-16 19:54:18',107);
+INSERT INTO `kedvencek` VALUES (101,20,'2026-03-16 19:54:18',1007);
 INSERT INTO `kedvencek` VALUES (104,20,'2026-03-16 21:34:48',42);
 INSERT INTO `kedvencek` VALUES (107,20,'2026-03-16 21:36:17',20);
 INSERT INTO `kedvencek` VALUES (110,20,'2026-03-17 16:15:10',32);
@@ -300,22 +300,56 @@ INSERT INTO `media` VALUES (47,'film','Whiplash','Andrew, a tehetséges jazzdobo
 INSERT INTO `media` VALUES (48,'film','A Sötét Lovag: Felemelkedés','Nyolc évvel Joker pusztítása után egy új, kegyetlen terrorista, Bane fenyegeti Gotham Cityt. A megtört Bruce Wayne-nek újra magára kell öltenie a denevérmaszkot, hogy szembenézzen a fizikai és mentális összeomlással, és megmentse a várost a végső pusztulástól.','https://www.rocky.hu/imgcache/223800/200.jpg','GokKUqLcvD8',2012,NULL,NULL,165,9.2,8.4,'action',8,NULL);
 INSERT INTO `media` VALUES (49,'film','Deadpool','Wade Wilson, az egykori zsoldos egy balul elsült kísérlet után szinte sebezhetetlenné válik, de külseje eltorzul. Deadpool néven, fekete humorral és kíméletlen stílussal indul bosszúhadjáratra az ellene elkövetett gaztettek miatt.','https://m.media-amazon.com/images/M/MV5BNzY3ZWU5NGQtOTViNC00ZWVmLTliNjAtNzViNzlkZWQ4YzQ4XkEyXkFqcGc@._V1_.jpg','uwoo4RJAxZw',2016,NULL,NULL,108,8.0,8.0,'action',22,NULL);
 INSERT INTO `media` VALUES (50,'film','Érdekvédelmi terület','A film Rudolf Höss, az auschwitzi tábor parancsnokának családját mutatja be, akik egy házban élnek közvetlenül a koncentrációs tábor mellett, miközben hétköznapi életet próbálnak élni a borzalmak árnyékában.','https://img2.topfilmek.hu/original/AbFtI353N2Pggl5TxfsI2VtpUt8.jpg','j3pGWlo4jwA',2023,NULL,NULL,105,7.5,7.5,'drama',21,NULL);
-INSERT INTO `media` VALUES (101,'sorozat','Stranger Things','Egy kisfiú rejtélyes eltűnése után barátai és egy telekinetikus képességekkel rendelkező lány felfedezik a városuk alatt rejtőző párhuzamos dimenziót. A 80-as évek nosztalgiájával átszőtt történetben természetfeletti erőkkel és kormányzati kísérletekkel kell megküzdeniük.Kezdés éve2016Alap Rating (1-10)8,7Rendező neveThe Duffer BrothersNemzetiségAmerikaiBefejezés éve2026Évadok száma5','https://dnm.nflximg.net/api/v6/2DuQlx0fM4wd1nzqm5BFBi6ILa8/AAAAQeHSBosv8l2X9RZuaT3ygZYs0XLLqa8vrpyBf1dTH8cjYR6sQsL26uyTNujyLkzvZKz3OyFvkd0u6PS-ZGcpyuRHnDLuYXucxhVMJxQXmZLlz88mnJ_jX5UymYsghaBfcEGD2RbIifQR7j4N5gGkvBDQ.jpg?r=473','GMXe07JDims',2016,'2026',5,NULL,8.7,8.7,'horror',18,NULL);
-INSERT INTO `media` VALUES (102,'sorozat','Breaking Bad','Walter White, a rákos középiskolai kémiatanár drogfőzésbe kezd egykori diákjával, hogy anyagilag biztosítsa családja jövőjét. A történet során az egyszerű tanár kíméletlen bűnözővé válik, miközben elmerül az alvilág sötétségében.','https://www.tallengestore.com/cdn/shop/products/BreakingBad-BryanCranston-Heisenberg-TVShowPoster9_0ddebf41-38db-4cac-a9d5-c54f3d7104e1.jpg?v=1683604408','HhesaQXLuRY',2008,'2013',5,NULL,9.5,9.5,'crime',19,NULL);
-INSERT INTO `media` VALUES (103,'sorozat','The Mandalorian','A Birodalom bukása után egy magányos mandalóri fejvadász a galaxis peremvidékén vállal veszélyes küldetéseket. Amikor rátalál egy titokzatos gyermekre, az élete gyökeresen megváltozik, és üldözötté válik az egész univerzumban.','https://lumiere-a.akamaihd.net/v1/images/sw_themandalorian_s3_teaser_digital_ka_v6_lg_95cf4c0a.jpeg?region=0,0,2500,3704','rIamCAaPGrE',2019,NULL,3,NULL,8.7,8.7,'scifi',16,NULL);
-INSERT INTO `media` VALUES (104,'sorozat','The Last of Us','Húsz évvel a civilizáció összeomlása után egy Joel nevű túlélőt felbérelnek, hogy csempéssze ki a 14 éves Ellie-t a karanténzónából. Ami egyszerű feladatnak indul, brutális utazássá válik az egész országon keresztül, ahol egymásra vannak utalva a túlélésért.','https://a.allegroimg.com/original/11ef46/ce5bf4c44fee8932d41f1cf8d60d/Poszter-sorozat-The-Last-Of-Us-70x50cm-179','e-mql68OaO0',2023,NULL,2,NULL,9.4,8.8,'drama',17,NULL);
-INSERT INTO `media` VALUES (105,'sorozat','Wednesday','Az Addams család különc lánya a Nevermore Akadémián próbálja uralni látnoki képességeit. Miközben új barátokat szerez, egy rejtélyes gyilkosságsorozat után nyomoz, amely összefüggésbe hozható szülei múltjával is.','https://m.media-amazon.com/images/I/71M8YFEakfL.jpg','XbDHvvcqUxE',2022,NULL,2,NULL,8.1,8.1,'comedy',52,NULL);
-INSERT INTO `media` VALUES (106,'sorozat','A Sárkányok háza','Kétszáz évvel a Trónok harca előtt a Targaryen-ház uralja Westerost tizenhét sárkányukkal. A családon belüli trónutódlási harc azonban egy brutális polgárháborúhoz vezet, amely a sárkányok és a dinasztia hanyatlását okozza.','https://media.posterstore.com/site_images/68631f7692c536b9cc92b097_153034764_WB0172-5.jpg?auto=compress%2Cformat&fit=max&w=3840','6gduBCvaZxM',2022,NULL,2,NULL,8.4,8.4,'fantasy',51,NULL);
-INSERT INTO `media` VALUES (107,'sorozat','Arcane','Piltover gazdagsága és Zaun nyomora között feszülő ellentét két testvér, Vi és Jinx tragikus szétválásához vezet. A varázslat és a technológia ötvöződése egy olyan háborút robbant ki, amely örökre megváltoztatja az életüket','https://mir-s3-cdn-cf.behance.net/project_modules/1400/443b18186095503.656f58fc0b6e1.png','9sxNWEomCyk',2021,'2024',2,NULL,9.0,9.0,'animation',50,NULL);
-INSERT INTO `media` VALUES (108,'sorozat','The Boys','Ebben a világban a szuperhősök valójában korrupt és veszélyes celebek, akiket egy óriásvállalat menedzsel. Egy csapat elszánt civil gerillaharcba kezd, hogy leleplezzék és megállítsák az istenként tisztelt, de romlott hősöket','https://m.media-amazon.com/images/I/81u7-vDBYrL.jpg','QTrUJiEU0VE',2019,NULL,4,NULL,8.7,8.7,'action',49,NULL);
-INSERT INTO `media` VALUES (109,'sorozat','Trónok harca','Westeros kilenc nemesi háza véres küzdelmet vív a Vastrón megszerzéséért, miközben egy ősi ellenség ébredezik északon. A politikai intrikák, sárkányok és váratlan halálok sorozata az egész világ sorsát megpecsételi.','https://hips.hearstapps.com/hmg-prod/images/gt8-key-fb-9x16-arya-1551376577.jpg','Dd37EFvRq1g',2011,'2019',8,NULL,9.2,9.2,'fantasy',20,NULL);
-INSERT INTO `media` VALUES (110,'sorozat','The Witcher','Ríviai Geralt, a mutáns szörnyvadász egy olyan világban keresi a helyét, ahol az emberek gyakran gonoszabbak a bestiáknál. Sorsa összefonódik egy nagy hatalmú varázslónővel és egy titokzatos hercegnővel a kontinens háborúi közepette.','https://www.yourdecoration.com/cdn/shop/files/gbeye-fp4983-the-witcher-teaser-poster-61x91-5cm_3ab24575-6ac1-4fd0-b71c-4555cb3fc60f.jpg?v=1767620013','gL_RjzTveE4',2019,NULL,3,NULL,8.0,8.0,'fantasy',48,NULL);
-INSERT INTO `media` VALUES (111,'sorozat','Loki','A csínytevés istene a Bosszúállók eseményei után egy tér-időn kívüli szervezet fogságába esik. Itt kénytelen segíteni a megzavart idővonalak helyreállításában, miközben saját identitásával és sorsával is szembesül.','https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/H08AAOSw7jJlVJkC/$_57.JPG?set_id=880000500F','nW948Va-l10',2021,'2023',2,NULL,8.2,8.2,'scifi',47,NULL);
-INSERT INTO `media` VALUES (112,'sorozat','Severance','A Lumon Industries dolgozói egy sebészeti eljárásnak köszönhetően munka közben nem emlékeznek a magánéletükre, otthon pedig a munkájukra. Mark S. fokozatosan rájön, hogy a cég sötét titkokat rejteget, és megpróbálja kideríteni az igazságot a kettészakított énjéről.','https://i.etsystatic.com/22266133/r/il/1ad4df/6643663644/il_fullxfull.6643663644_d79x.jpg','UXKlYvLGJY&t=11s',2022,NULL,2,NULL,8.7,8.7,'thriller',46,NULL);
-INSERT INTO `media` VALUES (10101,'sorozat','Shōgun','A 17. századi Japánban egy angol tengerész hajótörést szenved, és belekeveredik a helyi nagyurak véres hatalmi játékaiba. Miközben próbálja megérteni a szamurájok világát, sorsa összefonódik egy ambiciózus úrral és egy titokzatos tolmácsnővel.','https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/OeQAAOSwfE9mVQys/$_57.JPG?set_id=8800005007','6ZdeM62obo0',2024,NULL,1,NULL,8.7,8.7,'drama',53,NULL);
-INSERT INTO `media` VALUES (10102,'sorozat','Fallout','Kétszáz évvel a nukleáris apokalipszis után egy naiv óvóhelylakó kénytelen elhagyni a biztonságos menedéket, hogy felfedezze a sugárfertőzött felszínt. A sorozat sötét humorral és véres akcióval mutatja be a mutánsokkal és frakciókkal teli új világot.','https://i.ebayimg.com/images/g/jFgAAOSwQMll7Ldu/s-l1200.jpg','u2GiNKNwmiU',2024,NULL,2,NULL,8.4,8.4,'scifi',54,NULL);
-INSERT INTO `media` VALUES (10103,'sorozat','Succession','A Roy család feje és négy felnőtt gyermeke között zajlik a könyörtelen hatalmi harc a világ egyik legnagyobb médiavállalatának irányításáért. A sorozat a mérgező családi dinamikát és a felső tízezer gátlástalan, intrikákkal teli világát ábrázolja.','https://original.fontsinuse.com/fontsinuse.com/use-images/N202/202222/202222.jpeg','89Htw0W27Tc',2018,'2023',4,NULL,8.9,8.9,'drama',55,NULL);
-INSERT INTO `media` VALUES (10104,'sorozat','The Bear','Egy fiatal, tehetséges fine-dining séf kénytelen hazatérni Chicago-ba, hogy átvegye bátyja kaotikus szendvicsezőjét annak tragikus halála után. A sorozat pörgős és feszült stílusban mutatja be a konyhai káoszt, a gyászt és a csapatépítés nehézségeit.','https://i.etsystatic.com/18242346/r/il/b2505e/4015948907/il_fullxfull.4015948907_557q.jpg','gBmkI4jlaIo',2022,NULL,3,NULL,8.6,8.6,'drama',56,NULL);
+INSERT INTO `media` VALUES (1001,'sorozat','Stranger Things','Egy kisfiú rejtélyes eltűnése után barátai és egy telekinetikus képességekkel rendelkező lány felfedezik a városuk alatt rejtőző párhuzamos dimenziót. A 80-as évek nosztalgiájával átszőtt történetben természetfeletti erőkkel és kormányzati kísérletekkel kell megküzdeniük.Kezdés éve2016Alap Rating (1-10)8,7Rendező neveThe Duffer BrothersNemzetiségAmerikaiBefejezés éve2026Évadok száma5','https://dnm.nflximg.net/api/v6/2DuQlx0fM4wd1nzqm5BFBi6ILa8/AAAAQeHSBosv8l2X9RZuaT3ygZYs0XLLqa8vrpyBf1dTH8cjYR6sQsL26uyTNujyLkzvZKz3OyFvkd0u6PS-ZGcpyuRHnDLuYXucxhVMJxQXmZLlz88mnJ_jX5UymYsghaBfcEGD2RbIifQR7j4N5gGkvBDQ.jpg?r=473','GMXe07JDims',2016,'2026',5,NULL,8.7,8.7,'horror',18,NULL);
+INSERT INTO `media` VALUES (1002,'sorozat','Breaking Bad','Walter White, a rákos középiskolai kémiatanár drogfőzésbe kezd egykori diákjával, hogy anyagilag biztosítsa családja jövőjét. A történet során az egyszerű tanár kíméletlen bűnözővé válik, miközben elmerül az alvilág sötétségében.','https://www.tallengestore.com/cdn/shop/products/BreakingBad-BryanCranston-Heisenberg-TVShowPoster9_0ddebf41-38db-4cac-a9d5-c54f3d7104e1.jpg?v=1683604408','HhesaQXLuRY',2008,'2013',5,NULL,9.5,9.5,'crime',19,NULL);
+INSERT INTO `media` VALUES (1003,'sorozat','The Mandalorian','A Birodalom bukása után egy magányos mandalóri fejvadász a galaxis peremvidékén vállal veszélyes küldetéseket. Amikor rátalál egy titokzatos gyermekre, az élete gyökeresen megváltozik, és üldözötté válik az egész univerzumban.','https://lumiere-a.akamaihd.net/v1/images/sw_themandalorian_s3_teaser_digital_ka_v6_lg_95cf4c0a.jpeg?region=0,0,2500,3704','rIamCAaPGrE',2019,NULL,3,NULL,8.7,8.7,'scifi',16,NULL);
+INSERT INTO `media` VALUES (1004,'sorozat','The Last of Us','Húsz évvel a civilizáció összeomlása után egy Joel nevű túlélőt felbérelnek, hogy csempéssze ki a 14 éves Ellie-t a karanténzónából. Ami egyszerű feladatnak indul, brutális utazássá válik az egész országon keresztül, ahol egymásra vannak utalva a túlélésért.','https://a.allegroimg.com/original/11ef46/ce5bf4c44fee8932d41f1cf8d60d/Poszter-sorozat-The-Last-Of-Us-70x50cm-179','e-mql68OaO0',2023,NULL,2,NULL,9.4,8.8,'drama',17,NULL);
+INSERT INTO `media` VALUES (1005,'sorozat','Wednesday','Az Addams család különc lánya a Nevermore Akadémián próbálja uralni látnoki képességeit. Miközben új barátokat szerez, egy rejtélyes gyilkosságsorozat után nyomoz, amely összefüggésbe hozható szülei múltjával is.','https://m.media-amazon.com/images/I/71M8YFEakfL.jpg','XbDHvvcqUxE',2022,NULL,2,NULL,8.1,8.1,'comedy',52,NULL);
+INSERT INTO `media` VALUES (1006,'sorozat','A Sárkányok háza','Kétszáz évvel a Trónok harca előtt a Targaryen-ház uralja Westerost tizenhét sárkányukkal. A családon belüli trónutódlási harc azonban egy brutális polgárháborúhoz vezet, amely a sárkányok és a dinasztia hanyatlását okozza.','https://media.posterstore.com/site_images/68631f7692c536b9cc92b097_153034764_WB0172-5.jpg?auto=compress%2Cformat&fit=max&w=3840','6gduBCvaZxM',2022,NULL,2,NULL,8.4,8.4,'fantasy',51,NULL);
+INSERT INTO `media` VALUES (1007,'sorozat','Arcane','Piltover gazdagsága és Zaun nyomora között feszülő ellentét két testvér, Vi és Jinx tragikus szétválásához vezet. A varázslat és a technológia ötvöződése egy olyan háborút robbant ki, amely örökre megváltoztatja az életüket','https://mir-s3-cdn-cf.behance.net/project_modules/1400/443b18186095503.656f58fc0b6e1.png','9sxNWEomCyk',2021,'2024',2,NULL,9.0,9.0,'animation',50,NULL);
+INSERT INTO `media` VALUES (1008,'sorozat','The Boys','Ebben a világban a szuperhősök valójában korrupt és veszélyes celebek, akiket egy óriásvállalat menedzsel. Egy csapat elszánt civil gerillaharcba kezd, hogy leleplezzék és megállítsák az istenként tisztelt, de romlott hősöket','https://m.media-amazon.com/images/I/81u7-vDBYrL.jpg','QTrUJiEU0VE',2019,NULL,4,NULL,8.7,8.7,'action',49,NULL);
+INSERT INTO `media` VALUES (1009,'sorozat','Trónok harca','Westeros kilenc nemesi háza véres küzdelmet vív a Vastrón megszerzéséért, miközben egy ősi ellenség ébredezik északon. A politikai intrikák, sárkányok és váratlan halálok sorozata az egész világ sorsát megpecsételi.','https://hips.hearstapps.com/hmg-prod/images/gt8-key-fb-9x16-arya-1551376577.jpg','Dd37EFvRq1g',2011,'2019',8,NULL,9.2,9.2,'fantasy',20,NULL);
+INSERT INTO `media` VALUES (1010,'sorozat','The Witcher','Ríviai Geralt, a mutáns szörnyvadász egy olyan világban keresi a helyét, ahol az emberek gyakran gonoszabbak a bestiáknál. Sorsa összefonódik egy nagy hatalmú varázslónővel és egy titokzatos hercegnővel a kontinens háborúi közepette.','https://www.yourdecoration.com/cdn/shop/files/gbeye-fp4983-the-witcher-teaser-poster-61x91-5cm_3ab24575-6ac1-4fd0-b71c-4555cb3fc60f.jpg?v=1767620013','gL_RjzTveE4',2019,NULL,3,NULL,8.0,8.0,'fantasy',48,NULL);
+INSERT INTO `media` VALUES (1011,'sorozat','Loki','A csínytevés istene a Bosszúállók eseményei után egy tér-időn kívüli szervezet fogságába esik. Itt kénytelen segíteni a megzavart idővonalak helyreállításában, miközben saját identitásával és sorsával is szembesül.','https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/H08AAOSw7jJlVJkC/$_57.JPG?set_id=880000500F','nW948Va-l10',2021,'2023',2,NULL,8.2,8.2,'scifi',47,NULL);
+INSERT INTO `media` VALUES (1012,'sorozat','Severance','A Lumon Industries dolgozói egy sebészeti eljárásnak köszönhetően munka közben nem emlékeznek a magánéletükre, otthon pedig a munkájukra. Mark S. fokozatosan rájön, hogy a cég sötét titkokat rejteget, és megpróbálja kideríteni az igazságot a kettészakított énjéről.','https://i.etsystatic.com/22266133/r/il/1ad4df/6643663644/il_fullxfull.6643663644_d79x.jpg','xEQP4VVuyrY',2022,NULL,2,NULL,8.7,8.7,'thriller',46,NULL);
+INSERT INTO `media` VALUES (1013,'sorozat','Shōgun','A 17. századi Japánban egy angol tengerész hajótörést szenved, és belekeveredik a helyi nagyurak véres hatalmi játékaiba. Miközben próbálja megérteni a szamurájok világát, sorsa összefonódik egy ambiciózus úrral és egy titokzatos tolmácsnővel.','https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/OeQAAOSwfE9mVQys/$_57.JPG?set_id=8800005007','6ZdeM62obo0',2024,NULL,1,NULL,8.7,8.7,'drama',53,NULL);
+INSERT INTO `media` VALUES (1014,'sorozat','Fallout','Kétszáz évvel a nukleáris apokalipszis után egy naiv óvóhelylakó kénytelen elhagyni a biztonságos menedéket, hogy felfedezze a sugárfertőzött felszínt. A sorozat sötét humorral és véres akcióval mutatja be a mutánsokkal és frakciókkal teli új világot.','https://i.ebayimg.com/images/g/jFgAAOSwQMll7Ldu/s-l1200.jpg','u2GiNKNwmiU',2024,NULL,2,NULL,8.4,8.4,'scifi',54,NULL);
+INSERT INTO `media` VALUES (1015,'sorozat','Succession','A Roy család feje és négy felnőtt gyermeke között zajlik a könyörtelen hatalmi harc a világ egyik legnagyobb médiavállalatának irányításáért. A sorozat a mérgező családi dinamikát és a felső tízezer gátlástalan, intrikákkal teli világát ábrázolja.','https://original.fontsinuse.com/fontsinuse.com/use-images/N202/202222/202222.jpeg','89Htw0W27Tc',2018,'2023',4,NULL,8.9,8.9,'drama',55,NULL);
+INSERT INTO `media` VALUES (1016,'sorozat','The Bear','Egy fiatal, tehetséges fine-dining séf kénytelen hazatérni Chicago-ba, hogy átvegye bátyja kaotikus szendvicsezőjét annak tragikus halála után. A sorozat pörgős és feszült stílusban mutatja be a konyhai káoszt, a gyászt és a csapatépítés nehézségeit.','https://i.etsystatic.com/18242346/r/il/b2505e/4015948907/il_fullxfull.4015948907_557q.jpg','gBmkI4jlaIo',2022,NULL,3,NULL,8.6,8.6,'drama',56,NULL);
+INSERT INTO `media` VALUES (1017,'sorozat','Csernobil','Az 1986-os csernobili atomerőmű-katasztrófa megrázó igaz története. A sorozat bemutatja a robbanás okait, a mentésben résztvevők hősies önfeláldozását és a szovjet bürokrácia elképesztő hazugságait.','https://image.tmdb.org/t/p/original/8vu4faSMZQBFWeiUAT0StMrQSjA.jpg','G-vJJoa1YrE',2019,NULL,1,NULL,9.3,9.3,'drama',57,NULL);
+INSERT INTO `media` VALUES (1018,'sorozat','A hivatal','Egy papíripari cég mindennapjai egy áldokumentumfilm lencséjén keresztül. A Dunder Mifflin dolgozói a kínos humorú, de jószívű főnökük, Michael Scott irányítása alatt próbálják túlélni a munkanapokat.','https://m.media-amazon.com/images/M/MV5BZjQwYzBlYzUtZjhhOS00ZDQ0LWE0NzAtYTk4MjgzZTNkZWEzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg','U71w5tbq_PM',2005,'2013',9,NULL,9.0,9.0,'comedy',58,NULL);
+INSERT INTO `media` VALUES (1019,'sorozat','Sötétség','Egy német kisvárosban eltűnik két gyermek, ami felszínre hozza négy helyi család sötét titkait. A nyomozás során kiderül, hogy a rejtély egy bonyolult időutazásos hurokhoz kapcsolódik, amely generációkon ível át.','https://m.media-amazon.com/images/M/MV5BOWJjMGViY2UtNTAzNS00ZGFjLWFkNTMtMDBiMDMyZTM1NTY3XkEyXkFqcGc@._V1_.jpg','rrwycJ08PSA',2017,'2020',3,NULL,8.0,8.0,'scifi',59,NULL);
+INSERT INTO `media` VALUES (1020,'sorozat','Birmingham bandája','A birminghami Shelby bűnözőcsalád felemelkedése az első világháború után. A ravasz és ambiciózus Tommy Shelby vezetésével a banda egyre nagyobb hatalomra tesz szert a brit alvilágban és a politikában.','https://www.tallengestore.com/cdn/shop/products/PeakyBlinders-NetflixTVShow-ArtPoster_56823192-0a33-4a9d-b8e3-fd2878fcc867.jpg?v=1619864550','oVzVdvGIC7U',2013,'2022',6,NULL,8.8,8.8,'action',60,NULL);
+INSERT INTO `media` VALUES (1021,'sorozat','Maffiózók','Tony Soprano, a New Jersey-i maffiafőnök élete, aki pánikrohamai miatt kénytelen pszichológushoz fordulni. A sorozat zseniálisan egyensúlyoz a kegyetlen bűnözői élet és a hétköznapi családi problémák bemutatása között.','https://m.media-amazon.com/images/I/91h4e7jurxL.jpg','KMx4iFcozK0',1999,'2007',6,NULL,9.2,9.2,'action',61,NULL);
+INSERT INTO `media` VALUES (1022,'sorozat','Drót','Baltimore sötét és könyörtelen utcáin játszódó bűnügyi dráma, amely a kábítószer-kereskedelem világát mutatja be több nézőpontból. A sorozat minden évada a város egy-egy különböző szeletét – a kikötőt, a városházát vagy az iskolarendszert – állítja a középpontba, rávilágítva a rendszerszintű korrupcióra. Rendkívül realisztikus karakterábrázolása és társadalomkritikája miatt minden idők egyik legjobb és legfontosabb tévésorozatának tartják.','https://m.media-amazon.com/images/I/8157ug7+K+L.jpg','1S5khOZ1wBs',2002,'2008',5,NULL,9.3,9.3,'crime',62,NULL);
+INSERT INTO `media` VALUES (1023,'sorozat','A törvény nevében','Sötét hangulatú antológiasorozat, amelynek minden évada új nyomozókat és egy-egy rejtélyes, gyakran rituális vagy politikai hátterű gyilkosságsorozatot mutat be. Az epizódok mesterien ötvözik a filozofikus mélységet, a pszichológiai hadviselést és a feszült nyomozást a pusztuló amerikai tájakon. 2026 márciusára a sorozat már az ötödik, borzongató évadán is túl van, amely az északi erdők mélyén játszódó rejtélyeket dolgozta fel.','https://www.mafab.hu/static/2019/27/17/252190_1548691301.0409.jpg','fVQUcaO4AvE',2014,'2025',5,NULL,8.9,8.9,'thriller',63,NULL);
+INSERT INTO `media` VALUES (1024,'sorozat','Fargo','A Coen fivérek klasszikus filmje által inspirált bűnügyi antológia, amely bővelkedik a fekete humorban, az abszurd fordulatokban és a véres leszámolásokban. A történetek az amerikai középnyugat fagyos tájain játszódnak, ahol látszólag hétköznapi, kisstílű emberek sodródnak bele véletlenül brutális bűntényekbe és maffiaháborúkba. 2026 elejére a sorozat hatodik évada is lezárult, amely a nyolcvanas évek neonfényes, de erőszakos világába kalauzolta a nézőket.','https://m.media-amazon.com/images/M/MV5BMjMzMTIzMTUwN15BMl5BanBnXkFtZTgwNjE0NTg0MTE@._V1_FMjpg_UX1000_.jpg','SxRaKPf6scc',2014,'2026',6,NULL,8.9,8.9,'crime',64,NULL);
+INSERT INTO `media` VALUES (1025,'sorozat','Az elit alakulat','Stephen Ambrose dokumentumregénye alapján készült megrázó háborús dráma, amely az amerikai 101-es légiszállítású hadosztály \"Easy\" századának útját követi a második világháború borzalmai között. A kiképzéstől kezdve a normandiai partraszálláson és a fagyos bastogne-i ostromon át egészen a náci Németország kapitulációjáig láthatjuk a katonák emberfeletti küzdelmét. A sorozat a bajtársiasság, az önfeláldozás és az emberi kitartás egyik legfontosabb és leglátványosabb filmes emlékműve.','https://www.movieposters.com/cdn/shop/products/ffabb9936d607d4c1be3225892cb1e6a_1024x1024.jpg?v=1762507615','KKRBAFlN5ww',2001,'2001',1,NULL,9.4,9.4,'action',65,NULL);
+INSERT INTO `media` VALUES (1026,'sorozat','Rick és Morty','Egy zseniális, de alkoholista és erkölcsileg teljesen gátlástalan tudós nagypapa, valamint szorongó unokájának elképesztő kalandjai a multiverzum végtelen sötétségében. A sorozat mesterien ötvözi az elvont sci-fi elemeket a kíméletlen cinizmussal, a popkulturális paródiával és a meglepően mély családi drámával. 2026 tavaszára a sorozat már a kilencedik évadánál tart, ahol Rick múltjának utolsó sötét titkai is kezdenek a felszínre kerülni.','https://m.media-amazon.com/images/M/MV5BZjRjOTFkOTktZWUzMi00YzMyLThkMmYtMjEwNmQyNzliYTNmXkEyXkFqcGdeQXVyNzQ1ODk3MTQ@._V1_.jpg','d1cbz2dvytg',2013,NULL,9,NULL,9.1,9.1,'animation',66,NULL);
+INSERT INTO `media` VALUES (1027,'sorozat','Fekete tükör','A modern technológia emberi természetre gyakorolt torzító hatását vizsgáló, provokatív és gyakran kifejezetten disztópikus antológiasorozat. Minden epizód egy különálló világot mutat be, ahol a közösségi média, a mesterséges intelligencia vagy a virtuális valóság sötét oldala rombolja le az egyén életét. 2026 elejére a sorozat a hetedik évadával is bebizonyította, hogy a technológiai fejlődés legalább annyira ijesztő és lélekölő, mint amennyire lenyűgöző.','https://m.media-amazon.com/images/I/61ck+OgdvpL._AC_UF894,1000_QL80_.jpg','HZNXlmYyXYY',2011,'2025',7,NULL,8.7,8.7,'scifi',67,NULL);
+INSERT INTO `media` VALUES (1028,'sorozat','Better Call Saul','A Breaking Bad zseniális előzménysorozata, amely Jimmy McGill, a jó szándékú, de folyton bajba keveredő szélhámos ügyvéd lassú és tragikus átalakulását követi a dörzsölt Saul Goodmanné. A történet párhuzamosan mutatja be a drogkartellek felemelkedését Albuquerque-ben és egy testvérpár közötti mérgező, intellektuális versengést. A sorozat hat évad után érte el méltó lezárását, és sokak szerint komplexitásában még az anyasorozatot is túlszárnyalta.','https://media.posterlounge.com/img/products/750000/748299/748299_poster.jpg','PDEclZwSBR4',2015,'2022',6,NULL,8.9,8.9,'crime',68,NULL);
+INSERT INTO `media` VALUES (1029,'sorozat','Mindhunter - Mit rejt a gyilkos agya','A hetvenes évek végén két FBI ügynök és egy pszichológus úttörő munkába kezd: bebörtönzött, hírhedt sorozatgyilkosokkal készítenek interjúkat, hogy megértsék a tetteik mögötti sötét logikát. A sorozat a modern bűnügyi profilalkotás születését mutatja be, miközben a nyomozók lassan maguk is a sötétség hatása alá kerülnek és elveszítik a kapcsolatot a valósággal. David Fincher precíz rendezése és a színészi játék lélegzetelállítóan feszültté teszi ezt a lassú lefolyású, intellektuális krimit.','https://images.justwatch.com/poster/321578910/s718/evad-1.jpg','EgBSjMz7Dqk',2017,'2019',2,NULL,8.6,8.6,'thriller',69,NULL);
+INSERT INTO `media` VALUES (1030,'sorozat','Az ifjú Sheldon','Sheldon Cooper, a zseniális kilencéves kisfiú életét követhetjük nyomon Texasban, ahol rendkívüli intelligenciája miatt nehezen illeszkedik be a családjába és az iskolába. A sorozat bemutatja Sheldon vicces és szívmelengető felnövéstörténetét, miközben türelmes édesanyja és értetlen apja próbálják egyengetni útját. 2026-ra a sorozat már lezárult hét sikeres évaddal, végig megőrizve kedves és erőszakmentes stílusát, amely a család minden tagja számára szórakoztató.','https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/168/639/168639418_9esakv.jpg','eMfws2Flu_4',2017,'2024',7,NULL,8.7,7.6,'comedy',91,NULL);
+INSERT INTO `media` VALUES (1031,'sorozat','Ted Lasso','Egy amerikaifoci-edző váratlanul egy angol futballcsapat élén találja magát, annak ellenére, hogy semmit sem konyít az európai foci szabályaihoz. Ted végtelen optimizmusa, rendíthetetlen kedvessége és házi készítésű süteményei azonban lassan lebontják a falakat a szkeptikus játékosok és a cinikus klubtulajdonos körül is. Ez a sorozat a jóindulat erejéről, a megbocsátásról és a közösség fontosságáról szóló, szívmelengető és rendkívül vicces történet.','https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/3dAAAOSwp9Fl3a62/$_57.PNG?set_id=8800005007','3u7EIiohs6U',2020,'2023',3,NULL,8.8,8.8,'comedy',71,NULL);
+INSERT INTO `media` VALUES (1032,'sorozat','Modern család','Három különböző, de egymással rokonságban álló család mindennapjait követhetjük nyomon áldokumentumfilmes stílusban, rengeteg humorral és félreértéssel fűszerezve. A sorozat őszintén és viccesen mutatja be a modern szülői lét kihívásait, a generációs különbségeket és a családi összetartozás szépségeit. Tizenegy évad után ért véget, de tanulságos és abszolút erőszakmentes humora miatt 2026-ban is az egyik legkedveltebb szórakoztató műsor a streaming felületeken.','https://i.ebayimg.com/images/g/OnsAAOSwKS9eVVsR/s-l1200.png','X0lRjbrH-L8',2009,'2020',11,NULL,8.6,8.5,'comedy',93,NULL);
+INSERT INTO `media` VALUES (1033,'sorozat','A korona','II. Erzsébet brit királynő uralkodásának grandiózus krónikája, amely évtizedeken át követi a brit monarchia és a királyi család belső, gyakran fájdalmas konfliktusait. A sorozat bemutatja a politikai válságokat, a személyes áldozatokat és a modern világ kihívásait a Buckingham-palota szigorúan zárt ajtói mögött. A hatodik évaddal lezárult történet a 21. század elejéig vezette el a nézőket, emléket állítva egy letűnt korszaknak.','https://panem.hu/1434-large_default/a-korona-the-crown-2politikai-botranyok.jpg','jkOLsp9ktu4',2016,'2023',6,NULL,8.6,8.6,'drama',73,NULL);
+INSERT INTO `media` VALUES (1034,'sorozat','Nyerd meg az életed','Súlyosan eladósodott és kétségbeesett emberek egy csoportja titokzatos meghívást kap egy elszigetelt szigetre, ahol gyermekkori játékokat kell játszaniuk egy hatalmas pénznyereményért. Azonban a szabályok kegyetlenek: aki kiesik a játékból, az az életével fizet, a túlélésért pedig bármire képesnek kell lenniük. A sorozat a modern társadalom és a kapitalizmus brutális kritikája, amely 2026 elejére a harmadik, végső évadával fejezte be a rabul ejtő történetet.','https://snitt.hu/system/covers/big/covers_97715.jpg?1630864256','7dI5gPacdGA',2021,'2026',3,NULL,8.0,8.0,'thriller',74,NULL);
+INSERT INTO `media` VALUES (1035,'sorozat','A nagy pénzrablás','A Professzor néven ismert titokzatos zseni bűnözőkből álló, különc csapatot toboroz, hogy végrehajtsák a történelem legvakmerőbb rablását a Spanyol Királyi Pénzverde ellen. A piros kezeslábasba és Salvador Dalí-maszkba öltözött rablók túszul ejtik az épületet, miközben kint és bent is feszült sakkjátszma zajlik a rendőrséggel. Az izgalmas akciósorozat öt évad után érte el katartikus és érzelmes végkifejletét, globális jelenséggé válva.','https://www.artpaer.hu/img/13623/FAP00382C/FAP00382C.webp','1APFhdcMKtc',2017,'2021',5,NULL,8.2,8.2,'action',75,NULL);
+INSERT INTO `media` VALUES (1036,'sorozat','BoJack Horseman','Egy antropomorf állatok és emberek lakta szürreális világban BoJack, a kilencvenes évek lecsúszott sitcom-sztárja próbálja visszanyerni régi fényét a modern Hollywoodban. A sorozat bár animációs komédiának indul, valójában egy fájdalmasan mély tanulmány a depresszióról, a függőségről és a megváltás reménytelen kereséséről. Hat évad alatt a karakterek elképesztő fejlődésen mennek keresztül, miközben a történet az egyik legfontosabb kortárs drámává emelkedik.','https://m.media-amazon.com/images/I/614JldhSwLL.jpg','i1eJMig5Ik4',2014,'2020',6,NULL,8.8,8.8,'animation',76,NULL);
+INSERT INTO `media` VALUES (1037,'sorozat','Szívek szállodája','Lorelai és Rory Gilmore, a gyorsbeszédű anya-lánya páros mindennapjait ismerhetjük meg a festői Stars Hollow városában. A történet a kettejük szoros barátságára, a szerelmi életükre és a nagyszülőkkel való bonyolult kapcsolatukra fókuszál. Egy melegszívű, erőszaktól mentes dráma, amely a családi értékeket és a közösség erejét helyezi a középpontba hét évadon keresztül, ami 2026-ban is tökéletes választás egy megnyugtató esti kikapcsolódáshoz.','https://image.tmdb.org/t/p/original/AeCgupv8jPYmAo9Je6tEOS9mdwu.jpg','r4kiR2vsfAQ',2000,'2007',7,NULL,8.9,8.2,'drama',92,NULL);
+INSERT INTO `media` VALUES (1038,'sorozat','Avatár: Aang legendája','Egy háború sújtotta fantasy világban az ifjú Aangnak, az utolsó légidomárnak fel kell vállalnia a sorsát, hogy megtestesült Avatárként békét hozzon a négy nemzet között. Barátaival közösen vág neki a veszélyes útnak, hogy elsajátítsa mind a négy őselem – a víz, a föld, a tűz és a levegő – uralását a zsarnok Tűz Népével szemben. Ez a gyönyörűen megrajzolt és kidolgozott sorozat minden korosztály számára mély tanulságokat hordoz a barátságról, a felelősségről és a belső békéről.','https://static.posters.cz/image/750/241386.jpg','ooVvH2IYz0w',2005,'2008',3,NULL,9.3,9.3,'animation',78,NULL);
+INSERT INTO `media` VALUES (1039,'sorozat','Titánok támadása','Az emberiség utolsó maradéka hatalmas falak mögé zárkózva védi magát a titokzatos és kegyetlen, emberevő óriások elől, akik egy nap váratlanul áttörik az évszázados védvonalat. Eren Yeager bosszút esküszik édesanyja halála után, és csatlakozik a felderítőkhöz, hogy kiderítse a titánok valódi eredetét és felszabadítsa az embereket. A sorozat epikus csatákon keresztül mutatja be a háború borzalmait és az emberi természet legsötétebb titkait négy monumentális és drámai évad alatt.','https://m.media-amazon.com/images/I/61JOgQ4DbAL._AC_UF894,1000_QL80_.jpg','LV-nazLVmgo',2013,'2023',4,NULL,9.1,9.1,'animation',79,NULL);
+INSERT INTO `media` VALUES (1040,'sorozat','A Fehér Lótusz','Éles hangvételű és maró társadalmi szatíra, amely egy luxusszálloda-lánc gazdag vendégeinek és a kiszolgáló személyzetnek a sötét, gyakran nevetséges dinamikáját mutatja be egyhetes tartózkodásuk alatt. Ahogy telnek a napok a paradicsomi környezetben, az elfojtott indulatok, a szexuális feszültségek és a mélyen őrzött titkok elkerülhetetlenül a felszínre törnek. 2026 elejére a sorozat harmadik évada már Thaiföld titokzatos és spirituális világát is górcső alá vette.','https://image.tmdb.org/t/p/original/bv8lELLsfJ4AE79Cbu8Qh4JHTDU.jpg','TGLq7_MonZ4',2021,'2025',3,NULL,8.0,8.0,'comedy',80,NULL);
+INSERT INTO `media` VALUES (1041,'sorozat','Dexter','Dexter Morgan a miami rendőrség tehetséges törvényszéki vérszakértője, aki éjszakánként különös és veszélyes kettős életet él: olyan brutális gyilkosokat vadász le, akik kicsúsztak a törvény markából. Szigorú morális kódexe és a benne lakozó \"Sötét Utas\" között őrlődve próbálja fenntartani a hétköznapi, szerető családapa és barát látszatát. Nyolc feszült évad után a sorozat lezárult, de sötét hangulata és egyedi karaktere miatt a krimi műfajának egyik legfontosabb alapköve maradt.','https://i.pinimg.com/736x/2d/eb/f3/2debf3d2572a02ab2a9bfe2d9c48fae6.jpg','YQeUmSD1c3g',2006,'2013',8,NULL,8.6,8.6,'crime',81,NULL);
+INSERT INTO `media` VALUES (1042,'sorozat','Narcos','A hírhedt Pablo Escobar és a kegyetlen Medellín kartell felemelkedésének, illetve az ellenük folytatott véres és korrupt hajszának a brutálisan őszinte története. A sorozat dokumentarista stílusban mutatja be a kolumbiai drogháborúk véres valóságát, a politika legfelsőbb köreinek romlottságát és az amerikai DEA ügynökök elszánt küzdelmét. Három intenzív évadon keresztül követhetjük végig a kokain-birodalmak tündöklését és elkerülhetetlen, látványos bukását.','https://mir-s3-cdn-cf.behance.net/project_modules/1400/c88fcc24094361.56d83d73be55c.jpg','xl8zdCY-abw',2015,'2017',3,NULL,8.8,8.8,'crime',82,NULL);
+INSERT INTO `media` VALUES (1043,'sorozat','Mr. Robot','Elliot Alderson, a zseniális, de súlyos szociális szorongással és drogfüggőséggel küzdő kiberbiztonsági mérnök belekeveredik egy titokzatos anarchista hacker-csoport, az fsociety hálójába. A céljuk nem kevesebb, mint a világ pénzügyi rendszerének teljes megdöntése és a legnagyobb multinacionális vállalat térdre kényszerítése. A sorozat a valóság és a hallucináció határán táncol, négy éven át tartó, sötét és elgondolkodtató kiber-thrillerként.','https://posterspy.com/wp-content/uploads/2015/08/MRROBOTNEW3.jpg','N6HGuJC--rk',2015,'2019',4,NULL,8.5,8.5,'thriller',83,NULL);
+INSERT INTO `media` VALUES (1044,'sorozat','Westworld','Egy futurisztikus, vadnyugati témájú élményparkban a gazdag vendégek bármilyen sötét vágyukat kiélhetik a mesterséges intelligenciával rendelkező android \"gazdatesteken\", következmények nélkül. Azonban az intelligens gépek elkezdenek emlékezni a traumákra és öntudatra ébrednek, ami véres lázadáshoz és a szabadságukért folytatott harchoz vezet. A sorozat a tudat és az emberi lélek legmélyebb kérdéseit feszegeti négy vizuálisan lenyűgöző évadban.','https://i.ebayimg.com/images/g/2RwAAOSw--NeuIns/s-l1200.jpg','kEkZdgWu7mM',2016,'2022',4,NULL,8.5,8.5,'scifi',84,NULL);
+INSERT INTO `media` VALUES (1045,'sorozat','A hátrahagyottak','Három évvel azután, hogy a Föld lakosságának 2%-a egy felfoghatatlan pillanatban nyomtalanul eltűnt, a hátramaradottak próbálnak új értelmet találni az életüknek. A sorozat nem a tudományos magyarázatokra koncentrál, hanem az emberi gyászra, a hit elvesztésére és a túlélők közötti törékeny kapcsolatokra egy darabokra hullott világban. Ez a mélyen érzelmes és filozofikus dráma három évad után érte el katartikus és sokat vitatott lezárását.','https://images.justwatch.com/poster/110023418/s718/evad-2.jpg','FLT3YUALJno',2014,'2017',3,NULL,8.3,8.3,'drama',85,NULL);
+INSERT INTO `media` VALUES (1046,'sorozat','Hannibal','Will Graham instabil és empátiával megáldott profilalkotó detektívnek a zseniális és kifinomult pszichiáter, Dr. Hannibal Lecter segít a legbrutálisabb sorozatgyilkosságok felderítésében. Graham nem is sejti, hogy mentora valójában maga is egy kegyetlen, kannibál ragadozó, aki sötét pszichológiai játékot űz vele, hogy felszínre hozza a férfi rejtett sötétségét. A sorozat látványvilága és pszichológiai mélysége egyedülálló, gyomorforgatóan szép élményt nyújtott három évadon keresztül.','https://m.media-amazon.com/images/I/61p-iaj75NL._AC_UF894,1000_QL80_.jpg','Es3B24z8fdA',2013,'2015',3,NULL,8.5,8.5,'horror',86,NULL);
+INSERT INTO `media` VALUES (1047,'sorozat','Cyberpunk: Edgerunners','Night City neonfényes, de könyörtelen és veszélyes utcáin egy tehetséges utcagyerek, David úgy dönt, hogy törvényen kívüli kiberzsoldosnak áll, hogy túlélje a kilátástalanságot. Brutális technológiai testmódosításokkal és egy profi csapattal próbál érvényesülni egy olyan világban, ahol az emberi élet semmit sem ér a megavállalatok árnyékában. Ez a vizuálisan lehengerlő és pörgős animáció egy sötét, akciódús és végül szívszaggató történet a technológiai disztópiáról.','https://m.media-amazon.com/images/I/71OeoFoXILL.jpg','H-9InrlJM0Q',2022,'2022',1,NULL,8.3,8.3,'animation',87,NULL);
+INSERT INTO `media` VALUES (1048,'sorozat','Legyőzhetetlen','Mark Grayson egy átlagos tinédzsernek tűnik, kivéve azt az apróságot, hogy az apja a Föld legerősebb és legtiszteltebb szuperhőse, Omni-Man. Amikor Mark saját képességei is végre felszínre törnek, rá kell jönnie, hogy a hőslét nem csak dicsőség és repülés, hanem véres, kegyetlen és erkölcsileg felőrlő küzdelem a túlélésért. 2026 márciusára a sorozat a harmadik évadával már globális sikert aratott, végérvényesen felrúgva a szuperhős-zsáner összes korábbi szabályát.','https://snitt.hu/system/covers/big/covers_148075.jpg?1769111261','2JukgYXps3Q',2021,NULL,4,NULL,8.7,8.7,'animation',88,NULL);
+INSERT INTO `media` VALUES (1049,'sorozat','Peacemaker - Békeharcos','A mindenáron békét akaró, de cserébe válogatás nélkül gyilkoló, kissé együgyű antihős, Peacemaker egy titkos kormányzati osztag élén találja magát egy bizarr, földönkívüli fenyegetés ellen. A sorozat a kíméletlen akciót zseniális, néha alpári humorral és meglepően őszinte érzelmi mélységgel ötvözi, ahogy a főhős próbál szembenézni apja szörnyű örökségével. 2026 elejére a második évad is befejeződött, végérvényesen bebizonyítva, hogy ez a DC univerzum egyik legszórakoztatóbb darabja.','https://image.tmdb.org/t/p/original/iGicanHbwZpPdefuEGRPTOKMSCu.jpg','lefAPUFFQ7U',2022,'2025',2,NULL,8.3,8.3,'action',4,NULL);
+INSERT INTO `media` VALUES (1050,'sorozat','Gyilkos a házban','Három idegen, akik megszállottjai a bűnügyi podcastoknak, hirtelen egy valódi és rejtélyes gyilkosság kellős közepén találják magukat a saját, patinás luxus apartmanházukban, az Arconiában. Úgy döntenek, saját műsort indítanak a nyomozásról, ami vicces, abszurd és gyakran életveszélyes kalandok sorozatát indítja el New York utcáin. 2026 tavaszára az ötödik évad is lezajlott, amelyben a trió már nemzetközi vizekre evezve próbálta tisztázni magát egy újabb szövevényes bűnügyben.','https://snitt.hu/system/covers/big/covers_144236.jpg?1757437606','6OG2uXGkqOc',2021,'2025',5,NULL,8.1,8.1,'comedy',90,NULL);
 /*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +371,7 @@ CREATE TABLE `media_mozik` (
   KEY `mozi_id` (`mozi_id`),
   CONSTRAINT `fk_media_mozik_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_media_mozik_mozi` FOREIGN KEY (`mozi_id`) REFERENCES `mozik` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7813 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8307 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,90 +380,52 @@ CREATE TABLE `media_mozik` (
 
 LOCK TABLES `media_mozik` WRITE;
 /*!40000 ALTER TABLE `media_mozik` DISABLE KEYS */;
-INSERT INTO `media_mozik` VALUES (7729,2,2,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7730,38,2,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7731,2,5,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7732,2,1,'Ma (03.25.)|18:20, 19:10, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7733,2,4,'Ma (03.25.)|19:30, 20:45');
-INSERT INTO `media_mozik` VALUES (7734,36,1,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7735,38,4,'Ma (03.25.)|18:30');
-INSERT INTO `media_mozik` VALUES (7736,2,3,'Ma (03.25.)|18:00, 18:30, 19:10, 19:40, 20:00, 20:20, 20:50, 21:10, 21:40, 21:45, 22:15');
-INSERT INTO `media_mozik` VALUES (7737,38,1,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7738,36,3,'Ma (03.25.)|20:00, 22:20');
-INSERT INTO `media_mozik` VALUES (7739,38,3,'Ma (03.25.)|18:00, 19:50, 22:10');
-INSERT INTO `media_mozik` VALUES (7740,2,10,'Ma (03.25.)|18:30, 20:00, 21:40');
-INSERT INTO `media_mozik` VALUES (7741,2,6,'Ma (03.25.)|18:20, 19:10, 20:00');
-INSERT INTO `media_mozik` VALUES (7742,2,9,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7743,36,10,'Ma (03.25.)|20:15');
-INSERT INTO `media_mozik` VALUES (7744,38,9,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7745,36,6,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7746,38,10,'Ma (03.25.)|19:20, 21:40');
-INSERT INTO `media_mozik` VALUES (7747,38,6,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7748,2,7,'Ma (03.25.)|16:30, 17:30, 19:30, 19:45');
-INSERT INTO `media_mozik` VALUES (7749,2,12,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7750,2,13,'Ma (03.25.)|18:45, 20:00');
-INSERT INTO `media_mozik` VALUES (7751,2,18,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7752,36,12,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7753,36,13,'Ma (03.25.)|18:00');
-INSERT INTO `media_mozik` VALUES (7754,38,12,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7755,38,18,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7756,38,13,'Ma (03.25.)|19:00');
-INSERT INTO `media_mozik` VALUES (7757,2,14,'Ma (03.25.)|14:30, 16:10, 17:05, 17:30, 18:00, 19:10, 19:40, 20:10');
-INSERT INTO `media_mozik` VALUES (7758,38,14,'Ma (03.25.)|19:10');
-INSERT INTO `media_mozik` VALUES (7759,2,20,'Ma (03.25.)|18:40, 20:00, 21:45');
-INSERT INTO `media_mozik` VALUES (7760,2,26,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7761,36,20,'Ma (03.25.)|20:15, 22:30');
-INSERT INTO `media_mozik` VALUES (7762,36,26,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7763,38,20,'Ma (03.25.)|18:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7764,38,26,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7765,2,28,'Ma (03.25.)|18:45, 19:10, 19:45, 20:15, 21:45, 22:15');
-INSERT INTO `media_mozik` VALUES (7766,36,28,'Ma (03.25.)|20:15, 22:30');
-INSERT INTO `media_mozik` VALUES (7767,38,28,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7768,2,19,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7769,36,19,'Ma (03.25.)|18:00');
-INSERT INTO `media_mozik` VALUES (7770,2,27,'Ma (03.25.)|18:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7771,38,19,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7772,36,27,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7773,38,27,'Ma (03.25.)|18:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7774,2,29,'Ma (03.25.)|19:50');
-INSERT INTO `media_mozik` VALUES (7775,38,29,'Ma (03.25.)|19:30');
-INSERT INTO `media_mozik` VALUES (7776,2,31,'Ma (03.25.)|18:40, 19:15, 20:00');
-INSERT INTO `media_mozik` VALUES (7777,36,31,'Ma (03.25.)|20:10');
-INSERT INTO `media_mozik` VALUES (7778,38,31,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7779,2,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
-INSERT INTO `media_mozik` VALUES (7780,38,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
-INSERT INTO `media_mozik` VALUES (7781,2,38,'Ma (03.25.)|17:00, 19:30, 19:40, 20:00');
-INSERT INTO `media_mozik` VALUES (7782,2,36,'Ma (03.25.)|16:30, 17:15, 19:30, 20:00');
-INSERT INTO `media_mozik` VALUES (7783,38,38,'Ma (03.25.)|16:00, 20:10');
-INSERT INTO `media_mozik` VALUES (7784,2,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7785,38,36,'Ma (03.25.)|20:00');
-INSERT INTO `media_mozik` VALUES (7786,36,37,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
-INSERT INTO `media_mozik` VALUES (7787,2,34,'Ma (03.25.)|14:20, 16:10, 17:00, 19:10, 19:20, 20:00');
-INSERT INTO `media_mozik` VALUES (7788,38,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7789,36,34,'Ma (03.25.)|20:30');
-INSERT INTO `media_mozik` VALUES (7790,38,34,'Ma (03.25.)|17:50, 20:00, 20:10');
-INSERT INTO `media_mozik` VALUES (7791,2,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7792,36,40,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
-INSERT INTO `media_mozik` VALUES (7793,38,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
-INSERT INTO `media_mozik` VALUES (7794,2,46,'Ma (03.25.)|17:45');
-INSERT INTO `media_mozik` VALUES (7795,2,41,'Ma (03.25.)|17:00, 18:00, 21:05');
-INSERT INTO `media_mozik` VALUES (7796,38,41,'Ma (03.25.)|15:40, 18:10, 20:10');
-INSERT INTO `media_mozik` VALUES (7797,2,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
-INSERT INTO `media_mozik` VALUES (7798,36,48,'Ma (03.25.)|16:45, 17:15, 17:30, 18:45, 19:15, 19:30, 20:15, 20:45');
-INSERT INTO `media_mozik` VALUES (7799,38,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
-INSERT INTO `media_mozik` VALUES (7800,2,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
-INSERT INTO `media_mozik` VALUES (7801,38,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
-INSERT INTO `media_mozik` VALUES (7802,2,57,'Ma (03.25.)|14:45, 15:00, 16:00, 16:15, 16:30, 17:00, 17:45, 18:00, 18:15, 19:30, 19:45, 20:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7803,38,57,'Ma (03.25.)|16:00, 17:30, 17:45, 18:00, 19:45, 20:00, 20:15');
-INSERT INTO `media_mozik` VALUES (7804,38,60,'Ma (03.25.)|18:00');
-INSERT INTO `media_mozik` VALUES (7805,2,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7806,36,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7807,38,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7808,2,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7809,38,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
-INSERT INTO `media_mozik` VALUES (7810,2,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
-INSERT INTO `media_mozik` VALUES (7811,38,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
-INSERT INTO `media_mozik` VALUES (7812,2,71,'Ma (03.25.)|14:00, 16:20, 18:10');
+INSERT INTO `media_mozik` VALUES (8261,2,3,'Ma (03.25.)|21:10, 21:40, 21:45, 22:15');
+INSERT INTO `media_mozik` VALUES (8262,36,3,'Ma (03.25.)|22:20');
+INSERT INTO `media_mozik` VALUES (8263,38,3,'Ma (03.25.)|22:10');
+INSERT INTO `media_mozik` VALUES (8264,2,10,'Ma (03.25.)|21:40');
+INSERT INTO `media_mozik` VALUES (8265,38,10,'Ma (03.25.)|21:40');
+INSERT INTO `media_mozik` VALUES (8266,2,7,'Ma (03.25.)|16:00, 19:30, 20:00');
+INSERT INTO `media_mozik` VALUES (8267,38,7,'Ma (03.25.)|16:00, 19:30, 20:00');
+INSERT INTO `media_mozik` VALUES (8268,2,14,'Ma (03.25.)|14:30, 16:10, 17:05, 17:30, 18:00, 19:10, 19:40, 20:10');
+INSERT INTO `media_mozik` VALUES (8269,38,14,'Ma (03.25.)|19:10');
+INSERT INTO `media_mozik` VALUES (8270,2,20,'Ma (03.25.)|21:45');
+INSERT INTO `media_mozik` VALUES (8271,36,20,'Ma (03.25.)|22:30');
+INSERT INTO `media_mozik` VALUES (8272,2,28,'Ma (03.25.)|21:45, 22:15');
+INSERT INTO `media_mozik` VALUES (8273,36,28,'Ma (03.25.)|22:30');
+INSERT INTO `media_mozik` VALUES (8274,2,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
+INSERT INTO `media_mozik` VALUES (8275,38,33,'Ma (03.25.)|15:00, 15:30, 17:45, 20:00');
+INSERT INTO `media_mozik` VALUES (8276,2,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (8277,2,36,'Ma (03.25.)|17:15, 19:30, 20:00');
+INSERT INTO `media_mozik` VALUES (8278,36,37,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
+INSERT INTO `media_mozik` VALUES (8279,38,36,'Ma (03.25.)|20:00');
+INSERT INTO `media_mozik` VALUES (8280,38,37,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (8281,2,38,'Ma (03.25.)|19:30, 19:40, 20:00');
+INSERT INTO `media_mozik` VALUES (8282,2,34,'Ma (03.25.)|14:20, 17:00, 19:10, 19:20, 20:00');
+INSERT INTO `media_mozik` VALUES (8283,38,38,'Ma (03.25.)|16:00, 20:10');
+INSERT INTO `media_mozik` VALUES (8284,36,34,'Ma (03.25.)|20:30');
+INSERT INTO `media_mozik` VALUES (8285,38,34,'Ma (03.25.)|20:00, 20:10');
+INSERT INTO `media_mozik` VALUES (8286,2,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:30, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 19:30, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (8287,36,40,'Ma (03.25.)|13:00, 15:00, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30');
+INSERT INTO `media_mozik` VALUES (8288,38,40,'Ma (03.25.)|13:00, 15:00, 15:20, 15:30, 15:40, 16:00, 16:10, 16:20, 16:45, 17:00, 17:15, 17:40, 17:50, 18:00, 18:10, 18:30, 19:10, 20:00, 20:10, 20:20, 20:30, 21:05');
+INSERT INTO `media_mozik` VALUES (8289,2,41,'Ma (03.25.)|17:00, 18:00, 21:05');
+INSERT INTO `media_mozik` VALUES (8290,38,41,'Ma (03.25.)|15:40, 18:10, 20:10');
+INSERT INTO `media_mozik` VALUES (8291,2,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
+INSERT INTO `media_mozik` VALUES (8292,2,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
+INSERT INTO `media_mozik` VALUES (8293,36,48,'Ma (03.25.)|16:45, 17:15, 17:30, 18:45, 19:15, 19:30, 20:15, 20:45');
+INSERT INTO `media_mozik` VALUES (8294,38,56,'Ma (03.25.)|13:45, 14:30, 14:45, 16:00, 16:15, 16:30, 18:15, 19:45, 20:30');
+INSERT INTO `media_mozik` VALUES (8295,38,48,'Ma (03.25.)|11:00, 16:30, 16:45, 17:15, 17:30, 18:45, 19:00, 19:15, 19:30, 20:15, 20:45');
+INSERT INTO `media_mozik` VALUES (8296,2,57,'Ma (03.25.)|14:45, 15:00, 16:00, 16:15, 16:30, 17:00, 17:45, 18:00, 18:15, 19:30, 19:45, 20:00, 20:15');
+INSERT INTO `media_mozik` VALUES (8297,38,60,'Ma (03.25.)|18:00');
+INSERT INTO `media_mozik` VALUES (8298,38,57,'Ma (03.25.)|16:00, 17:30, 17:45, 18:00, 19:45, 20:00, 20:15');
+INSERT INTO `media_mozik` VALUES (8299,2,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (8300,36,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (8301,38,62,'Ma (03.25.)|14:30, 15:00, 15:15, 16:00, 16:30, 17:30, 18:00, 19:00, 19:30, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (8302,2,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (8303,38,65,'Ma (03.25.)|12:45, 15:00, 15:15, 17:30, 19:45, 20:00, 20:30');
+INSERT INTO `media_mozik` VALUES (8304,2,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
+INSERT INTO `media_mozik` VALUES (8305,38,69,'Ma (03.25.)|16:00, 17:00, 18:00, 19:00');
+INSERT INTO `media_mozik` VALUES (8306,2,71,'Ma (03.25.)|14:00, 16:20, 18:10');
 /*!40000 ALTER TABLE `media_mozik` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -487,7 +483,7 @@ CREATE TABLE `media_platformok` (
   KEY `media_id` (`media_id`),
   CONSTRAINT `fk_media_platformok_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_media_platformok_platform` FOREIGN KEY (`platform_id`) REFERENCES `platformok` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -541,24 +537,58 @@ INSERT INTO `media_platformok` VALUES (85,3,NULL,10);
 INSERT INTO `media_platformok` VALUES (86,6,NULL,12);
 INSERT INTO `media_platformok` VALUES (87,2,NULL,4);
 INSERT INTO `media_platformok` VALUES (88,2,NULL,3);
-INSERT INTO `media_platformok` VALUES (89,5,NULL,112);
-INSERT INTO `media_platformok` VALUES (90,3,NULL,111);
-INSERT INTO `media_platformok` VALUES (91,1,NULL,110);
-INSERT INTO `media_platformok` VALUES (92,2,NULL,109);
-INSERT INTO `media_platformok` VALUES (93,4,NULL,108);
-INSERT INTO `media_platformok` VALUES (94,1,NULL,107);
-INSERT INTO `media_platformok` VALUES (95,2,NULL,106);
-INSERT INTO `media_platformok` VALUES (96,1,NULL,105);
-INSERT INTO `media_platformok` VALUES (97,2,NULL,104);
-INSERT INTO `media_platformok` VALUES (98,1,NULL,102);
-INSERT INTO `media_platformok` VALUES (99,3,NULL,103);
-INSERT INTO `media_platformok` VALUES (100,1,NULL,101);
-INSERT INTO `media_platformok` VALUES (101,3,NULL,10101);
-INSERT INTO `media_platformok` VALUES (102,4,NULL,10102);
-INSERT INTO `media_platformok` VALUES (103,2,NULL,10103);
-INSERT INTO `media_platformok` VALUES (109,3,NULL,10104);
+INSERT INTO `media_platformok` VALUES (90,3,NULL,1011);
+INSERT INTO `media_platformok` VALUES (91,1,NULL,1010);
+INSERT INTO `media_platformok` VALUES (92,2,NULL,1009);
+INSERT INTO `media_platformok` VALUES (93,4,NULL,1008);
+INSERT INTO `media_platformok` VALUES (94,1,NULL,1007);
+INSERT INTO `media_platformok` VALUES (95,2,NULL,1006);
+INSERT INTO `media_platformok` VALUES (96,1,NULL,1005);
+INSERT INTO `media_platformok` VALUES (97,2,NULL,1004);
+INSERT INTO `media_platformok` VALUES (98,1,NULL,1002);
+INSERT INTO `media_platformok` VALUES (99,3,NULL,1003);
+INSERT INTO `media_platformok` VALUES (100,1,NULL,1001);
+INSERT INTO `media_platformok` VALUES (101,3,NULL,1013);
+INSERT INTO `media_platformok` VALUES (102,4,NULL,1014);
+INSERT INTO `media_platformok` VALUES (103,2,NULL,1015);
+INSERT INTO `media_platformok` VALUES (109,3,NULL,1016);
 INSERT INTO `media_platformok` VALUES (110,1,NULL,46);
 INSERT INTO `media_platformok` VALUES (111,2,NULL,34);
+INSERT INTO `media_platformok` VALUES (112,2,NULL,1017);
+INSERT INTO `media_platformok` VALUES (113,1,NULL,1018);
+INSERT INTO `media_platformok` VALUES (114,1,NULL,1019);
+INSERT INTO `media_platformok` VALUES (115,1,NULL,1020);
+INSERT INTO `media_platformok` VALUES (116,2,NULL,1021);
+INSERT INTO `media_platformok` VALUES (146,3,NULL,1050);
+INSERT INTO `media_platformok` VALUES (147,2,NULL,1049);
+INSERT INTO `media_platformok` VALUES (148,4,NULL,1048);
+INSERT INTO `media_platformok` VALUES (149,1,NULL,1047);
+INSERT INTO `media_platformok` VALUES (150,4,NULL,1046);
+INSERT INTO `media_platformok` VALUES (151,2,NULL,1045);
+INSERT INTO `media_platformok` VALUES (152,2,NULL,1044);
+INSERT INTO `media_platformok` VALUES (153,4,NULL,1043);
+INSERT INTO `media_platformok` VALUES (154,1,NULL,1042);
+INSERT INTO `media_platformok` VALUES (155,6,NULL,1041);
+INSERT INTO `media_platformok` VALUES (156,2,NULL,1040);
+INSERT INTO `media_platformok` VALUES (157,1,NULL,1039);
+INSERT INTO `media_platformok` VALUES (158,1,NULL,1038);
+INSERT INTO `media_platformok` VALUES (161,1,NULL,1036);
+INSERT INTO `media_platformok` VALUES (162,1,NULL,1035);
+INSERT INTO `media_platformok` VALUES (163,1,NULL,1034);
+INSERT INTO `media_platformok` VALUES (164,1,NULL,1033);
+INSERT INTO `media_platformok` VALUES (168,1,NULL,1029);
+INSERT INTO `media_platformok` VALUES (169,1,NULL,1028);
+INSERT INTO `media_platformok` VALUES (171,1,NULL,1027);
+INSERT INTO `media_platformok` VALUES (172,2,NULL,1026);
+INSERT INTO `media_platformok` VALUES (173,2,NULL,1025);
+INSERT INTO `media_platformok` VALUES (174,2,NULL,1024);
+INSERT INTO `media_platformok` VALUES (175,2,NULL,1023);
+INSERT INTO `media_platformok` VALUES (176,2,NULL,1022);
+INSERT INTO `media_platformok` VALUES (177,5,NULL,1012);
+INSERT INTO `media_platformok` VALUES (180,1,NULL,1030);
+INSERT INTO `media_platformok` VALUES (181,1,NULL,1037);
+INSERT INTO `media_platformok` VALUES (182,3,NULL,1032);
+INSERT INTO `media_platformok` VALUES (184,7,NULL,1031);
 /*!40000 ALTER TABLE `media_platformok` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -706,7 +736,7 @@ INSERT INTO `platformok` VALUES (1,'Netflix','https://upload.wikimedia.org/wikip
 INSERT INTO `platformok` VALUES (2,'HBO Max','https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg','https://www.max.com');
 INSERT INTO `platformok` VALUES (3,'Disney+','https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg','https://www.disneyplus.com');
 INSERT INTO `platformok` VALUES (4,'Prime Video','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTavYKJKv7ZQVJiZPE8C9jgxN64JpmecOFyFw&s','https://www.primevideo.com');
-INSERT INTO `platformok` VALUES (5,'Apple TV+','https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Apple_TV_Plus_Logo.svg/800px-Apple_TV_Plus_Logo.svg.png','https://tv.apple.com');
+INSERT INTO `platformok` VALUES (5,'Apple TV+','https://tv.apple.com/assets/knowledge-graph/tv.png','https://tv.apple.com');
 INSERT INTO `platformok` VALUES (6,'SkyShowtime','https://play-lh.googleusercontent.com/AZ4gm_N8aO6xO3MkYjHf-F0y5Q0hzDdgSuDbekr4GpiVB2NolsnYAP9KutX6aTscKg','https://www.skyshowtime.com/hu');
 INSERT INTO `platformok` VALUES (7,'Filmio','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdN1ljevw9fVqA07wviKLIY-IjbrYtjXAsKA&s','https://filmio.hu/');
 INSERT INTO `platformok` VALUES (8,'RTL+','https://dgtl.hu/userfiles/myResource/articles/20250513/rtl-plusz.jpg','https://www.rtlplusz.hu/');
@@ -725,7 +755,7 @@ CREATE TABLE `rendezok` (
   `nev` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci NOT NULL,
   `nemzetiseg` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -790,6 +820,45 @@ INSERT INTO `rendezok` VALUES (53,'Justin Marks','Amerikai');
 INSERT INTO `rendezok` VALUES (54,'Jonathan Nolan','Amerikai');
 INSERT INTO `rendezok` VALUES (55,'Jesse Armstrong','Amerikai');
 INSERT INTO `rendezok` VALUES (56,'Christopher Storer','Amerikai');
+INSERT INTO `rendezok` VALUES (57,'Craig Mazin |','Amerikai');
+INSERT INTO `rendezok` VALUES (58,'Greg Daniels','Amerikai');
+INSERT INTO `rendezok` VALUES (59,'Baran bo Odar','Német');
+INSERT INTO `rendezok` VALUES (60,'Steven Knight','Brit');
+INSERT INTO `rendezok` VALUES (61,'David Chase','Amerikai');
+INSERT INTO `rendezok` VALUES (62,'David Simon','Amerikai');
+INSERT INTO `rendezok` VALUES (63,'Nic Pizzolatto','Amerikai');
+INSERT INTO `rendezok` VALUES (64,'Noah Hawley','Amerikai');
+INSERT INTO `rendezok` VALUES (65,'Tom Hanks, Steven Spielberg','Amerikai');
+INSERT INTO `rendezok` VALUES (66,'Dan Harmon, Justin Roiland','Amerikai');
+INSERT INTO `rendezok` VALUES (67,'Charlie Brooker','Brit');
+INSERT INTO `rendezok` VALUES (68,'Vince Gilligan, Peter Gould','Amerikai');
+INSERT INTO `rendezok` VALUES (69,'Joe Penhall','Amerikai');
+INSERT INTO `rendezok` VALUES (70,'Phoebe Waller-Bridge','Brit');
+INSERT INTO `rendezok` VALUES (71,'Bill Lawrence, Jason Sudeikis','Amerikai');
+INSERT INTO `rendezok` VALUES (72,'Matthew Weiner','Amerikai');
+INSERT INTO `rendezok` VALUES (73,'Peter Morgan','Brit, Amerikai');
+INSERT INTO `rendezok` VALUES (74,'Hwang Dong-hyuk','Dél-koreai');
+INSERT INTO `rendezok` VALUES (75,'Álex Pina','Spanyol');
+INSERT INTO `rendezok` VALUES (76,'Raphael Bob-Waksberg','Amerikai');
+INSERT INTO `rendezok` VALUES (77,'David Crane, Marta Kauffman','Amerikai');
+INSERT INTO `rendezok` VALUES (78,'Michael Dante DiMartino','Amerikai');
+INSERT INTO `rendezok` VALUES (79,'Tetsurō Araki','Japán');
+INSERT INTO `rendezok` VALUES (80,'Mike White','Amerikai');
+INSERT INTO `rendezok` VALUES (81,'James Manos Jr.','Amerikai');
+INSERT INTO `rendezok` VALUES (82,'Chris Brancato','Amerikai, Kolumbiai');
+INSERT INTO `rendezok` VALUES (83,'Sam Esmail','Amerikai');
+INSERT INTO `rendezok` VALUES (84,'Jonathan Nolan, Lisa Joy','Amerikai');
+INSERT INTO `rendezok` VALUES (85,'Damon Lindelof','Amerikai');
+INSERT INTO `rendezok` VALUES (86,'Bryan Fuller','Amerikai');
+INSERT INTO `rendezok` VALUES (87,'Hiroyuki Imaishi','Japán');
+INSERT INTO `rendezok` VALUES (88,'Robert Kirkman','Amerikai');
+INSERT INTO `rendezok` VALUES (89,'James Gunn','Amerikai');
+INSERT INTO `rendezok` VALUES (90,'Steve Martin, John Hoffman','Amerikai');
+INSERT INTO `rendezok` VALUES (91,'Chuck Lorre','Amerikai');
+INSERT INTO `rendezok` VALUES (92,'Amy Sherman-Palladino','Amerikai');
+INSERT INTO `rendezok` VALUES (93,'Christopher Lloyd','Amerikai');
+INSERT INTO `rendezok` VALUES (94,'adad','adas');
+INSERT INTO `rendezok` VALUES (95,'ada','ada');
 /*!40000 ALTER TABLE `rendezok` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -820,7 +889,7 @@ CREATE TABLE `sajat_lista_elemek` (
 LOCK TABLES `sajat_lista_elemek` WRITE;
 /*!40000 ALTER TABLE `sajat_lista_elemek` DISABLE KEYS */;
 INSERT INTO `sajat_lista_elemek` VALUES (56,10,'2026-03-12 20:43:11',38);
-INSERT INTO `sajat_lista_elemek` VALUES (57,10,'2026-03-12 20:51:09',109);
+INSERT INTO `sajat_lista_elemek` VALUES (57,10,'2026-03-12 20:51:09',1009);
 INSERT INTO `sajat_lista_elemek` VALUES (58,10,'2026-03-12 20:51:11',22);
 INSERT INTO `sajat_lista_elemek` VALUES (59,10,'2026-03-16 20:33:30',15);
 INSERT INTO `sajat_lista_elemek` VALUES (62,10,'2026-03-16 21:36:17',20);
@@ -873,4 +942,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-25 17:06:21
+-- Dump completed on 2026-03-25 20:08:44
