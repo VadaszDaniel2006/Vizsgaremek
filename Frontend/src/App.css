@@ -51,3 +51,14 @@ html, body, #root {
 }
 /* Firefox támogatás */
 * { scrollbar-width: thin; scrollbar-color: #3e50ff #070a1a; }
+
+/* --- KÉPEK JAVÍTÁSA (LUSTA BETÖLTÉS ÉS HOVER HIBA ELLEN) --- */
+/* Lefoglalja a helyet a képeknek a betöltés előtt, így görgetéskor azonnal töltenek */
+.movies-grid img, 
+[class*="movie-card"] img {
+  aspect-ratio: 2 / 3; /* Standard film poszter arány (szélesség / magasság) */
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  background-color: var(--modal-bg); /* Sötétkék "csontváz" háttér amíg tölt a kép */
+}
