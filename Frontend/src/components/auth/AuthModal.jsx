@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Toast from '../ui/Toast';
 import './AuthModal.css';
 
-// Kategóriák listája
 const CATEGORIES = [
     { id: 'action', name: 'Akció', icon: '🔥' },
     { id: 'comedy', name: 'Vígjáték', icon: '😂' },
@@ -19,7 +18,6 @@ const CATEGORIES = [
 export default function AuthModal({ onClose, onLogin }) {
   const [isRegister, setIsRegister] = useState(false);
   
-  // Űrlap adatok
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,7 +25,6 @@ export default function AuthModal({ onClose, onLogin }) {
   const [username, setUsername] = useState('');
   const [favoriteCategories, setFavoriteCategories] = useState([]); 
   
-  // --- ÚJ: JELSZÓ LÁTHATÓSÁG ÁLLAPOTOK ---
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -43,6 +40,40 @@ export default function AuthModal({ onClose, onLogin }) {
         if (newCategories.length < 5) newCategories.push(catId);
     }
     setFavoriteCategories(newCategories);
+  };
+
+  // --- ÚJ LOGIKA: Egykattintásos jelszóküldés ---
+  const handleDirectForgotPassword = async () => {
+      // 1. Ellenőrizzük, hogy be van-e írva valami az email mezőbe
+      if (!email || !email.includes('@')) {
+          setError('Kérlek, előbb írd be a regisztrált email címedet a fenti mezőbe!');
+          return;
+      }
+
+      setError('');
+      setLoading(true);
+
+      try {
+          // JAVÍTVA: Port 5000-re átírva!
+          const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+              setToast({ message: data.message, type: 'success' });
+          } else {
+              setError(data.message || 'Hiba történt a jelszóigénylés során.');
+          }
+      } catch (err) {
+          console.error("API Hiba:", err);
+          setError("Nem sikerült kapcsolódni a szerverhez.");
+      } finally {
+          setLoading(false);
+      }
   };
 
   const handleSubmit = async (e) => {
@@ -69,19 +100,14 @@ export default function AuthModal({ onClose, onLogin }) {
     }
 
     try {
+        // JAVÍTVA: Port 5000-re átírva!
         const API_URL = 'http://localhost:5000/api/auth';
 
         if (isRegister) {
             const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password,
-                    username: username,
-                    favoriteCategories: favoriteCategories 
-                })
+                body: JSON.stringify({ name, email, password, username, favoriteCategories })
             });
 
             const data = await response.json();
@@ -102,10 +128,7 @@ export default function AuthModal({ onClose, onLogin }) {
             const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
@@ -148,12 +171,12 @@ export default function AuthModal({ onClose, onLogin }) {
           {isRegister && (
             <>
                 <div className="input-group">
-                    <input type="text" placeholder=" " value={name} onChange={(e) => setName(e.target.value)} required={isRegister} />
+                    <input type="text" placeholder=" " value={name} onChange={(e) => setName(e.target.value)} required />
                     <label>Teljes név</label>
                 </div>
 
                 <div className="input-group">
-                    <input type="text" placeholder=" " value={username} onChange={(e) => setUsername(e.target.value)} required={isRegister} />
+                    <input type="text" placeholder=" " value={username} onChange={(e) => setUsername(e.target.value)} required />
                     <label>Felhasználónév</label>
                 </div>
             </>
@@ -164,14 +187,13 @@ export default function AuthModal({ onClose, onLogin }) {
             <label>Email cím</label>
           </div>
 
-          {/* JELSZÓ MEZŐ SZEM IKONNAL */}
           <div className="input-group" style={{ position: 'relative' }}>
             <input 
               type={showPassword ? "text" : "password"} 
               placeholder=" " 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required={!isRegister ? true : false} 
               style={{ paddingRight: '45px' }}
             />
             <label>Jelszó</label>
@@ -184,6 +206,20 @@ export default function AuthModal({ onClose, onLogin }) {
                 <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
             </button>
           </div>
+
+          {/* ELFELEJTETT JELSZÓ GOMB - Csak bejelentkezésnél */}
+          {!isRegister && (
+              <div style={{ textAlign: 'right', marginTop: '-10px', marginBottom: '15px' }}>
+                  <span 
+                      style={{ fontSize: '0.85rem', color: '#94a3b8', cursor: 'pointer', transition: 'color 0.2s' }} 
+                      onClick={handleDirectForgotPassword}
+                      onMouseEnter={(e) => e.target.style.color = 'white'}
+                      onMouseLeave={(e) => e.target.style.color = '#94a3b8'}
+                  >
+                      {loading ? 'Küldés...' : 'Elfelejtetted a jelszavad?'}
+                  </span>
+              </div>
+          )}
 
           {isRegister && (
             <div className="input-group" style={{ position: 'relative' }}>

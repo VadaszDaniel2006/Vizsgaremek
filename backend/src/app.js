@@ -17,7 +17,15 @@ const moziRoutes = require('./routes/moziRoutes');
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+
+// --- JAVÍTOTT CORS BEÁLLÍTÁS ---
+app.use(cors({
+    origin: 'http://localhost:8090', // A frontend címed
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
 app.use(morgan('dev'));
 
 // Méret limit növelése

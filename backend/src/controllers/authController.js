@@ -1,8 +1,9 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer'); // --- ÚJ IMPORT ---
 
-// --- REGISZTRÁCIÓ (JAVÍTVA: ALAPÉRTELMEZETT AVATAR HOZZÁADVA) ---
+// --- REGISZTRÁCIÓ ---
 exports.register = async (req, res) => {
     const { name, email, password, username, favoriteCategories } = req.body;
 
@@ -21,10 +22,8 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Alapértelmezett avatar URL
         const defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
 
-        // JAVÍTÁS: Beírtuk az 'avatar' oszlopot is a lekérdezésbe
         const sql = `INSERT INTO felhasznalok (nev, email, jelszo_hash, felhasznalonev, jogosultsag, regisztracio_datum, avatar) VALUES (?, ?, ?, ?, 'user', NOW(), ?)`;
         const [result] = await db.query(sql, [name, email, hashedPassword, username, defaultAvatar]);
         const newUserId = result.insertId;
@@ -177,5 +176,68 @@ exports.getMe = async (req, res) => {
     } catch (error) {
         console.error("Hiba a profil lekérésekor:", error);
         res.status(500).json({ message: 'Szerver hiba történt.' });
+    }
+};
+
+// --- ÚJ: ELFELEJTETT JELSZÓ ---
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: 'Kérlek, add meg az email címed!' });
+    }
+
+    try {
+        const [users] = await db.query('SELECT * FROM felhasznalok WHERE email = ?', [email]);
+        
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Nincs fiók regisztrálva ezzel az email címmel.' });
+        }
+
+        const user = users[0]; 
+
+        const newPassword = Math.random().toString(36).slice(-8);
+        
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await db.query('UPDATE felhasznalok SET jelszo_hash = ? WHERE id = ?', [hashedPassword, user.id]);
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER, 
+                pass: process.env.EMAIL_PASS 
+            }
+        });
+
+        const mailOptions = {
+            from: `"Mozipont" <${process.env.EMAIL_USER}>`,
+            to: email, 
+            subject: 'Mozipont - Új jelszó',
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Kedves ${user.nev}!</h2>
+                    <p>Kérésedre generáltunk egy új jelszót a fiókodhoz.</p>
+                    <div style="background-color: #f4f4f4; padding: 15px; border-radius: 5px; display: inline-block; margin: 10px 0;">
+                        Az új jelszavad: <strong style="font-size: 18px; color: #3e50ff;">${newPassword}</strong>
+                    </div>
+                    <p>Ezzel a jelszóval már be tudsz jelentkezni az oldalra.</p>
+                    <p style="color: #d9534f; font-weight: bold;">
+                        Kérjük, amint beléptél, azonnal nyisd meg a "Profil szerkesztése" menüpontot, és változtasd meg ezt a jelszót egy sajátra!
+                    </p>
+                    <br>
+                    <p>Üdvözlettel,<br>A Mozipont csapata</p>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: 'Az új jelszót sikeresen elküldtük az email címedre!' });
+
+    } catch (error) {
+        console.error("Hiba az elfelejtett jelszó folyamatban:", error);
+        res.status(500).json({ message: 'Szerver hiba történt az email küldésekor.' });
     }
 };

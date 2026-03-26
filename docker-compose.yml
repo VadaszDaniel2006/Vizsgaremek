@@ -49,27 +49,26 @@ services:
     ports:
       - "8082:80"             # Böngészőben: http://localhost:8082
 
-  # 4. BACKEND API (Node.js)
+ # 4. BACKEND API (Node.js)
   api:
     build:
-      context: ./backend      # A mappád neve a képen: backend
+      context: ./backend      
       dockerfile: Dockerfile
     container_name: mozi_api
     restart: unless-stopped
-    # --- MÓDOSÍTOTT RÉSZ KEZDETE ---
     depends_on:
       db:
         condition: service_healthy
-    # --- MÓDOSÍTOTT RÉSZ VÉGE ---
     environment:
-      # Átadjuk az adatokat a Node.js kódnak
+      # --- JAVÍTOTT RÉSZ ---
       DB_HOST: db
-      DB_USER: appuser
-      DB_PASSWORD: apppw
-      DB_DATABASE: mozipont_beta
+      DB_USER: root
+      DB_PASSWORD: rootpw
+      DB_NAME: mozipont_beta
       PORT: 5000
+      # ---------------------
     ports:
-      - "5000:5000"           # Backend elérése: http://localhost:5000
+      - "5000:5000"
 
 volumes:
   db_data:
