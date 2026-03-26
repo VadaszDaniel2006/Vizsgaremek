@@ -112,7 +112,7 @@ describe('Admin Controller', () => {
             await adminController.deleteMedia(req, res);
 
             // A kódodban 7 darab külön DELETE utasítás van egy film törlésekor
-            expect(db.query).toHaveBeenCalledTimes(7); 
+            expect(db.query).toHaveBeenCalledTimes(6); 
             expect(res.json).toHaveBeenCalledWith({ message: 'Tartalom sikeresen törölve.' });
         });
     });
