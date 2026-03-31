@@ -25,6 +25,13 @@ import Top50Page from './pages/Top50Page';
 import WeeklyPick from './pages/WeeklyPick';
 import CinemaMap from './pages/CinemaMap';
 
+// --- Új Footerhez tartozó oldalak importálása ---
+import Aszf from './pages/Aszf';
+import Adatvedelem from './pages/Adatvedelem';
+import Sugokozpont from './pages/Sugokozpont';
+import Kapcsolat from './pages/Kapcsolat';
+
+
 // --- Globális CSS ---
 import './App.css'; 
 
@@ -395,9 +402,18 @@ function App() {
             <Route path="/mozik-terkep" element={<CinemaMap />} />
             <Route path="/kereses" element={<Search />} />
             <Route path="/admin" element={<AdminDashboard refreshApp={() => fetchAllData(user ? user.id : '')} />} />
+            
+            {/* --- ÚJ: A Footer menüpontjainak útvonalai --- */}
+            <Route path="/aszf" element={<Aszf />} />
+            <Route path="/adatvedelem" element={<Adatvedelem />} />
+            <Route path="/sugokozpont" element={<Sugokozpont />} />
+            <Route path="/kapcsolat" element={<Kapcsolat />} />
+            
         </Routes>
 
+        {/* Footer komponens itt kerül meghívásra az összes oldal alján */}
         <Footer />
+
         <ModalManager trailerModal={trailerModal} closeTrailer={closeTrailer} infoModal={infoModal} closeInfo={closeInfo} streamingModal={streamingModal} closeStreaming={closeStreaming} openStreaming={openStreaming} />
         {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} onLogin={handleLogin} />}
         {profileModalOpen && user && <ProfileEditor user={user} onClose={() => setProfileModalOpen(false)} onSave={handleUpdateProfile} />}

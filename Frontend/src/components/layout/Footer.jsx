@@ -1,52 +1,77 @@
-// src/components/Footer.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 export default function Footer() {
+  const [locationStatus, setLocationStatus] = useState('Állapot ellenőrzése...');
+
+  useEffect(() => {
+    const checkLocationPermission = async () => {
+      if ("geolocation" in navigator && navigator.permissions) {
+        try {
+          const result = await navigator.permissions.query({ name: 'geolocation' });
+          
+          const updateStatus = (state) => {
+            if (state === 'granted') setLocationStatus('Engedélyezve');
+            else if (state === 'prompt') setLocationStatus('Engedélykérésre vár');
+            else setLocationStatus('Letiltva');
+          };
+
+          updateStatus(result.state);
+          result.onchange = () => updateStatus(result.state);
+        } catch (error) {
+          setLocationStatus('Nem ellenőrizhető');
+        }
+      } else {
+        setLocationStatus('Nem támogatott');
+      }
+    };
+
+    checkLocationPermission();
+  }, []);
+
   return (
     <footer className="site-footer">
       <div className="footer-container">
         
-        {/* Közösségi ikonok */}
-        <div className="footer-socials">
-          <a href="#"><i className="fab fa-facebook-f"></i></a>
-          <a href="#"><i className="fab fa-instagram"></i></a>
-          <a href="#"><i className="fab fa-twitter"></i></a>
-          <a href="#"><i className="fab fa-youtube"></i></a>
+        {/* Felső rész: Logó + Közösségi ikonok a bal oldalon, Linkek a jobb oldalon */}
+        <div className="footer-main">
+          
+          <div className="footer-left">
+            <h2 className="footer-brand">MoziPont</h2>
+            <div className="footer-socials">
+              <a href="https://www.facebook.com/groups/1703104210893357" target="_blank" rel="noreferrer" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/mozipont1/" target="_blank" rel="noreferrer" aria-label="Instagram"><i className="fab fa-instagram"></i></a>
+            </div>
+          </div>
+
+          <div className="footer-right">
+            <div className="footer-links">
+              <Link to="/sugokozpont">Súgóközpont</Link>
+              <Link to="/kapcsolat">Kapcsolat</Link>
+              <Link to="/aszf">Használati feltételek</Link>
+              <Link to="/adatvedelem">Adatvédelem</Link>
+              
+            </div>
+          </div>
+
         </div>
 
-        {/* Linkek rács elrendezésben */}
-        <div className="footer-links">
-          <ul>
-            <li><a href="#">Hangos leírás</a></li>
-            <li><a href="#">Befektetői kapcsolatok</a></li>
-            <li><a href="#">Jogi nyilatkozat</a></li>
-          </ul>
-          <ul>
-            <li><a href="#">Súgóközpont</a></li>
-            <li><a href="#">Álláslehetőségek</a></li>
-            <li><a href="#">Cookie beállítások</a></li>
-          </ul>
-          <ul>
-            <li><a href="#">Ajándékkártyák</a></li>
-            <li><a href="#">Használati feltételek</a></li>
-            <li><a href="#">Céginformációk</a></li>
-          </ul>
-          <ul>
-            <li><a href="#">Médiaközpont</a></li>
-            <li><a href="#">Adatvédelem</a></li>
-            <li><a href="#">Kapcsolat</a></li>
-          </ul>
+        {/* Középső rész: Elegáns, sávos helymeghatározó infó */}
+        <div className="footer-location-wrapper">
+          <div className="location-header">
+            <i className="fas fa-map-marker-alt"></i> 
+            <span className="location-status">Helymeghatározás: {locationStatus}</span>
+          </div>
+          <p className="location-disclaimer">
+            A legközelebbi mozik pontos megjelenítése érdekében az oldal kérheti a tartózkodási helyedet. 
+            Az adatok biztonságos kezeléséről az <Link to="/adatvedelem">Adatvédelmi tájékoztatóban</Link> olvashatsz.
+          </p>
         </div>
 
-        {/* Szervizkód gomb (Dizájn elem) */}
-        <div className="service-code">
-            <button>Szervizkód</button>
-        </div>
-
-        {/* Copyright */}
-        <div className="footer-copyright">
-          <p>&copy; 2026 MoziPont. Minden jog fenntartva.</p>
+        {/* Alsó rész: Szerzői jog */}
+        <div className="footer-bottom">
+          <p>&copy; {new Date().getFullYear()} MoziPont. Minden jog fenntartva.</p>
         </div>
 
       </div>

@@ -14,6 +14,9 @@ const searchRoutes = require('./routes/searchRoutes');
 const moziRoutes = require('./routes/moziRoutes');
 // ----------------------------------------------
 
+
+const contactRoutes = require('./routes/contactRoutes');
+
 const app = express();
 
 app.use(helmet());
@@ -41,6 +44,8 @@ app.use('/api/admin', adminRoutes);
 app.use('/api', searchRoutes); 
 // --- ÚJ SOR: Bekötjük a mozikat az /api/mozik alá ---
 app.use('/api/mozik', moziRoutes);
+
+app.use('/api/contact', contactRoutes);
 // ----------------------------------------------
 
 app.use((req, res) => {

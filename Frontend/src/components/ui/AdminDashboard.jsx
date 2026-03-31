@@ -12,7 +12,8 @@ export default function AdminDashboard({ refreshApp }) {
     const [reportedReviews, setReportedReviews] = useState([]);
     const [mediaList, setMediaList] = useState([]);
     const [mozikList, setMozikList] = useState([]); 
-    const [categories, setCategories] = useState([]); // ÚJ: Kategóriák állapota
+    const [categories, setCategories] = useState([]); 
+    const [messages, setMessages] = useState([]); // ÚJ
     const [error, setError] = useState('');
     const [toast, setToast] = useState(null);
 
@@ -29,6 +30,9 @@ export default function AdminDashboard({ refreshApp }) {
     const [mediaToDelete, setMediaToDelete] = useState(null);
     const [editingMedia, setEditingMedia] = useState(null);
 
+    const [showMessageDeleteModal, setShowMessageDeleteModal] = useState(false); // ÚJ
+    const [messageToDelete, setMessageToDelete] = useState(null); // ÚJ
+
     const initialMediaForm = { 
         tipus: 'film', cim: '', leiras: '', poszter_url: '', elozetes_url: '', 
         megjelenes_ev_start: '', megjelenes_ev_end: '', evadok_szama: '', hossz_perc: '', 
@@ -38,20 +42,19 @@ export default function AdminDashboard({ refreshApp }) {
     const [uploadData, setUploadData] = useState(initialMediaForm);
 
     const refreshAllData = () => {
-        fetchUsers(); fetchReportedReviews(); fetchMediaList(); fetchMozikList(); fetchCategories(); // Frissítettük a hívást
+        fetchUsers(); fetchReportedReviews(); fetchMediaList(); fetchMozikList(); fetchCategories(); fetchMessages();
         if (refreshApp) refreshApp();
     };
 
     useEffect(() => { refreshAllData(); }, []);
 
-    // HÁTTÉR GÖRGETÉSÉNEK LETILTÁSA
-    const isAnyModalOpen = editingMedia || editingUser || showDeleteModal || showMediaDeleteModal || showReviewDeleteModal;
+    const isAnyModalOpen = editingMedia || editingUser || showDeleteModal || showMediaDeleteModal || showReviewDeleteModal || showMessageDeleteModal;
     useEffect(() => {
         const bgContainer = document.querySelector('.neo-admin-bg');
         if (isAnyModalOpen) {
             if (bgContainer) bgContainer.classList.add('admin-dashboard-modal-open');
             document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden'; // A HTML taget is le kell zárni!
+            document.documentElement.style.overflow = 'hidden'; 
         } else {
             if (bgContainer) bgContainer.classList.remove('admin-dashboard-modal-open');
             document.body.style.overflow = '';
@@ -99,14 +102,12 @@ export default function AdminDashboard({ refreshApp }) {
             const res = await fetch('http://localhost:5000/api/admin/mozik', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
             const data = await res.json(); 
             if (res.ok) {
-                // JAVÍTÁS: Kiszűrjük a duplikált mozikat, hogy a szerkesztőben egy mozi csak egyszer szerepeljen
                 const uniqueMozik = Array.from(new Map(data.map(m => [m.id, m])).values());
                 setMozikList(uniqueMozik); 
             }
         } catch (err) { console.error("Hiba a mozik lekérésekor", err); }
     };
 
-    // ÚJ: Kategóriák lekérése a backendről
     const fetchCategories = async () => {
         const token = localStorage.getItem('token');
         try { 
@@ -114,6 +115,34 @@ export default function AdminDashboard({ refreshApp }) {
             const data = await res.json(); 
             if (res.ok) setCategories(data); 
         } catch (err) { console.error("Hiba a kategóriák lekérésekor", err); }
+    };
+
+    // ÚJ: Üzenetek lekérése
+    const fetchMessages = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/contact/messages', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok) setMessages(data); 
+        } catch (err) { console.error("Hiba az üzenetek lekérésekor", err); }
+    };
+
+    const handleMarkMessageRead = async (id) => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch(`http://localhost:5000/api/contact/messages/${id}/read`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } }); 
+            if (res.ok) { fetchMessages(); showNotification("Üzenet olvasottnak jelölve."); } 
+        } catch (err) { showNotification("Szerver hiba.", "error"); }
+    };
+
+    const handleDeleteMessageConfirmed = async () => {
+        if (!messageToDelete) return; 
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch(`http://localhost:5000/api/contact/messages/${messageToDelete}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); 
+            if (res.ok) { fetchMessages(); showNotification("Üzenet törölve."); } 
+        } catch (err) { showNotification("Szerver hiba.", "error"); }
+        setShowMessageDeleteModal(false); setMessageToDelete(null);
     };
 
     const handleUploadSubmit = async (e) => {
@@ -134,16 +163,13 @@ export default function AdminDashboard({ refreshApp }) {
 
     const openEditMediaModal = (media) => {
         setEditingMedia(media);
-
-        // JAVÍTÁS: Biztosítjuk, hogy a mozi azonosítók tiszta, duplikációmentes tömbben legyenek
         let parsedMoziIds = [];
         if (Array.isArray(media.mozi_ids)) {
             parsedMoziIds = media.mozi_ids;
         } else if (typeof media.mozi_ids === 'string' && media.mozi_ids.trim() !== '') {
             parsedMoziIds = media.mozi_ids.split(',').map(id => parseInt(id.trim(), 10));
         }
-        parsedMoziIds = [...new Set(parsedMoziIds)]; // Duplikációk kigyomlálása
-
+        parsedMoziIds = [...new Set(parsedMoziIds)]; 
         setUploadData({ 
             tipus: media.tipus || 'film', cim: media.cim || '', leiras: media.leiras || '', 
             poszter_url: media.poszter_url || '', elozetes_url: media.elozetes_url || '', 
@@ -340,6 +366,8 @@ export default function AdminDashboard({ refreshApp }) {
         </form>
     );
 
+    const unreadMessagesCount = messages.filter(m => !m.olvasva).length;
+
     return (
         <div className="neo-admin-bg">
             <div className="neo-admin-wrapper">
@@ -352,13 +380,19 @@ export default function AdminDashboard({ refreshApp }) {
                 <div className="neo-nav">
                     <div className={`neo-tab ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}><i className="fas fa-users"></i> Felhasználók</div>
                     <div className={`neo-tab ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}><i className="fas fa-shield-alt"></i> Jelentések</div>
+                    
+                    <div className={`neo-tab ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
+                        <i className="fas fa-envelope"></i> Üzenetek 
+                        {unreadMessagesCount > 0 && <span style={{backgroundColor: '#ef4444', color: 'white', borderRadius: '50%', padding: '2px 8px', fontSize: '0.8rem', marginLeft: '8px', fontWeight: 'bold'}}>{unreadMessagesCount}</span>}
+                    </div>
+
                     <div className={`neo-tab ${activeTab === 'manageMedia' ? 'active' : ''}`} onClick={() => setActiveTab('manageMedia')}><i className="fas fa-database"></i> Tartalom Kezelése</div>
                     <div className={`neo-tab ${activeTab === 'upload' ? 'active' : ''}`} onClick={() => { setActiveTab('upload'); setEditingMedia(null); setUploadData(initialMediaForm); }}><i className="fas fa-cloud-upload-alt"></i> Új Feltöltés</div>
                 </div>
 
                 {error && <div style={{background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', color: '#fca5a5', padding: '15px', borderRadius: '12px', textAlign: 'center', marginBottom: '30px', maxWidth: '600px', margin: '0 auto 30px'}}>{error}</div>}
 
-                {/* FELHASZNÁLÓK FÜL */}
+                {/* FELHASZNÁLÓK */}
                 {!error && activeTab === 'users' && (
                     <div className="neo-card">
                         <table className="neo-table">
@@ -384,7 +418,7 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* JELENTÉSEK FÜL */}
+                {/* JELENTÉSEK */}
                 {!error && activeTab === 'reports' && (
                     <div className="neo-card">
                         {reportedReviews.length === 0 ? (
@@ -402,12 +436,8 @@ export default function AdminDashboard({ refreshApp }) {
                                             <div className="neo-item-title" style={{color: '#8c9eff'}}>{review.media_title}</div>
                                             <div className="neo-item-sub" style={{color: '#e74c3c', marginTop: '5px', fontWeight: 'bold'}}><i className="fas fa-exclamation-triangle"></i> Ok: {review.report_reason || 'Nincs megadva'}</div>
                                         </td>
-                                        <td>
-                                            <span className="neo-badge tag">@{review.username}</span>
-                                        </td>
-                                        <td>
-                                            <span className="neo-badge admin">@{review.reporter_username || 'Ismeretlen'}</span>
-                                        </td>
+                                        <td><span className="neo-badge tag">@{review.username}</span></td>
+                                        <td><span className="neo-badge admin">@{review.reporter_username || 'Ismeretlen'}</span></td>
                                         <td style={{ maxWidth: '350px' }}>
                                             <div style={{ color: '#f5c518', marginBottom: '8px', fontSize: '0.95rem', fontWeight: 'bold' }}><i className="fas fa-star"></i> {review.rating}/10</div>
                                             <div style={{ color: '#ccc', fontStyle: 'italic', lineHeight: 1.6 }}>"{review.comment}"</div>
@@ -425,7 +455,50 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* TARTALOM KEZELÉSE FÜL */}
+                {/* ÜZENETEK */}
+                {!error && activeTab === 'messages' && (
+                    <div className="neo-card">
+                        {messages.length === 0 ? (
+                            <div style={{ padding: '60px', textAlign: 'center', color: '#888' }}>
+                                <i className="fas fa-inbox" style={{fontSize: '5rem', marginBottom: '20px', color: '#4b5563'}}></i>
+                                <h2 style={{color: 'white', marginBottom: '10px', fontSize: '1.8rem'}}>Üres az Inboxod</h2>
+                                <p>Jelenleg nincsenek beérkezett üzenetek az oldalon keresztül.</p>
+                            </div>
+                        ) : (
+                            <table className="neo-table">
+                                <thead><tr><th>Küldő & Dátum</th><th>Téma</th><th>Üzenet</th><th style={{textAlign: 'right'}}>Műveletek</th></tr></thead>
+                                <tbody>{messages.map(msg => (
+                                    <tr key={msg.id} style={{ opacity: msg.olvasva ? 0.6 : 1, transition: '0.3s' }}>
+                                        <td style={{ minWidth: '200px' }}>
+                                            <div className="neo-item-title" style={{color: '#8c9eff'}}>
+                                                {msg.nev} 
+                                                {msg.felhasznalo_id && <span style={{marginLeft: '8px', fontSize: '0.75rem', backgroundColor: '#3b82f6', color: '#fff', padding: '2px 6px', borderRadius: '4px'}}>Regisztrált tag</span>}
+                                            </div>
+                                            <a href={`mailto:${msg.email}`} className="neo-item-sub" style={{color: '#9ca3af', textDecoration: 'none', display: 'block', margin: '5px 0'}}><i className="fas fa-reply"></i> {msg.email}</a>
+                                            <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{new Date(msg.datum).toLocaleString('hu-HU')}</div>
+                                        </td>
+                                        <td>
+                                            <span className="neo-badge tag" style={{ backgroundColor: msg.olvasva ? 'rgba(255,255,255,0.1)' : 'rgba(59, 130, 246, 0.2)', color: msg.olvasva ? '#ccc' : '#60a5fa' }}>{msg.tema}</span>
+                                        </td>
+                                        <td style={{ maxWidth: '400px' }}>
+                                            <div style={{ color: '#ccc', fontStyle: 'italic', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{msg.uzenet}</div>
+                                        </td>
+                                        <td>
+                                            <div className="neo-actions">
+                                                {!msg.olvasva && (
+                                                    <button onClick={() => handleMarkMessageRead(msg.id)} className="neo-action-btn approve" title="Olvasottnak jelöl"><i className="fas fa-check-double"></i></button>
+                                                )}
+                                                <button onClick={() => { setMessageToDelete(msg.id); setShowMessageDeleteModal(true); }} className="neo-action-btn delete" title="Törlés"><i className="fas fa-trash-alt"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}</tbody>
+                            </table>
+                        )}
+                    </div>
+                )}
+
+                {/* TARTALOM KEZELÉSE */}
                 {!error && activeTab === 'manageMedia' && (
                     <div className="neo-card">
                         <div className="neo-sub-tabs">
@@ -456,7 +529,7 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* ÚJ TARTALOM FELTÖLTÉSE FÜL */}
+                {/* ÚJ TARTALOM FELTÖLTÉSE */}
                 {!error && activeTab === 'upload' && (
                     <div className="neo-card" style={{padding: '50px'}}>
                         <h2 style={{color: 'white', margin: '0 0 30px 0', fontSize: '2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '20px'}}><i className="fas fa-magic" style={{color: 'var(--primary)', marginRight: '15px'}}></i>Új tartalom publikálása</h2>
@@ -524,6 +597,7 @@ export default function AdminDashboard({ refreshApp }) {
                 <ConfirmModal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} onConfirm={handleDeleteUserConfirmed} title="Felhasználó törlése" message="Biztosan véglegesen törölni szeretnéd ezt a felhasználót?" />
                 <ConfirmModal isOpen={showMediaDeleteModal} onClose={() => setShowMediaDeleteModal(false)} onConfirm={handleDeleteMediaConfirmed} title="Tartalom törlése" message="Biztosan véglegesen törlöd ezt a filmet/sorozatot?" />
                 <ConfirmModal isOpen={showReviewDeleteModal} onClose={() => setShowReviewDeleteModal(false)} onConfirm={handleDeleteReviewConfirmed} title="Komment törlése" message="Biztosan véglegesen törlöd a jelentett kommentet?" />
+                <ConfirmModal isOpen={showMessageDeleteModal} onClose={() => setShowMessageDeleteModal(false)} onConfirm={handleDeleteMessageConfirmed} title="Üzenet törlése" message="Biztosan véglegesen törlöd ezt az ügyfélszolgálati üzenetet?" />
                 {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
             </div>
         </div>
