@@ -13,7 +13,7 @@ export default function AdminDashboard({ refreshApp }) {
     const [mediaList, setMediaList] = useState([]);
     const [mozikList, setMozikList] = useState([]); 
     const [categories, setCategories] = useState([]); 
-    const [messages, setMessages] = useState([]); // ÚJ
+    const [messages, setMessages] = useState([]); 
     const [error, setError] = useState('');
     const [toast, setToast] = useState(null);
 
@@ -30,8 +30,8 @@ export default function AdminDashboard({ refreshApp }) {
     const [mediaToDelete, setMediaToDelete] = useState(null);
     const [editingMedia, setEditingMedia] = useState(null);
 
-    const [showMessageDeleteModal, setShowMessageDeleteModal] = useState(false); // ÚJ
-    const [messageToDelete, setMessageToDelete] = useState(null); // ÚJ
+    const [showMessageDeleteModal, setShowMessageDeleteModal] = useState(false); 
+    const [messageToDelete, setMessageToDelete] = useState(null); 
 
     const initialMediaForm = { 
         tipus: 'film', cim: '', leiras: '', poszter_url: '', elozetes_url: '', 
@@ -41,12 +41,100 @@ export default function AdminDashboard({ refreshApp }) {
     };
     const [uploadData, setUploadData] = useState(initialMediaForm);
 
+    const fetchUsers = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/users', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok && Array.isArray(data)) { setUsers(data); setError(''); } 
+        } catch (err) { setError('Nem sikerült elérni a szervert.'); }
+    };
+
+    const fetchReportedReviews = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/reported-reviews', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok && Array.isArray(data)) setReportedReviews(data); 
+        } catch (err) { console.error("Hiba a jelentések lekérésekor", err); }
+    };
+
+    const fetchMediaList = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/media', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok && Array.isArray(data)) setMediaList(data); 
+        } catch (err) { console.error("Hiba a tartalmak lekérésekor", err); }
+    };
+
+    const fetchMozikList = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/mozik', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok && Array.isArray(data)) {
+                const uniqueMozik = Array.from(new Map(data.map(m => [m.id, m])).values());
+                const cinemaCityMozik = uniqueMozik.filter(mozi => 
+                    mozi.nev && mozi.nev.toLowerCase().includes('cinema city')
+                );
+                setMozikList(cinemaCityMozik); 
+            }
+        } catch (err) { console.error("Hiba a mozik lekérésekor", err); }
+    };
+
+    const fetchCategories = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/admin/categories', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok && Array.isArray(data)) setCategories(data); 
+        } catch (err) { console.error("Hiba a kategóriák lekérésekor", err); }
+    };
+
+    const fetchMessages = async () => {
+        const token = localStorage.getItem('token');
+        try { 
+            const res = await fetch('http://localhost:5000/api/contact/messages', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
+            const data = await res.json(); 
+            if (res.ok && Array.isArray(data)) setMessages(data); 
+        } catch (err) { console.error("Hiba az üzenetek lekérésekor", err); }
+    };
+
     const refreshAllData = () => {
         fetchUsers(); fetchReportedReviews(); fetchMediaList(); fetchMozikList(); fetchCategories(); fetchMessages();
         if (refreshApp) refreshApp();
     };
 
-    useEffect(() => { refreshAllData(); }, []);
+    // Erősített adatfrissítés (10 másodpercenként ÉS ha visszalépünk az ablakba)
+    useEffect(() => { 
+        refreshAllData(); 
+        
+        const interval = setInterval(() => {
+            fetchReportedReviews();
+            fetchMessages();
+        }, 10000);
+
+        const handleFocus = () => {
+            fetchReportedReviews();
+            fetchMessages();
+        };
+        window.addEventListener('focus', handleFocus);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, []);
+
+    // Fülváltáskor is kényszerített frissítés
+    useEffect(() => {
+        if (activeTab === 'users') fetchUsers();
+        else if (activeTab === 'reports') fetchReportedReviews();
+        else if (activeTab === 'messages') fetchMessages();
+        else if (activeTab === 'manageMedia') fetchMediaList();
+        else if (activeTab === 'upload') fetchMozikList();
+    }, [activeTab]);
 
     const isAnyModalOpen = editingMedia || editingUser || showDeleteModal || showMediaDeleteModal || showReviewDeleteModal || showMessageDeleteModal;
     useEffect(() => {
@@ -68,64 +156,6 @@ export default function AdminDashboard({ refreshApp }) {
     }, [isAnyModalOpen]);
 
     const showNotification = (message, type = 'success') => { setToast({ message, type }); };
-
-    const fetchUsers = async () => {
-        const token = localStorage.getItem('token');
-        try { 
-            const res = await fetch('http://localhost:5000/api/admin/users', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
-            const data = await res.json(); 
-            if (res.ok) { setUsers(data); setError(''); } 
-        } catch (err) { setError('Nem sikerült elérni a szervert.'); }
-    };
-
-    const fetchReportedReviews = async () => {
-        const token = localStorage.getItem('token');
-        try { 
-            const res = await fetch('http://localhost:5000/api/admin/reported-reviews', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
-            const data = await res.json(); 
-            if (res.ok) setReportedReviews(data); 
-        } catch (err) { showNotification("Hiba a jelentések lekérésekor.", "error"); }
-    };
-
-    const fetchMediaList = async () => {
-        const token = localStorage.getItem('token');
-        try { 
-            const res = await fetch('http://localhost:5000/api/admin/media', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
-            const data = await res.json(); 
-            if (res.ok) setMediaList(data); 
-        } catch (err) { showNotification("Hiba a tartalmak lekérésekor.", "error"); }
-    };
-
-    const fetchMozikList = async () => {
-        const token = localStorage.getItem('token');
-        try { 
-            const res = await fetch('http://localhost:5000/api/admin/mozik', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
-            const data = await res.json(); 
-            if (res.ok) {
-                const uniqueMozik = Array.from(new Map(data.map(m => [m.id, m])).values());
-                setMozikList(uniqueMozik); 
-            }
-        } catch (err) { console.error("Hiba a mozik lekérésekor", err); }
-    };
-
-    const fetchCategories = async () => {
-        const token = localStorage.getItem('token');
-        try { 
-            const res = await fetch('http://localhost:5000/api/admin/categories', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
-            const data = await res.json(); 
-            if (res.ok) setCategories(data); 
-        } catch (err) { console.error("Hiba a kategóriák lekérésekor", err); }
-    };
-
-    // ÚJ: Üzenetek lekérése
-    const fetchMessages = async () => {
-        const token = localStorage.getItem('token');
-        try { 
-            const res = await fetch('http://localhost:5000/api/contact/messages', { headers: { 'Authorization': `Bearer ${token}` }, cache: 'no-store' }); 
-            const data = await res.json(); 
-            if (res.ok) setMessages(data); 
-        } catch (err) { console.error("Hiba az üzenetek lekérésekor", err); }
-    };
 
     const handleMarkMessageRead = async (id) => {
         const token = localStorage.getItem('token');
@@ -366,7 +396,8 @@ export default function AdminDashboard({ refreshApp }) {
         </form>
     );
 
-    const unreadMessagesCount = messages.filter(m => !m.olvasva).length;
+    const unreadMessagesCount = Array.isArray(messages) ? messages.filter(m => !m.olvasva).length : 0;
+    const reportsCount = Array.isArray(reportedReviews) ? reportedReviews.length : 0;
 
     return (
         <div className="neo-admin-bg">
@@ -379,7 +410,11 @@ export default function AdminDashboard({ refreshApp }) {
 
                 <div className="neo-nav">
                     <div className={`neo-tab ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}><i className="fas fa-users"></i> Felhasználók</div>
-                    <div className={`neo-tab ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}><i className="fas fa-shield-alt"></i> Jelentések</div>
+                    
+                    <div className={`neo-tab ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
+                        <i className="fas fa-shield-alt"></i> Jelentések
+                        {reportsCount > 0 && <span style={{backgroundColor: '#ef4444', color: 'white', borderRadius: '50%', padding: '2px 8px', fontSize: '0.8rem', marginLeft: '8px', fontWeight: 'bold'}}>{reportsCount}</span>}
+                    </div>
                     
                     <div className={`neo-tab ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
                         <i className="fas fa-envelope"></i> Üzenetek 
@@ -387,6 +422,7 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
 
                     <div className={`neo-tab ${activeTab === 'manageMedia' ? 'active' : ''}`} onClick={() => setActiveTab('manageMedia')}><i className="fas fa-database"></i> Tartalom Kezelése</div>
+                    
                     <div className={`neo-tab ${activeTab === 'upload' ? 'active' : ''}`} onClick={() => { setActiveTab('upload'); setEditingMedia(null); setUploadData(initialMediaForm); }}><i className="fas fa-cloud-upload-alt"></i> Új Feltöltés</div>
                 </div>
 
@@ -421,7 +457,7 @@ export default function AdminDashboard({ refreshApp }) {
                 {/* JELENTÉSEK */}
                 {!error && activeTab === 'reports' && (
                     <div className="neo-card">
-                        {reportedReviews.length === 0 ? (
+                        {reportsCount === 0 ? (
                             <div style={{ padding: '60px', textAlign: 'center', color: '#888' }}>
                                 <i className="fas fa-check-circle" style={{fontSize: '5rem', marginBottom: '20px', color: '#2ecc71', filter: 'drop-shadow(0 0 20px rgba(46, 204, 113, 0.4))'}}></i>
                                 <h2 style={{color: 'white', marginBottom: '10px', fontSize: '1.8rem'}}>Minden rendben!</h2>
@@ -458,7 +494,7 @@ export default function AdminDashboard({ refreshApp }) {
                 {/* ÜZENETEK */}
                 {!error && activeTab === 'messages' && (
                     <div className="neo-card">
-                        {messages.length === 0 ? (
+                        {!messages || messages.length === 0 ? (
                             <div style={{ padding: '60px', textAlign: 'center', color: '#888' }}>
                                 <i className="fas fa-inbox" style={{fontSize: '5rem', marginBottom: '20px', color: '#4b5563'}}></i>
                                 <h2 style={{color: 'white', marginBottom: '10px', fontSize: '1.8rem'}}>Üres az Inboxod</h2>
