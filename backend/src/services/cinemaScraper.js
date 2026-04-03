@@ -1,12 +1,11 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
 const db = require('../config/db'); 
-const https = require('https');
 
-// Golyóálló megoldás: Nem támaszkodunk a Docker nyelvi csomagjaira (amik hiányozhatnak),
-// hanem fixen YYYY-MM-DD formátumot rakunk össze a pontos magyar időből!
+// 📅 Dátum és JELENLEGI IDŐ formázások
+const getBudapestDateObj = () => new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Budapest' }));
+
 const getTodayDate = () => {
-    const tzDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Budapest' }));
+    const tzDate = getBudapestDateObj();
     const y = tzDate.getFullYear();
     const m = String(tzDate.getMonth() + 1).padStart(2, '0');
     const d = String(tzDate.getDate()).padStart(2, '0');
@@ -16,213 +15,198 @@ const getTodayDate = () => {
 const getDisplayDate = () => {
     const dateStr = getTodayDate();
     const parts = dateStr.split('-');
-    const month = parts[1];
-    const day = parts[2];
-    return `Ma (${month}.${day}.)`;
+    return `Ma (${parts[1]}.${parts[2]}.)`;
 };
 
-// Cím normalizálása
-const normalizeText = (text) => {
+// ⏳ IDŐ SZŰRŐ (Csak a jövőbeli vetítéseket tartjuk meg)
+const isFutureTime = (timeStr) => {
+    const tzDate = getBudapestDateObj();
+    const currentTotalMins = tzDate.getHours() * 60 + tzDate.getMinutes();
+    
+    let [h, m] = timeStr.toLowerCase().replace('.', ':').split(':');
+    let hInt = parseInt(h, 10);
+    let mInt = parseInt(m, 10);
+    
+    let movieTotalMins = (hInt < 4 ? hInt + 24 : hInt) * 60 + mInt;
+    return movieTotalMins >= (currentTotalMins - 15);
+};
+
+// 💡 CÍM NORMALIZÁLÓ
+const normalizeTitle = (text) => {
     if (!text) return "";
     let clean = text.toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Ékezetek kigyomlálása a biztos találatért (á->a, é->e)
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/&/g, ' es ')
-        .replace(/[^a-z0-9]+/g, ' ') // Csak alap betűk és számok maradhatnak
+        .replace(/[-–:/|]/g, ' ') 
+        .replace(/[^a-z0-9\s]+/g, '') 
         .replace(/\s+/g, ' ')
         .trim();
-    clean = clean.replace(/^(a|az)\s+/, '');
+    clean = clean.replace(/^(a|az|the)\s+/, '');
+    clean = clean.replace(/^project\s+/, ''); 
     return clean;
 };
 
-const getCinemaCityInternalId = (url) => {
+// ==========================================
+// 1. CINEMA CITY API (100% STABIL)
+// ==========================================
+const fetchCinemaCityIds = async () => {
+    try {
+        const url = `https://www.cinemacity.hu/hu/data-api-service/v1/quickbook/10102/cinemas/with-event/until/${getTodayDate()}`;
+        const res = await axios.get(url, { timeout: 15000 });
+        const map = {};
+        if (res.data?.body?.cinemas) {
+            res.data.body.cinemas.forEach(c => { map[normalizeTitle(c.displayName)] = c.id; });
+        }
+        return map;
+    } catch (e) { return null; }
+};
+
+const getCinemaCityInternalId = (url, moziName, ccMap) => {
     const match = url.match(/\/(\d{4})/);
     if (match) return match[1];
+    if (ccMap) {
+        const cleanName = normalizeTitle(moziName.replace(/cinema city/i, '').trim());
+        for (let key in ccMap) { if (key.includes(cleanName) || cleanName.includes(key)) return ccMap[key]; }
+    }
     const dictionary = {
-        'allee': '1125', 'westend': '1131', 'arena': '1132', 'mammut': '1130', 
-        'campona': '1126', 'debrecen': '1127', 'szeged': '1134', 'pecs': '1133', 
+        'allee': '1133', 'westend': '1131', 'arena': '1132', 'mammut': '1144', 
+        'campona': '1126', 'debrecen': '1127', 'szeged': '1134', 'pecs': '1130', 
         'gyor': '1128', 'miskolc': '1129', 'alba': '1124', 'nyiregyhaza': '1142', 
         'sopron': '1139', 'savaria': '1138', 'balaton': '1136', 'szolnok': '1137', 
         'zala': '1135', 'dunaplaza': '1141'
     };
-    for (const key in dictionary) { if (url.includes(key)) return dictionary[key]; }
+    for (const key in dictionary) { if (url.toLowerCase().includes(key)) return dictionary[key]; }
     return null;
 };
 
-// 1. CINEMA CITY
-const scrapeCinemaCity = async (url) => {
-    const internalId = getCinemaCityInternalId(url);
+const scrapeCinemaCity = async (mozi, ccMap) => {
+    const internalId = getCinemaCityInternalId(mozi.url, mozi.nev, ccMap);
     if (!internalId) return {};
 
     const date = getTodayDate();
-    const displayDate = getDisplayDate();
     const apiUrl = `https://www.cinemacity.hu/hu/data-api-service/v1/quickbook/10102/film-events/in-cinema/${internalId}/at-date/${date}`;
 
     try {
-        const response = await axios.get(apiUrl, { 
-            headers: { 'User-Agent': 'Mozilla/5.0' },
-            timeout: 15000
-        });
+        const response = await axios.get(apiUrl, { timeout: 15000 });
         const films = response.data?.body?.films || [];
         const events = response.data?.body?.events || [];
         
-        let result = {};
+        let rawTimes = {};
         films.forEach(film => {
-            const cleanTitle = normalizeText(film.name);
+            const cleanTitle = normalizeTitle(film.name);
             const filmEvents = events.filter(e => e.filmId === film.id);
-            const times = filmEvents.map(e => e.eventDateTime.split('T')[1].substring(0, 5));
+            const timeStrings = filmEvents
+                .map(e => e.eventDateTime.split('T')[1].substring(0, 5))
+                .filter(t => isFutureTime(t));
             
-            if (times.length > 0) {
-                result[cleanTitle] = `${displayDate}|${[...new Set(times)].sort().join(', ')}`;
+            if (timeStrings.length > 0) {
+                if (!rawTimes[cleanTitle]) rawTimes[cleanTitle] = [];
+                rawTimes[cleanTitle].push(...timeStrings); 
             }
         });
-        return result;
-    } catch (error) {
-        return {};
-    }
+        return rawTimes;
+    } catch (error) { return {}; }
 };
 
-// 2. UNIVERZÁLIS "BLOKK" SCRAPER (Szigorú Időpont-Szűrővel)
-const scrapeUniversalBlock = async (url, movies) => {
-    try {
-        const response = await axios.get(url, { 
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' },
-            timeout: 15000,
-            httpsAgent: new https.Agent({ rejectUnauthorized: false }) // SSL/Tanúsítvány hibák ignorálása a kis moziknál
-        });
-        const $ = cheerio.load(response.data);
-        const result = {};
-        const displayDate = getDisplayDate();
+// ==========================================
+// KÖZPONTI FELDOLGOZÓ 
+// ==========================================
+const processCinemaData = async (mozi, movies, ccMap) => {
+    // CSAK A CINEMA CITY MOZIKAT DOLGOZZUK FEL!
+    if (!mozi.url.toLowerCase().includes('cinemacity')) {
+        return null; 
+    }
 
-        // Kőkemény Regex: Dátumok (10.12.) és játékidők (120 perc) azonnali kiszűrése
-        const timeRegex = /(?<!\d[\.\-])\b(?:[01]?[0-9]|2[0-3])[:.][0-5][0-9]\b(?!\.)(?!\s*perc|\s*p\b)/gi;
+    const rawTimes = await scrapeCinemaCity(mozi, ccMap);
+    if (!rawTimes || Object.keys(rawTimes).length === 0) return null;
 
-        movies.forEach(movie => {
-            // Cím variációk generálása (Pl. "Reminders of Him - Emlékek róla" -> "Reminders of Him" és "Emlékek róla")
-            let cimVariaciok = [movie.cim];
+    let finalFormattedData = [];
+    const displayDate = getDisplayDate();
+
+    for (let movie of movies) {
+        const cleanTargetTitle = normalizeTitle(movie.cim);
+        
+        let matchedTimes = [];
+        for (const [scrapedTitle, times] of Object.entries(rawTimes)) {
+            const cst = normalizeTitle(scrapedTitle);
+            if (cst === cleanTargetTitle || cst.includes(cleanTargetTitle) || cleanTargetTitle.includes(cst)) {
+                matchedTimes.push(...times);
+            }
+        }
+
+        if (matchedTimes.length > 0) {
+            let dailyTimes = [];
+            let lastMinutes = -1;
+            const uniqueTimesSet = [...new Set(matchedTimes)].sort();
             
-            const splitChars = ['-', '–', ':', '/', '|']; // Hosszú kötőjel (–) és egyéb elválasztók felismerése
-            splitChars.forEach(char => {
-                if (movie.cim.includes(char)) cimVariaciok.push(...movie.cim.split(char));
-            });
-            
-            const cleanVariations = [...new Set(cimVariaciok.map(c => normalizeText(c)))].filter(c => c.length > 3);
-            if (cleanVariations.length === 0) return;
+            for (let t of uniqueTimesSet) {
+                if (!isFutureTime(t)) continue;
+                let [h, m] = t.replace('.', ':').split(':');
+                if (!m) m = '00';
+                let formattedTime = `${h.padStart(2, '0')}:${m.padStart(2, '0')}`;
+                let hour = parseInt(h, 10);
+                let minutes = parseInt(m, 10);
 
-            let foundTimes = [];
-
-            // Keresés az oldalon olyan blokkokban, amik tartalmazzák a film címét
-            $('div, article, section, li, td, tr, p, .movie-item, .program-item, .showtime').each((i, el) => {
-                const blockText = $(el).text().replace(/\s+/g, ' ').trim();
-                
-                // Nagyobbra vesszük a limitet, mert egyes helyi mozik egyben öntik be a heti szöveget
-                if (blockText.length < 5 || blockText.length > 1500) return;
-
-                const cleanBlockText = normalizeText(blockText);
-                
-                // Ha BÁRMELYIK névváltozat (pl. csak a magyar címe) szerepel a helyi mozi oldalán:
-                let isMatch = cleanVariations.some(variacio => cleanBlockText.includes(variacio));
-
-                if (isMatch) {
-                    let times = blockText.match(timeRegex);
-                    if (times && times.length > 0) {
-                        foundTimes.push(...times);
-                    }
-                }
-            });
-
-            if (foundTimes.length > 0) {
-                const validTimes = [...new Set(foundTimes.map(t => {
-                    let [h, m] = t.toLowerCase().replace('.', ':').split(':');
-                    return `${h.padStart(2, '0')}:${m}`;
-                }))]
-                .filter(t => {
-                    const hour = parseInt(t.split(':')[0], 10);
-                    // Valid mozi időpontok: 9:00 - 23:59, plusz éjféli premierek (0-1 óra)
-                    return (hour >= 9 && hour <= 23) || hour === 0 || hour === 1;
-                })
-                .sort();
-
-                if (validTimes.length > 0) {
-                    // A kimenetbe az eredeti, teljes normalizált címet tesszük, hogy a fő kód megtalálja
-                    result[normalizeText(movie.cim)] = `${displayDate}|${validTimes.join(', ')}`;
+                if ((hour >= 9 && hour <= 23) || hour === 0 || hour === 1) {
+                    let currentMinutes = (hour < 4 ? hour + 24 : hour) * 60 + minutes;
+                    if (lastMinutes !== -1 && currentMinutes <= lastMinutes + 15) continue; 
+                    dailyTimes.push(formattedTime);
+                    lastMinutes = currentMinutes;
                 }
             }
-        });
 
-        return result;
-    } catch (error) {
-        return {}; 
+            if (dailyTimes.length > 0) {
+                if (dailyTimes.length > 8) dailyTimes = dailyTimes.slice(0, 8);
+                const finalData = `${displayDate}|${dailyTimes.join(', ')}`;
+                finalFormattedData.push({ movieId: movie.id, finalData });
+            }
+        }
     }
-};
-
-const chunkArray = (array, size) => {
-    const chunked = [];
-    for (let i = 0; i < array.length; i += size) {
-        chunked.push(array.slice(i, i + size));
-    }
-    return chunked;
+    return finalFormattedData;
 };
 
 // --- FŐ LOGIKA ---
 const runCinemaScraper = async () => {
-    console.log('🤖 Robot: TÜRELMES, Időpont-Szűrős adatgyűjtés elindítva...');
+    console.log('🚀 Robot: STABIL CINEMA CITY API ADATGYŰJTÉS elindítva...');
     const startTime = Date.now();
 
     try {
         await db.query('DELETE FROM media_mozik');
         console.log('🧹 Robot: Régi moziműsor törölve. Keresés folyamatban...');
 
-        // CSAK a 2026-os (és az utáni) filmek moziműsorát fogja lekérdezni és frissíteni!
         const [movies] = await db.query(`SELECT id, cim FROM media WHERE tipus = "film" AND megjelenes_ev_start >= 2026`);
         const [cinemas] = await db.query('SELECT id, nev, url FROM mozik');
 
-        const moziChunks = chunkArray(cinemas, 5);
+        console.log('🌍 Cinema City ID-k lekérése...');
+        const ccMap = await fetchCinemaCityIds();
+
         let processedCount = 0;
+        const ccCinemas = cinemas.filter(c => c.url && c.url.toLowerCase().includes('cinemacity'));
 
-        for (const chunk of moziChunks) {
-            const chunkPromises = chunk.map(async (mozi) => {
-                if (!mozi.url || mozi.url.length < 5) return;
-
-                let scrapedData = {}; 
-                let method = "";
-
-                if (mozi.nev.includes('Cinema City')) {
-                    scrapedData = await scrapeCinemaCity(mozi.url);
-                } else {
-                    // ÁTADJUK a filmeket is az univerzális scrapernek, hogy okosan tudjon keresni!
-                    scrapedData = await scrapeUniversalBlock(mozi.url, movies);
-                }
-
-                for (let movie of movies) {
-                    const cleanMovieTitle = normalizeText(movie.cim);
-                    if (!cleanMovieTitle || cleanMovieTitle.length < 3) continue;
-
-                    // Okosított egyezés vizsgálat mindkét (API és Blokk) scraperhez
-                    const matchedKey = Object.keys(scrapedData).find(key => 
-                        key === cleanMovieTitle || 
-                        (cleanMovieTitle.length > 5 && key.includes(cleanMovieTitle)) ||
-                        (key.length > 5 && cleanMovieTitle.includes(key))
-                    );
-
-                    if (matchedKey) {
+        for (const mozi of ccCinemas) {
+            try {
+                const results = await processCinemaData(mozi, movies, ccMap);
+                if (results && results.length > 0) {
+                    for (const res of results) {
                         try {
-                            await db.query('INSERT IGNORE INTO media_mozik (media_id, mozi_id, idopontok) VALUES (?, ?, ?)', [movie.id, mozi.id, scrapedData[matchedKey]]);
-                            console.log(`✅ ${mozi.nev}: "${movie.cim}" - ${scrapedData[matchedKey]}`);
+                            await db.query('INSERT IGNORE INTO media_mozik (media_id, mozi_id, idopontok) VALUES (?, ?, ?)', [res.movieId, mozi.id, res.finalData]);
+                            const movieName = movies.find(m => m.id === res.movieId)?.cim;
+                            console.log(`✅ ${mozi.nev}: "${movieName}" - ${res.finalData}`);
                         } catch (err) {}
                     }
+                } else {
+                    console.log(`➖ ${mozi.nev}: Nincs mai találat.`);
                 }
-            });
-
-            await Promise.allSettled(chunkPromises);
+            } catch (err) {
+                console.error(`⚠️ Hiba a(z) ${mozi.nev} mozi feldolgozásakor.`);
+            }
             
-            processedCount += chunk.length;
-            console.log(`⏳ Folyamat: ${processedCount}/${cinemas.length} mozi ellenőrizve...`);
-
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            processedCount++;
+            console.log(`⏳ Folyamat: ${processedCount}/${ccCinemas.length} mozi ellenőrizve...`);
         }
 
         const endTime = Date.now();
-        console.log(`🏆 Robot: Türelmes adatgyűjtés BEFEJEZVE! Időtartam: ${((endTime - startTime) / 1000).toFixed(2)} mp.`);
+        console.log(`🏆 Robot: Adatgyűjtés BEFEJEZVE! Időtartam: ${((endTime - startTime) / 1000).toFixed(2)} mp.`);
     } catch (error) {
         console.error('❌ Robot kritikus hiba:', error);
     }

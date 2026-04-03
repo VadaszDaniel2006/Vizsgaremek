@@ -3,12 +3,12 @@ services:
   frontend:
     container_name: mozi_frontend
     build:
-      context: ./Frontend     # A mappád neve a képen: Frontend
+      context: ./Frontend     
       dockerfile: Dockerfile
     depends_on:
       - api
     ports:
-      - "8090:80"             # Böngészőben: http://localhost:8090
+      - "8090:80"             
     restart: unless-stopped
 
   # 2. ADATBÁZIS (MySQL)
@@ -18,22 +18,19 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpw
-      MYSQL_DATABASE: mozipont_beta   # A te adatbázis neved
+      MYSQL_DATABASE: mozipont_beta   
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppw
     ports:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
-      # EZ A SOR TÖLTI BE AZ SQL FÁJLT A db_init MAPPÁBÓL:
       - ./db_init:/docker-entrypoint-initdb.d:ro 
-    # --- ÚJ RÉSZ KEZDETE ---
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpw"]
       interval: 10s
       timeout: 5s
       retries: 5
-    # --- ÚJ RÉSZ VÉGE ---
 
   # 3. PHPMYADMIN (Adatbázis kezelő)
   phpmyadmin:
@@ -47,26 +44,25 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
     ports:
-      - "8082:80"             # Böngészőben: http://localhost:8082
+      - "8082:80"             
 
- # 4. BACKEND API (Node.js)
+  # 4. BACKEND API (Node.js)
   api:
     build:
       context: ./backend      
       dockerfile: Dockerfile
     container_name: mozi_api
     restart: unless-stopped
+    shm_size: '1gb'           # <--- ÚJ RÉSZ: Extra memória a böngészőnek!
     depends_on:
       db:
         condition: service_healthy
     environment:
-      # --- JAVÍTOTT RÉSZ ---
       DB_HOST: db
       DB_USER: root
       DB_PASSWORD: rootpw
       DB_NAME: mozipont_beta
       PORT: 5000
-      # ---------------------
     ports:
       - "5000:5000"
 
