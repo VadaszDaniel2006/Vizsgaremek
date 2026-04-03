@@ -191,7 +191,7 @@ export default function AdminDashboard({ refreshApp }) {
         } catch (err) { showNotification("Szerver hiba a feltöltés során.", "error"); }
     };
 
-    const openEditMediaModal = (media) => {
+    const openEditMediaModal = async (media) => {
         setEditingMedia(media);
         let parsedMoziIds = [];
         if (Array.isArray(media.mozi_ids)) {
@@ -199,7 +199,8 @@ export default function AdminDashboard({ refreshApp }) {
         } else if (typeof media.mozi_ids === 'string' && media.mozi_ids.trim() !== '') {
             parsedMoziIds = media.mozi_ids.split(',').map(id => parseInt(id.trim(), 10));
         }
-        parsedMoziIds = [...new Set(parsedMoziIds)]; 
+        
+        // Azonnal betöltjük az alap adatokat, hogy a felület ne várakozzon
         setUploadData({ 
             tipus: media.tipus || 'film', cim: media.cim || '', leiras: media.leiras || '', 
             poszter_url: media.poszter_url || '', elozetes_url: media.elozetes_url || '', 
@@ -207,8 +208,25 @@ export default function AdminDashboard({ refreshApp }) {
             evadok_szama: media.evadok_szama || '', hossz_perc: media.hossz_perc || '', 
             alap_rating: media.alap_rating || 8.0, kategoria_id: media.kategoria_id || '',
             rendezo_nev: media.rendezo_nev || '', nemzetiseg_nev: media.nemzetiseg_nev || '', platform_id: media.platform_id || '',
-            mozi_ids: parsedMoziIds
+            mozi_ids: [...new Set(parsedMoziIds)].filter(id => !isNaN(id))
         });
+
+        // A háttérben lekérjük a robot által aktuálisan talált vetítési helyszíneket is
+        try {
+            const res = await fetch(`http://localhost:5000/api/mozik/${media.id}/mozik`);
+            if (res.ok) {
+                const liveMozik = await res.json();
+                if (Array.isArray(liveMozik) && liveMozik.length > 0) {
+                    const liveIds = liveMozik.map(m => parseInt(m.mozi_id || m.id, 10));
+                    setUploadData(prev => ({
+                        ...prev,
+                        mozi_ids: [...new Set([...prev.mozi_ids, ...liveIds])].filter(id => !isNaN(id))
+                    }));
+                }
+            }
+        } catch (err) {
+            console.error("Hiba az élő mozik lekérésekor:", err);
+        }
     };
 
     const handleDeleteMediaConfirmed = async () => {

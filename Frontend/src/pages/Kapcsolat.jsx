@@ -1,9 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Kapcsolat() {
   const [formData, setFormData] = useState({ nev: '', email: '', tema: '', uzenet: '' });
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copyStatus, setCopyStatus] = useState('');
+
+  // Biztonságos időzítő a másolás üzenet eltüntetéséhez
+  useEffect(() => {
+    if (copyStatus) {
+      const timer = setTimeout(() => setCopyStatus(''), 3000);
+      return () => clearTimeout(timer); // Ha elnavigálsz, törli az időzítőt
+    }
+  }, [copyStatus]);
+
+  // Biztonságos időzítő az űrlap sikeres küldésének eltüntetéséhez
+  useEffect(() => {
+    if (status.type === 'success') {
+      const timer = setTimeout(() => setStatus({ type: '', message: '' }), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [status.type]);
 
   // E-mail küldése a backendnek
   const handleSubmit = async (e) => {
@@ -51,12 +68,7 @@ export default function Kapcsolat() {
   const handleCopyEmail = (e) => {
     e.preventDefault();
     navigator.clipboard.writeText('mozipont1@gmail.com');
-    setStatus({ type: 'success', message: 'E-mail cím sikeresen másolva a vágólapra!' });
-    
-    // 3 másodperc múlva eltüntetjük az üzenetet
-    setTimeout(() => {
-        setStatus({ type: '', message: '' });
-    }, 3000);
+    setCopyStatus('E-mail cím sikeresen másolva a vágólapra!');
   };
 
   return (
@@ -82,6 +94,13 @@ export default function Kapcsolat() {
             <i className="fas fa-copy"></i> mozipont1@gmail.com
           </button>
           
+          {copyStatus && (
+            <div style={{ marginTop: '15px', color: '#10b981', fontWeight: 'bold' }}>
+              <i className="fas fa-check-circle" style={{ marginRight: '8px' }}></i>
+              {copyStatus}
+            </div>
+          )}
+          
           <p style={{ marginTop: '20px', fontSize: '0.9rem', color: '#6b7280' }}>Várható válaszidő: 24-48 óra munkanapokon.</p>
         </div>
       </div>
@@ -90,7 +109,7 @@ export default function Kapcsolat() {
         <h2 style={{ color: '#fff', marginBottom: '20px', fontSize: '1.8rem' }}>Üzenet küldése közvetlenül az oldalról</h2>
         <p style={{ color: '#9ca3af', marginBottom: '30px' }}>Töltsd ki az alábbi űrlapot, és üzeneted azonnal az Adminisztrátori pultba kerül!</p>
         
-        {/* SIKERES/SIKERTELEN ÜZENET VISSZAJELZŐ (Itt jelenik meg a másolás sikere is!) */}
+        {/* SIKERES/SIKERTELEN ÜZENET VISSZAJELZŐ */}
         {status.message && (
           <div style={{ padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: status.type === 'success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)', color: status.type === 'success' ? '#10b981' : '#ef4444', border: `1px solid ${status.type === 'success' ? '#10b981' : '#ef4444'}` }}>
             {status.type === 'success' ? <i className="fas fa-check-circle" style={{marginRight: '10px'}}></i> : <i className="fas fa-exclamation-circle" style={{marginRight: '10px'}}></i>}

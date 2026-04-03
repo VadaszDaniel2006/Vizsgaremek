@@ -61,5 +61,5 @@ select.neo-input { appearance: none; background-image: url("data:image/svg+xml,%
 .neo-btn-primary:hover { background: #2c3bb7; transform: translateY(-2px); }
 .neo-btn-secondary { background: transparent; color: #ccc; border: 1px solid #555; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
 .neo-btn-secondary:hover { color: white; background: rgba(255,255,255,0.1); border-color: white; }
-.neo-btn-exit { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); color: white; border: none; padding: 15px 40px; border-radius: 100px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3); }
-.neo-btn-exit:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(168, 85, 247, 0.5); }
+.neo-btn-exit { background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 100px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(62, 80, 255, 0.4); }
+.neo-btn-exit:hover { background: #2c3bb7; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(62, 80, 255, 0.5); }
