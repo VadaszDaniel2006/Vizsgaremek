@@ -116,5 +116,5 @@ A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) felada
 **A fejlesztési környezet futtatásához szükséges fájlok azonnali letöltése:**
 *(A linkekre kattintva a böngésző azonnal letölti a fájlokat a gépedre.)*
 
-* 🐳 [**docker-compose.yml letöltése**](https://drive.google.com/uc?export=download&id=17gjd4pBreps4Ub8ZaHBggPk1N51rWaes) 
-* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://drive.google.com/uc?export=download&id=1vdqx9FhWL1gBA8rsxt-ZEDJ5lDAL0iO4)
+* 🐳 [**docker-compose.yml letöltése**](https://drive.google.com/file/d/1k7W3RL-XSPnvj9A0XEA-P4rnAczEk_Dv/view?usp=sharing) 
+* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://drive.google.com/file/d/1tWgIfjjUGtWU673Oeg25P-wvTmsYVLav/view?usp=sharing)
