@@ -108,7 +108,6 @@ A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) felada
 
 **Külső API-k:**
 * **YouTube Data API:** Trailerek és videó metaadatok lekéréséhez.
-* **TMDb API:** Plakátok, leírások, képek és részletes filmes adatok integrálásához.
 
 **Adatbázis:**
 * **MySQL:** Mozik, vetítések, foglalások, felhasználók, értékelések és kedvencek relációs tárolása (Docker konténerben futtatva).
@@ -116,5 +115,5 @@ A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) felada
 **A fejlesztési környezet futtatásához szükséges fájlok azonnali letöltése:**
 *(A linkekre kattintva a böngésző azonnal letölti a fájlokat a gépedre.)*
 
-* 🐳 [**docker-compose.yml letöltése**](https://drive.google.com/file/d/1k7W3RL-XSPnvj9A0XEA-P4rnAczEk_Dv/view?usp=sharing) 
-* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://drive.google.com/file/d/1tWgIfjjUGtWU673Oeg25P-wvTmsYVLav/view?usp=sharing)
+* 🐳 [**docker-compose.yml letöltése**](https://drive.google.com/uc?export=download&id=1k7W3RL-XSPnvj9A0XEA-P4rnAczEk_Dv) 
+* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://drive.google.com/uc?export=download&id=1tWgIfjjUGtWU673Oeg25P-wvTmsYVLav)
