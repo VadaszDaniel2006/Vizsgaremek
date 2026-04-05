@@ -50,28 +50,4 @@ describe('Search Controller', () => {
             expect(res.status).toHaveBeenCalledWith(500);
         });
     });
-
-    describe('saveSearchHistory', () => {
-        it('400-as hibát dob, ha hiányzik a userId vagy a searchTerm', async () => {
-            const req = { body: { userId: 1 } }; 
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            await searchController.saveSearchHistory(req, res);
-
-            expect(res.status).toHaveBeenCalledWith(400);
-        });
-
-        it('Sikeresen elmenti a keresési előzményt (200)', async () => {
-            db.query.mockResolvedValueOnce([{}]);
-
-            const req = { body: { userId: 1, searchTerm: 'Star Wars' } };
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            await searchController.saveSearchHistory(req, res);
-
-            expect(db.query).toHaveBeenCalledTimes(1);
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({ message: "Előzmény elmentve!" });
-        });
-    });
 });

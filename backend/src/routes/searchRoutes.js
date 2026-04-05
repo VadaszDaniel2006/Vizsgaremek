@@ -4,6 +4,4 @@ const searchController = require('../controllers/searchController');
 
 router.get('/search', searchController.globalSearch);
 
-router.post('/search/history', searchController.saveSearchHistory);
-
 module.exports = router;

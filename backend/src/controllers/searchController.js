@@ -50,21 +50,3 @@ exports.globalSearch = async (req, res) => {
         res.status(500).json({ message: "Hiba történt a keresés során." });
     }
 };
-
-
-exports.saveSearchHistory = async (req, res) => {
-    const { userId, searchTerm } = req.body;
-    if (!userId || !searchTerm) return res.status(400).json({ message: "Hiányzó adatok!" });
-
-    try {
-     
-        await db.query(
-            'INSERT INTO keresesi_elozmenyek (felhasznalo_id, keresett_szoveg, kereses_ideje) VALUES (?, ?, NOW())', 
-            [userId, searchTerm]
-        );
-        res.status(200).json({ message: "Előzmény elmentve!" });
-    } catch (err) { 
-        console.error("Előzmény mentési hiba:", err);
-        res.status(500).json({ message: "Szerverhiba az előzmények mentésekor." }); 
-    }
-};
