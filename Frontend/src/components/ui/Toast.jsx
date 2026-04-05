@@ -1,10 +1,9 @@
-// src/components/Toast.jsx
 import React, { useEffect } from 'react';
 import './Toast.css';
 
 export default function Toast({ message, type, onClose }) {
   useEffect(() => {
-    // 3 másodperc után automatikusan eltűnik
+
     const timer = setTimeout(() => {
       onClose();
     }, 3000);

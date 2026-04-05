@@ -1,4 +1,3 @@
-// src/components/Modal.jsx
 import React, { useEffect } from 'react';
 import './Modal.css';
 
@@ -6,7 +5,7 @@ export default function Modal({ videoId, onClose }) {
   
   useEffect(() => {
     if (videoId) {
-      // Mind a body-t, mind a html-t lezárjuk a biztos siker érdekében
+
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
     } else {
@@ -24,7 +23,6 @@ export default function Modal({ videoId, onClose }) {
 
   return (
     <div className="modal" onClick={onClose}>
-      {/* Itt a stopPropagation megakadályozza, hogy a belső részre kattintva is bezáródjon */}
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Előzetes</h3>

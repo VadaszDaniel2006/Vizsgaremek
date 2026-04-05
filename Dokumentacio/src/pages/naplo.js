@@ -18,12 +18,10 @@ export default function FejlesztesiNaplo() {
       })
       .then(data => {
         if (Array.isArray(data)) {
-          // --- JAVÍTÁS: Szigorú időrendi sorbarendezés ---
-          // A legfrissebb bejegyzés (legnagyobb dátumérték) kerül legfelülre
           const sortedData = [...data].sort((a, b) => {
             const dateA = new Date(a.commit.author.date);
             const dateB = new Date(b.commit.author.date);
-            return dateB - dateA; // Csökkenő sorrend
+            return dateB - dateA; 
           });
           
           setCommits(sortedData);

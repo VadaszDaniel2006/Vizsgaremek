@@ -26,7 +26,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    // --- ÚJ: JELSZÓ LÁTHATÓSÁG ÁLLAPOTOK ---
+   
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -167,8 +167,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                     )}
 
                     <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-                        
-                        {/* BAL OLDAL: AVATAR */}
+
                         <div style={{ flex: '1', minWidth: '250px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <div style={{ position: 'relative', width: '180px', height: '180px', marginBottom: '15px' }}>
                                 <img 
@@ -193,7 +192,6 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                             <p style={{ color: '#aaa', fontSize: '0.9rem' }}>Kattints a kamera ikonra a cseréhez</p>
                         </div>
 
-                        {/* JOBB OLDAL: INPUTOK */}
                         <div style={{ flex: '2', minWidth: '300px' }}>
                             <h4 style={{ marginBottom: '15px', color: 'white', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
                                 <i className="fas fa-info-circle"></i> Személyes adatok
@@ -209,12 +207,10 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                                 <input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="Pl. kissjanos99" />
                             </div>
 
-                            {/* --- JELSZÓ MÓDOSÍTÁSA SZEKCIÓ --- */}
                             <h4 style={{ marginTop: '25px', marginBottom: '15px', color: 'white', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
                                 <i className="fas fa-lock"></i> Jelszó módosítása <span style={{fontSize: '0.8rem', color: '#888'}}>(Opcionális)</span>
                             </h4>
-                            
-                            {/* JELENLEGI JELSZÓ */}
+
                             <div className="profile-input-group">
                                 <label>Jelenlegi jelszó</label>
                                 <div style={{ position: 'relative' }}>
@@ -237,7 +233,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                                {/* ÚJ JELSZÓ */}
+
                                 <div className="profile-input-group">
                                     <label>Új jelszó</label>
                                     <div style={{ position: 'relative' }}>
@@ -260,7 +256,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                                     </div>
                                 </div>
                                 
-                                {/* ÚJ JELSZÓ ÚJRA */}
+
                                 <div className="profile-input-group">
                                     <label>Új jelszó újra</label>
                                     <div style={{ position: 'relative' }}>
@@ -286,7 +282,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                         </div>
                     </div>
 
-                    {/* KATEGÓRIÁK */}
+
                     <div style={{ marginTop: '30px' }}>
                         <h4 style={{ marginBottom: '15px', color: 'white', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
                             <i className="fas fa-heart" style={{color: '#ff4b4b'}}></i> Kedvenc kategóriák 
@@ -325,7 +321,7 @@ export default function ProfileEditor({ user, onClose, onSave }) {
                         </div>
                     </div>
 
-                    {/* GOMBOK */}
+
                     <div className="modal-actions">
                         <button type="button" style={{ 
                             background: 'transparent', border: '1px solid #444', color: '#ccc', 

@@ -1,23 +1,14 @@
-/* --- src/css/custom.css --- */
-
-/**
- * MoziPont Projekt - Egyedi Stíluslap
- */
-
 :root {
-  /* Alapszínek */
   --ifm-color-primary: #3b82f6;
   --ifm-color-primary-dark: #2563eb;
   --ifm-color-primary-darker: #1d4ed8;
   --ifm-color-primary-darkest: #1e40af;
   --ifm-color-primary-light: #60a5fa;
   
-  /* Elrendezés */
-  --ifm-navbar-height: 65px; /* Elegáns, karcsú menümagasság */
+  --ifm-navbar-height: 65px; 
   --ifm-spacing-horizontal: 1.5rem;
 }
 
-/* --- SÖTÉT MÓD BEÁLLÍTÁSOK --- */
 [data-theme='dark'] {
   --ifm-background-color: #0f172a; 
   --ifm-background-surface-color: #1e293b;
@@ -25,9 +16,8 @@
   --ifm-footer-background-color: #0F1E35;
 }
 
-/* --- NAVIGÁCIÓS SÁV (NAVBAR) --- */
 .navbar {
-  background-color: #0F1E35 !important; /* A kért sötétkék szín */
+  background-color: #0F1E35 !important; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   padding: 0 1.5rem;
@@ -39,7 +29,6 @@
   align-items: center;
 }
 
-/* LOGÓ MÉRETEZÉS - Karcsú és profi */
 .navbar__logo {
   height: 42px !important; 
   width: auto;
@@ -53,7 +42,6 @@
   transform: scale(1.05);
 }
 
-/* Menüpontok stílusa */
 .navbar__item {
   color: #f1f5f9 !important;
   font-weight: 500;
@@ -73,24 +61,22 @@
   font-weight: 700;
 }
 
-/* --- DARK MODE GOMB JAVÍTÁSA --- */
-/* Ez biztosítja, hogy a Nap/Hold ikon ne tűnjön el a sötétkék navbaron */
+
 [class*='colorModeToggle'] {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
 [class*='colorModeToggle'] svg {
-  fill: #f1f5f9 !important; /* Világos szín az ikonnak */
+  fill: #f1f5f9 !important; 
   color: #f1f5f9 !important;
 }
 
 [class*='colorModeToggle']:hover svg {
-  fill: #60a5fa !important; /* Hoverre kék lesz */
+  fill: #60a5fa !important; 
   color: #60a5fa !important;
 }
 
-/* --- KEZDŐOLDAL (HERO) --- */
 .hero {
   padding: 4rem 2rem;
   text-align: center;
@@ -112,7 +98,6 @@
   margin: 0 auto 2rem auto;
 }
 
-/* --- FEJLESZTÉSI NAPLÓ (TIMELINE) --- */
 .commit-card {
   transition: all 0.3s ease;
 }
@@ -123,7 +108,6 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* --- GOMBOK --- */
 .button--secondary {
   background-color: #3b82f6;
   color: #ffffff;
@@ -142,7 +126,7 @@
   text-decoration: none;
 }
 
-/* --- EGYÉB JAVÍTÁSOK --- */
+
 ::-webkit-scrollbar {
   width: 10px;
 }

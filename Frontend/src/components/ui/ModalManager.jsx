@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Modal.css'; // <--- EZ A SOR KERÜLT BELE JAVÍTÁSKÉNT!
+import './Modal.css'; 
 
 export default function ModalManager({ 
   trailerModal, closeTrailer, 
@@ -114,12 +114,11 @@ export default function ModalManager({
             </div>
             
             <div className="streaming-services-container" style={{ padding: '10px' }}>
-              
-              {/* Nem blokkoljuk a felületet! Azonnal mutatjuk a streaminget, a mozi pedig csendben tölt be. */}
+
               <>
                   {isLoading && <p style={{textAlign: 'center', fontSize: '0.85rem', color:'#3e50ff', margin: '5px 0'}}><i className="fas fa-spinner fa-spin"></i> Élő moziműsor frissítése...</p>}
                   {(() => {
-                    // Szigorú szűrő: Csak a valós, névvel rendelkező platformokat engedjük át!
+
                     const activePlatforms = (liveStreaming.length > 0 ? liveStreaming : (streamingModal.movie?.platform_lista || [])).filter(p => p && p.nev && p.nev.trim() !== '');
                     
                     if (activePlatforms.length > 0) {
@@ -170,7 +169,7 @@ export default function ModalManager({
                           <h4 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px', textTransform: 'uppercase' }}>Mozikban</h4>
                           <div className="streaming-services modern-scrollbar" style={{ maxHeight: '350px', overflowY: 'auto', paddingRight: '5px' }}>
                             {liveMozik.map((mozi, index) => {
-                                // JAVÍTÁS: A '|' jel mentén kettévágjuk a kapott stringet
+
                                 let nap = "Mai műsor";
                                 let idopontokTomb = [];
                                 

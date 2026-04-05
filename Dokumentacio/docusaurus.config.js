@@ -1,9 +1,8 @@
-// @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'MoziPont', // Az oldal böngésző fülén megjelenő neve marad
+  title: 'MoziPont', 
   tagline: 'Mozis filmek és sorozatok webalkalmazása',
   favicon: 'img/logo2.png',
 
@@ -49,7 +48,7 @@ const config = {
         disableSwitch: false,
       },
       navbar: {
-        title: '', // EZT VÁLTOZTATTUK MEG: Így csak a kép (logo.png) fog látszódni
+        title: '', 
         logo: {
           alt: 'MoziPont Logo',
           src: 'img/logo.png',

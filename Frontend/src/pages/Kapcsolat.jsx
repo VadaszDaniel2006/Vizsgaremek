@@ -6,15 +6,13 @@ export default function Kapcsolat() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
 
-  // Biztonságos időzítő a másolás üzenet eltüntetéséhez
   useEffect(() => {
     if (copyStatus) {
       const timer = setTimeout(() => setCopyStatus(''), 3000);
-      return () => clearTimeout(timer); // Ha elnavigálsz, törli az időzítőt
+      return () => clearTimeout(timer); 
     }
   }, [copyStatus]);
 
-  // Biztonságos időzítő az űrlap sikeres küldésének eltüntetéséhez
   useEffect(() => {
     if (status.type === 'success') {
       const timer = setTimeout(() => setStatus({ type: '', message: '' }), 5000);
@@ -22,7 +20,6 @@ export default function Kapcsolat() {
     }
   }, [status.type]);
 
-  // E-mail küldése a backendnek
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -64,7 +61,6 @@ export default function Kapcsolat() {
     setIsSubmitting(false);
   };
 
-  // ÚJ: E-mail cím másolása a vágólapra
   const handleCopyEmail = (e) => {
     e.preventDefault();
     navigator.clipboard.writeText('mozipont1@gmail.com');
@@ -72,21 +68,19 @@ export default function Kapcsolat() {
   };
 
   return (
-    // A padding-top értéke 85px-ről 130px-re lett növelve
+
     <div className="page-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '110px 20px 60px', color: '#d1d5db', fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ color: '#ffffff', fontSize: '2.8rem', textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>Kapcsolat és Ügyfélszolgálat</h1>
       <p style={{ fontSize: '1.2rem', textAlign: 'center', marginBottom: '50px', color: '#9ca3af', lineHeight: '1.6' }}>
         Kérdésed, kérésed vagy panaszod van? A MoziPont csapata elkötelezett a gyors és hatékony segítségnyújtás mellett. Kérjük, válaszd ki a számodra megfelelő elérhetőséget!
       </p>
-      
-      {/* KÖZPONTI E-MAIL DOBOZ (A Jogi ügyeket kivettük, ezt középre igazítjuk) */}
+
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '50px' }}>
         <div style={{ backgroundColor: '#111827', padding: '40px', borderRadius: '15px', border: '1px solid #374151', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', maxWidth: '500px', width: '100%' }}>
           <i className="fas fa-envelope" style={{ fontSize: '3.5rem', color: '#3b82f6', marginBottom: '20px' }}></i>
           <h2 style={{ color: '#ffffff', marginBottom: '15px', fontSize: '1.6rem' }}>Központi E-mail címünk</h2>
           <p style={{ marginBottom: '25px', color: '#9ca3af' }}>Kattints a gombra az e-mail cím másolásához, ha a saját leveleződből szeretnél írni nekünk!</p>
-          
-          {/* MÁSOLÓS GOMB */}
+
           <button 
             onClick={handleCopyEmail} 
             style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', backgroundColor: '#2563eb', color: '#fff', padding: '12px 25px', borderRadius: '8px', border: 'none', fontWeight: 'bold', fontSize: '1.2rem', cursor: 'pointer', transition: '0.3s' }}
@@ -108,8 +102,7 @@ export default function Kapcsolat() {
       <div style={{ backgroundColor: '#1f2937', padding: '40px', borderRadius: '15px', marginTop: '50px' }}>
         <h2 style={{ color: '#fff', marginBottom: '20px', fontSize: '1.8rem' }}>Üzenet küldése közvetlenül az oldalról</h2>
         <p style={{ color: '#9ca3af', marginBottom: '30px' }}>Töltsd ki az alábbi űrlapot, és üzeneted azonnal az Adminisztrátori pultba kerül!</p>
-        
-        {/* SIKERES/SIKERTELEN ÜZENET VISSZAJELZŐ */}
+
         {status.message && (
           <div style={{ padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: status.type === 'success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)', color: status.type === 'success' ? '#10b981' : '#ef4444', border: `1px solid ${status.type === 'success' ? '#10b981' : '#ef4444'}` }}>
             {status.type === 'success' ? <i className="fas fa-check-circle" style={{marginRight: '10px'}}></i> : <i className="fas fa-exclamation-circle" style={{marginRight: '10px'}}></i>}

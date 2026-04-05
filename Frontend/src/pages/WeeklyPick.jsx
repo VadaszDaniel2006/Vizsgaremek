@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './WeeklyPick.css';
 
-// Garantálja a heti fix filmeket F5 után is
 const getCurrentFixedWeek = () => {
     const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
     return Math.floor(daysSinceEpoch / 7);
 };
 
-// Robusztus PRNG (Mulberry32) - 100% stabil minden böngészőben és újratöltéskor!
 const mulberry32 = (a) => {
     return function() {
       var t = a += 0x6D2B79F5;
@@ -17,9 +15,8 @@ const mulberry32 = (a) => {
     }
 };
 
-// Tömb megkeverése a stabil seed alapján (Fisher-Yates)
 const shuffleArray = (array, seed) => {
-    const random = mulberry32(seed); // Stabil generátor a heti seedből
+    const random = mulberry32(seed); 
     let m = array.length, t, i;
     while (m) {
         i = Math.floor(random() * m--);
@@ -100,7 +97,7 @@ const WeeklyListCard = ({ item, user, openStreaming, openTrailer, openReviews, o
                 <h4>{item.cim}</h4>
                 <div className="card-meta">
                     <span>{item.megjelenes_ev || item.megjelenes_ev_start}</span>
-                    {/* ITT FRISSÜL MAJD A PONTSZÁM AZONNAL: */}
+
                     <span><i className="fas fa-star" style={{color: '#fbbf24'}}></i> {item.rating}</span>
                 </div>
             </div>
@@ -125,11 +122,10 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
         window.scrollTo(0, 0);
     }, []);
 
-    // 1. ELSŐ BETÖLTÉS: Fix lista kiosztása (nem mozdul F5-re)
     useEffect(() => {
         const fetchRecommendations = async () => {
             try {
-                // A cache: 'no-store' nagyon fontos, különben a régi adatot kapjuk!
+
                 const [moviesRes, seriesRes] = await Promise.all([
                     fetch('http://localhost:5000/api/filmek', { cache: 'no-store' }),
                     fetch('http://localhost:5000/api/sorozatok', { cache: 'no-store' })
@@ -140,8 +136,7 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
                 let combined = [];
                 if (moviesData.data) combined = [...combined, ...moviesData.data.filter(m => parseFloat(m.rating) > 7.0)];
                 if (seriesData.data) combined = [...combined, ...seriesData.data.filter(s => parseFloat(s.rating) > 7.0)];
-                
-                // Szigorú stabilizálás Típus, ID és Cím alapján, hogy az F5 soha ne tudjon más sorrendet csinálni!
+
                 combined.sort((a, b) => {
                     const typeA = a.tipus || (a.evadok_szama !== undefined ? 'sorozat' : 'film');
                     const typeB = b.tipus || (b.evadok_szama !== undefined ? 'sorozat' : 'film');
@@ -156,19 +151,17 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
                     return cimA.localeCompare(cimB);
                 });
 
-                // DEBUG: Ellenőrizzük, hogy a Backend ugyanazokat az adatokat küldi-e F5-önként!
                 console.log("ÖSSZES BEÉRKEZETT (7.0 feletti) ELEM SZÁMA:", combined.length);
                 console.log("ELSŐ 5 ELEM ID-JA (Miután a React sorba rakta):", combined.slice(0, 5).map(i => i.id || i._id));
                 
                 if (combined.length > 0) {
                     const currentWeek = getCurrentFixedWeek();
-                    
-                    // Megkeverjük a tömböt a heti "seed" alapján, így garantáltan csak hetente változik
+
                     const shuffled = shuffleArray([...combined], currentWeek);
                     
                     let weeklySelection = [];
                     for (let i = 0; i < 6; i++) {
-                        // Ha kevesebb mint 6 elem van összesen, akkor ismétlődéssel töltjük fel
+
                         weeklySelection.push(shuffled[i % shuffled.length]);
                     }
                     
@@ -177,10 +170,8 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
             } catch (error) { console.error(error); } finally { setLoading(false); }
         };
         fetchRecommendations();
-    }, []); // Üres tömb -> csak egyszer fut le!
+    }, []); 
 
-    // --- 2. CSENDES FRISSÍTŐ (A KULCS A MEGOLDÁSHOZ!) ---
-    // Ha írsz egy véleményt, lefut, és CSAK a kártyákon lévő "rating" értéket írja át a legújabbra!
     useEffect(() => {
         if (interactionUpdate === 0 || !recommendations.featured) return;
 
@@ -216,7 +207,6 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
         updateRatingsSilently();
     }, [interactionUpdate]); 
 
-    // Gombok státusza a fenti nagy kártyához
     useEffect(() => {
         const fetchStatus = async () => {
             if (!user || !recommendations.featured) return;
@@ -253,7 +243,6 @@ export default function WeeklyPick({ user, openStreaming, openTrailer, openRevie
     const { featured, list } = recommendations;
     const activeStyle = { color: '#00e676', borderColor: '#00e676', backgroundColor: 'rgba(15, 21, 43, 0.95)' };
 
-    // Biztosítjuk a típust a fő kiemelt film/sorozat számára is
     const safeFeatured = { ...featured, tipus: featured.tipus || ((featured.evadok_szama !== undefined || featured.sorozat_id !== undefined) ? 'sorozat' : 'film') };
 
     return (

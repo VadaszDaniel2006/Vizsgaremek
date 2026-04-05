@@ -1,6 +1,5 @@
 const db = require('../config/db');
 
-// 1. Összes mozi lekérése
 const getOsszesMozi = async (req, res) => {
     try {
         const [mozik] = await db.query('SELECT * FROM mozik');
@@ -11,7 +10,7 @@ const getOsszesMozi = async (req, res) => {
     }
 };
 
-// 2. Egy film mozijainak lekérése (KIBŐVÍTVE AZ IDŐPONTOKKAL)
+
 const getMozikForMedia = async (req, res) => {
     const mediaId = req.params.id;
     try {
@@ -21,26 +20,24 @@ const getMozikForMedia = async (req, res) => {
             JOIN media_mozik mm ON m.id = mm.mozi_id
             WHERE mm.media_id = ?
         `, [mediaId]);
-        
-        // Duplikációk kiszűrése (ha az adatbázisban véletlenül többször szerepelne egy mozi az adott filmhez)
+
         const egyediMozikMap = new Map();
         mozik.forEach(mozi => {
             if (!egyediMozikMap.has(mozi.id)) egyediMozikMap.set(mozi.id, mozi);
         });
         const egyediMozik = Array.from(egyediMozikMap.values());
 
-        // 1. Aktuális magyar idő pontos kiszámítása (Docker UTC elcsúszás ellen)
         const bpTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Budapest' }));
         const jelenlegiPerc = bpTime.getHours() * 60 + bpTime.getMinutes();
 
-        // 2. Kiszűrjük azokat az időpontokat és mozikat, amik már lementek
+  
         const szurtMozik = egyediMozik.map(mozi => {
             if (!mozi.idopontok) return null;
 
             let idokSzoveg = mozi.idopontok;
             let datumResz = "";
             
-            // Kettéválasztjuk a dátumot ("Ma (03.16.)|") és magukat az időpontokat
+
             if (idokSzoveg.includes('|')) {
                 const parts = idokSzoveg.split('|');
                 datumResz = parts[0] + '|';
@@ -53,18 +50,17 @@ const getMozikForMedia = async (req, res) => {
                 if (isNaN(ora) || isNaN(perc)) return false;
                 
                 let moziPerc = (ora * 60) + perc;
-                
-                // Éjféli premierek (00:00 - 01:59) jövőbelinek számítanak aznap este
+
                 if (ora === 0 || ora === 1) moziPerc += 24 * 60;
                 
-                return moziPerc >= jelenlegiPerc; // Csak az marad, ami még nem múlt el
+                return moziPerc >= jelenlegiPerc; 
             });
 
             if (jovoBeliIdopontok.length > 0) {
                 mozi.idopontok = datumResz + jovoBeliIdopontok.join(', ');
                 return mozi;
             } else {
-                // Ha egy mozinak mára már egyetlen elérhető időpontja sincs, teljesen elrejtjük!
+  
                 return null;
             }
         }).filter(mozi => mozi !== null);
@@ -75,7 +71,7 @@ const getMozikForMedia = async (req, res) => {
     }
 };
 
-// 3. Egy film platformjainak lekérése
+
 const getPlatformokForMedia = async (req, res) => {
     const mediaId = req.params.id;
     try {

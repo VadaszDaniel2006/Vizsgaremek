@@ -15,18 +15,18 @@ describe('Series Controller', () => {
 
     describe('getAllSeries', () => {
         it('Sikeresen lekéri a sorozatokat és formázza a platformokat (bejelentkezés nélkül)', async () => {
-            // Egy nyers adatbázis sor szimulálása
+
             const mockRows = [{
                 id: 1,
                 tipus: 'sorozat',
                 cim: 'Stranger Things',
                 megjelenes_ev_start: 2016,
-                megjelenes_ev_end: null, // "2016-" formátumot várunk
-                platform_raw: 'Netflix|||netflix_logo.png|||https://netflix.com' // Nyers concat string
+                megjelenes_ev_end: null, 
+                platform_raw: 'Netflix|||netflix_logo.png|||https://netflix.com' 
             }];
             db.query.mockResolvedValueOnce([mockRows]);
 
-            const req = { query: {} }; // Nincs userId megadva
+            const req = { query: {} }; 
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
             await seriesController.getAllSeries(req, res);
@@ -36,8 +36,8 @@ describe('Series Controller', () => {
                 data: expect.arrayContaining([
                     expect.objectContaining({
                         cim: 'Stranger Things',
-                        megjelenes_ev: '2016-', // Ellenőrizzük az évet formázó logikát
-                        platform_nev: 'Netflix', // Ellenőrizzük a split logikát
+                        megjelenes_ev: '2016-', 
+                        platform_nev: 'Netflix', 
                         platform_link: 'https://netflix.com'
                     })
                 ])
@@ -64,8 +64,8 @@ describe('Series Controller', () => {
                 cim: 'Breaking Bad',
                 rating: 9.5,
                 megjelenes_ev_start: 2008,
-                megjelenes_ev_end: 2013, // "2008-2013" formátumot várunk
-                platform_raw: null // Nincs platform hozzárendelve
+                megjelenes_ev_end: 2013, 
+                platform_raw: null 
             }];
             db.query.mockResolvedValueOnce([mockRows]);
 
@@ -80,7 +80,7 @@ describe('Series Controller', () => {
                     expect.objectContaining({
                         cim: 'Breaking Bad',
                         megjelenes_ev: '2008-2013',
-                        platform_nev: null // Üres platform kezelésének tesztelése
+                        platform_nev: null 
                     })
                 ])
             });

@@ -13,7 +13,7 @@ const MovieRow = ({
   onAddToList, 
   onRemoveFromList, 
   onOpenReviews,
-  interactionUpdate // <--- ÚJ: Ezt kell átvenni az App.jsx-től (a szinkronizáláshoz)
+  interactionUpdate 
 }) => {
   if (!items || items.length === 0) return null;
 
@@ -34,7 +34,7 @@ const MovieRow = ({
             onAddToList={onAddToList}
             onRemoveFromList={onRemoveFromList}
             onOpenReviews={onOpenReviews}
-            interactionUpdate={interactionUpdate} // <--- ÚJ: Továbbadjuk a kártyának
+            interactionUpdate={interactionUpdate} 
           />
         ))}
       </div>

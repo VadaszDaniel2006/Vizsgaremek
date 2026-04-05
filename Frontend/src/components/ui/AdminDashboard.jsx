@@ -106,7 +106,6 @@ export default function AdminDashboard({ refreshApp }) {
         if (refreshApp) refreshApp();
     };
 
-    // Erősített adatfrissítés (10 másodpercenként ÉS ha visszalépünk az ablakba)
     useEffect(() => { 
         refreshAllData(); 
         
@@ -127,7 +126,6 @@ export default function AdminDashboard({ refreshApp }) {
         };
     }, []);
 
-    // Fülváltáskor is kényszerített frissítés
     useEffect(() => {
         if (activeTab === 'users') fetchUsers();
         else if (activeTab === 'reports') fetchReportedReviews();
@@ -199,8 +197,7 @@ export default function AdminDashboard({ refreshApp }) {
         } else if (typeof media.mozi_ids === 'string' && media.mozi_ids.trim() !== '') {
             parsedMoziIds = media.mozi_ids.split(',').map(id => parseInt(id.trim(), 10));
         }
-        
-        // Azonnal betöltjük az alap adatokat, hogy a felület ne várakozzon
+
         setUploadData({ 
             tipus: media.tipus || 'film', cim: media.cim || '', leiras: media.leiras || '', 
             poszter_url: media.poszter_url || '', elozetes_url: media.elozetes_url || '', 
@@ -211,7 +208,6 @@ export default function AdminDashboard({ refreshApp }) {
             mozi_ids: [...new Set(parsedMoziIds)].filter(id => !isNaN(id))
         });
 
-        // A háttérben lekérjük a robot által aktuálisan talált vetítési helyszíneket is
         try {
             const res = await fetch(`http://localhost:5000/api/mozik/${media.id}/mozik`);
             if (res.ok) {
@@ -446,7 +442,6 @@ export default function AdminDashboard({ refreshApp }) {
 
                 {error && <div style={{background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', color: '#fca5a5', padding: '15px', borderRadius: '12px', textAlign: 'center', marginBottom: '30px', maxWidth: '600px', margin: '0 auto 30px'}}>{error}</div>}
 
-                {/* FELHASZNÁLÓK */}
                 {!error && activeTab === 'users' && (
                     <div className="neo-card">
                         <table className="neo-table">
@@ -472,7 +467,6 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* JELENTÉSEK */}
                 {!error && activeTab === 'reports' && (
                     <div className="neo-card">
                         {reportsCount === 0 ? (
@@ -509,7 +503,6 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* ÜZENETEK */}
                 {!error && activeTab === 'messages' && (
                     <div className="neo-card">
                         {!messages || messages.length === 0 ? (
@@ -552,7 +545,6 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* TARTALOM KEZELÉSE */}
                 {!error && activeTab === 'manageMedia' && (
                     <div className="neo-card">
                         <div className="neo-sub-tabs">
@@ -583,7 +575,6 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* ÚJ TARTALOM FELTÖLTÉSE */}
                 {!error && activeTab === 'upload' && (
                     <div className="neo-card" style={{padding: '50px'}}>
                         <h2 style={{color: 'white', margin: '0 0 30px 0', fontSize: '2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '20px'}}><i className="fas fa-magic" style={{color: 'var(--primary)', marginRight: '15px'}}></i>Új tartalom publikálása</h2>
@@ -591,7 +582,6 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* SZERKESZTŐ MODAL */}
                 {editingMedia && (
                     <div className="neo-modal-overlay" onClick={() => { setEditingMedia(null); setUploadData(initialMediaForm); }}>
                         <div className="neo-modal-content" onClick={e => e.stopPropagation()}>
@@ -601,7 +591,6 @@ export default function AdminDashboard({ refreshApp }) {
                     </div>
                 )}
 
-                {/* FELHASZNÁLÓ SZERKESZTŐ MODAL */}
                 {editingUser && (
                     <div className="neo-modal-overlay" onClick={() => { setEditingUser(null); setShowUserPassword(false); }}>
                         <div className="neo-modal-content small" onClick={e => e.stopPropagation()}>

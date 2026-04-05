@@ -33,8 +33,7 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-container">
-        
-        {/* Felső rész: Logó + Közösségi ikonok a bal oldalon, Linkek a jobb oldalon */}
+
         <div className="footer-main">
           
           <div className="footer-left">
@@ -57,7 +56,6 @@ export default function Footer() {
 
         </div>
 
-        {/* Középső rész: Elegáns, sávos helymeghatározó infó */}
         <div className="footer-location-wrapper">
           <div className="location-header">
             <i className="fas fa-map-marker-alt"></i> 
@@ -69,7 +67,6 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Alsó rész: Szerzői jog */}
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} MoziPont. Minden jog fenntartva.</p>
         </div>

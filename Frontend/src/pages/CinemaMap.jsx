@@ -4,7 +4,6 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './CinemaMap.css';
 
-// --- 1. Ikon generáló funkció ---
 const getMarkerIcon = (nev) => {
   let color = 'blue'; 
   if (nev.toLowerCase().includes('cinema city')) color = 'red';
@@ -20,7 +19,6 @@ const getMarkerIcon = (nev) => {
   });
 };
 
-// --- 2. Technológiai extrák felismerése ---
 const getCinemaFeatures = (nev) => {
   const name = nev.toLowerCase();
   const features = [];
@@ -33,13 +31,11 @@ const getCinemaFeatures = (nev) => {
   return features;
 };
 
-// JAVÍTÁS: Extrém tág határok, hogy az animáció ne ütközzön "falba" (ez szünteti meg a rángatást)
 const hungaryBounds = [
   [43.00, 13.00], 
   [54.00, 26.00]  
 ];
 
-// --- 3. MATEMATIKA: Távolság számítása ---
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -80,7 +76,7 @@ const CinemaMap = () => {
             const d = calculateDistance(userLat, userLng, m.lat, m.lng);
             if (d < minD) { minD = d; closest = m; }
           });
-          // A legközelebbi mozinál bezoomolunk (flyTo)
+
           mapRef.current?.flyTo([closest.lat, closest.lng], 13, { duration: 2 });
           setIsLocated(true);
         }
@@ -120,14 +116,14 @@ const CinemaMap = () => {
               zoom={7} 
               minZoom={7} 
               maxBounds={hungaryBounds} 
-              maxBoundsViscosity={0.2} // JAVÍTÁS: Puha falak -> NINCS RÁNGATÓZÁS
+              maxBoundsViscosity={0.2} 
               style={{ height: '600px', width: '100%', zIndex: 1 }} 
               ref={mapRef} 
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
               {moziLista.map((mozi) => {
-                // Szélső városok szűrése (Sopron, Győr, Tatabánya, Salgótarján)
+
                 const isEdge = mozi.lat > 47.5 || mozi.lng < 17.0;
 
                 return (
@@ -137,19 +133,19 @@ const CinemaMap = () => {
                     icon={getMarkerIcon(mozi.nev)}
                     eventHandlers={{
                       click: () => {
-                        // Kattintáskor csak odacsúsztatunk, nem zoomolunk bele
+
                         mapRef.current?.panTo([mozi.lat, mozi.lng], { animate: true, duration: 0.6 });
                       }
                     }}
                   >
                     <Popup 
-                      autoPan={false} // JAVÍTÁS: Ez akadályozza meg a konfliktust a falakkal
+                      autoPan={false} 
                       eventHandlers={{
                         remove: () => {
-                          // CSAK BEZÁRÁSKOR INDUL VISSZA
+
                           if (isEdge && mapRef.current) {
                             setTimeout(() => {
-                              // setView-et használunk a flyTo helyett a nagyobb stabilitásért
+
                               mapRef.current.setView(centerPoint, 7, { 
                                 animate: true, 
                                 duration: 1.0 

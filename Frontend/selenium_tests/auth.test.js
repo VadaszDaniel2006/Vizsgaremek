@@ -7,7 +7,6 @@ async function authTesztek() {
         
         console.log("--- AUTH TESZTEK (1-5) ---");
 
-        // 1. TESZT: Sikeres bejelentkezés Adminnal
         await driver.get('http://localhost:8090/');
         await driver.wait(until.elementLocated(By.css('.btn-login')), 5000).click();
         await driver.sleep(1000); 
@@ -25,30 +24,26 @@ async function authTesztek() {
         }, 8000);
         console.log("✅ 1. Sikeres Admin bejelentkezés (Modalon keresztül): OK");
 
-        // 2. TESZT: Kijelentkezés
         await driver.get('http://localhost:8090/'); 
         await driver.sleep(1000);
         let profilDropdown = await driver.wait(until.elementLocated(By.css('.nav-right .profil-dropdown-toggle, .nav-right img, .nav-right .user-menu')), 5000);
         await profilDropdown.click();
         await driver.sleep(1000);
         await driver.findElement(By.xpath("//*[contains(text(), 'Kijelentkezés') or contains(text(), 'Kilépés')]")).click();
-        
-        // ÚJ LOGIKA: Várjuk a felugró ablakot és rákattintunk az "Igen" gombra (vagy a SweetAlert confirm gombjára)
+
         try {
             let igenGomb = await driver.wait(until.elementLocated(By.xpath("//button[contains(translate(text(), 'IGEN', 'igen'), 'igen') or contains(@class, 'swal2-confirm')]")), 5000);
             await driver.wait(until.elementIsVisible(igenGomb), 5000);
             await igenGomb.click();
-            await driver.sleep(1000); // Várunk, amíg a kilépés megtörténik
+            await driver.sleep(1000); 
         } catch (e) {
             console.log("Nem találtam meg az 'Igen' gombot a felugró ablakon, próbálok továbbmenni...");
         }
-        
-        // Frissítjük az oldalt, hogy biztosan frissüljön a Navbar
+ 
         await driver.get('http://localhost:8090/');
         await driver.wait(until.elementLocated(By.css('.btn-login')), 5000);
         console.log("✅ 2. Kijelentkezés: OK");
 
-        // 3. TESZT: Sikertelen bejelentkezés (Rossz jelszó)
         await driver.get('http://localhost:8090/');
         await driver.sleep(1000);
         await driver.wait(until.elementLocated(By.css('.btn-login')), 5000).click();
@@ -61,7 +56,6 @@ async function authTesztek() {
         let errorMsg = await driver.findElements(By.css('.auth-error'));
         if (errorMsg.length > 0) console.log("✅ 3. Sikertelen bejelentkezés (Rossz jelszó blokkolva): OK");
 
-        // 4. TESZT: Hibás email formátum validáció
         await driver.get('http://localhost:8090/');
         await driver.sleep(1000);
         await driver.wait(until.elementLocated(By.css('.btn-login')), 5000).click();
@@ -73,7 +67,6 @@ async function authTesztek() {
         await driver.sleep(1000);
         console.log("✅ 4. Bejelentkezés hibás email formátummal (Validáció): OK");
 
-        // 5. TESZT: Váltás a Regisztráció felületre a modalon belül
         await driver.get('http://localhost:8090/');
         await driver.sleep(1000);
         await driver.wait(until.elementLocated(By.css('.btn-login')), 5000).click();

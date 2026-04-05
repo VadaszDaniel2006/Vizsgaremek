@@ -8,23 +8,20 @@ const Sidebar = ({ isOpen, onClose, title, items, onItemClick, onDeleteItem }) =
       const isMovie = !!item.film_id;
 
       const normalizedMovie = {
-          // Azonosítók
+
           id: isMovie ? item.film_id : item.sorozat_id,
           _id: isMovie ? item.film_id : item.sorozat_id,
-          
-          // Alapadatok
+
           cim: isMovie ? item.film_cim : item.sorozat_cim,
           title: isMovie ? item.film_cim : item.sorozat_cim,
           poszter_url: isMovie ? item.film_poster : item.sorozat_poster,
           poster: isMovie ? item.film_poster : item.sorozat_poster,
-          
-          // Részletek
+
           leiras: isMovie ? item.film_leiras : item.sorozat_leiras,
           rating: isMovie ? item.film_rating : item.sorozat_rating,
           megjelenes_ev: isMovie ? item.film_ev : item.sorozat_ev,
           year: isMovie ? item.film_ev : item.sorozat_ev,
-          
-          // PLATFORMOK ÁTADÁSA (Ez a kulcs!)
+
           platformok: item.platformok || [],
 
           type: isMovie ? 'film' : 'sorozat',

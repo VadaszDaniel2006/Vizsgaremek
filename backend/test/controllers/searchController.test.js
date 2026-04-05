@@ -22,7 +22,7 @@ describe('Search Controller', () => {
 
             expect(res.status).toHaveBeenCalledWith(200);
             expect(res.json).toHaveBeenCalledWith([]);
-            expect(db.query).not.toHaveBeenCalled(); // DB-hez hozzá se nyúlunk
+            expect(db.query).not.toHaveBeenCalled(); 
         });
 
         it('Sikeres keresés esetén visszaadja a találatokat (200)', async () => {
@@ -34,7 +34,6 @@ describe('Search Controller', () => {
 
             await searchController.globalSearch(req, res);
 
-            // A kódod 6-szor adja át a '%mátrix%'-ot a query-nek
             expect(db.query).toHaveBeenCalledTimes(1);
             expect(res.status).toHaveBeenCalledWith(200);
             expect(res.json).toHaveBeenCalledWith(mockResults);
@@ -54,7 +53,7 @@ describe('Search Controller', () => {
 
     describe('saveSearchHistory', () => {
         it('400-as hibát dob, ha hiányzik a userId vagy a searchTerm', async () => {
-            const req = { body: { userId: 1 } }; // Hiányzik a searchTerm
+            const req = { body: { userId: 1 } }; 
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
             await searchController.saveSearchHistory(req, res);

@@ -45,7 +45,7 @@ describe('Mozi Controller', () => {
             const mockPlatformok = [{ id: 1, nev: 'Netflix', url: 'https://netflix.com' }];
             db.query.mockResolvedValueOnce([mockPlatformok]);
 
-            const req = { params: { id: 10 } }; // pl. egy film ID-ja
+            const req = { params: { id: 10 } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
             await moziController.getPlatformokForMedia(req, res);

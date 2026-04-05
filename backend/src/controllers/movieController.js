@@ -2,13 +2,13 @@ const db = require('../config/db');
 
 exports.getAllMovies = async (req, res) => {
     const userId = req.query.userId;
-    const isRandom = req.query.random === 'true'; // Megnézzük, kér-e keverést a frontend
+    const isRandom = req.query.random === 'true';
 
     try {
         let query = "";
         let params = [];
 
-        // HA BE VAN JELENTKEZVE: Okos ajánlórendszer
+   
         if (userId && userId !== 'undefined' && userId !== 'null' && userId !== '') {
             query = `
                 SELECT 
@@ -47,7 +47,6 @@ exports.getAllMovies = async (req, res) => {
             `;
             params.push(userId);
         } else {
-            // HA NINCS BEJELENTKEZVE: Sima 17 random film
             query = `
                 SELECT 
                     m.*,

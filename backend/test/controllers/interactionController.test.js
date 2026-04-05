@@ -16,7 +16,7 @@ describe('Interaction Controller', () => {
 
     describe('addToFavorites', () => {
         it('400-as hibát dob, ha hiányoznak az adatok', async () => {
-            const req = { body: {} }; // Üres body
+            const req = { body: {} }; 
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
             await interactionController.addToFavorites(req, res);
@@ -24,7 +24,7 @@ describe('Interaction Controller', () => {
         });
 
         it('400-as hibát dob, ha már a kedvencek között van', async () => {
-            // A SELECT query találatot ad vissza
+
             db.query.mockResolvedValueOnce([[{ id: 1 }]]);
 
             const req = { body: { userId: 1, filmId: 10 } };
@@ -36,9 +36,9 @@ describe('Interaction Controller', () => {
         });
 
         it('Sikeresen hozzáadja a kedvencekhez (200)', async () => {
-            // A SELECT query üres tömböt ad vissza (nincs még a kedvencek közt)
+
             db.query.mockResolvedValueOnce([[]]);
-            // Az INSERT query lefut
+
             db.query.mockResolvedValueOnce([{}]);
 
             const req = { body: { userId: 1, filmId: 10 } };

@@ -25,7 +25,6 @@ const MovieCard = ({
     listed: false
   });
 
-  // BIZTOSÍTÉK: Kényszerítjük a 'tipus' attribútumot, hogy a felugró ablak sose maradjon láthatatlan adat hiányában
   const safeMovie = movie ? { ...movie, tipus: movie.tipus || ((movie.evadok_szama !== undefined || movie.sorozat_id !== undefined) ? 'sorozat' : 'film') } : null;
 
   useEffect(() => {
@@ -91,7 +90,6 @@ const MovieCard = ({
       if (finalOpenReviews) finalOpenReviews(safeMovie);
   };
 
-  // --- JAVÍTÁS 1: Elegáns gomb aktív állapot, ami NEM nyomja szét a dobozt ---
   const activeStyle = { 
       color: '#00e676', 
       borderColor: '#00e676', 
@@ -101,7 +99,7 @@ const MovieCard = ({
   if (!movie) return null;
 
   return (
-    // JAVÍTÁS 2: A kártya magassága fixen kitölti a flex/grid dobozt
+
     <div className="movie-card-container" style={{ height: '100%' }}>
       <div 
         className="movie-card" 
@@ -110,7 +108,7 @@ const MovieCard = ({
             const finalOpenTrailer = onOpenTrailer || openTrailer;
             if (finalOpenTrailer) finalOpenTrailer(safeMovie.elozetes_url, safeMovie.cim);
         }}
-        style={{ flexShrink: 0 }} // JAVÍTÁS 3: A kép sosem nyomódhat össze
+        style={{ flexShrink: 0 }} 
       >
         <div className="card-image">
           <img src={movie.poszter_url || movie.poster} alt={movie.cim} loading="lazy" decoding="async" />
@@ -152,7 +150,6 @@ const MovieCard = ({
         </div>
       </div>
 
-      {/* JAVÍTÁS 4: Inline védelem a szövegeknek, hogy F5 esetén is megmaradjon a formájuk */}
       <div className="card-details" style={{ padding: '15px', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <h4 style={{ fontSize: '16px', lineHeight: '1.2', margin: '0 0 8px 0', color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 'bold' }}>
             {movie.cim || movie.title}
@@ -163,7 +160,6 @@ const MovieCard = ({
         </div>
       </div>
 
-      {/* JAVÍTÁS 5: A gombok fix szélessége és magassága inline rögzítve */}
       <div className="card-buttons top50-action-row" style={{ display: 'flex', gap: '10px', marginTop: 'auto', padding: '12px' }}>
         <button 
             className="btn-card-play" 

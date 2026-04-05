@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'; 
 import logoImg from "../../assets/logo.png";
-import ProfilDropdown from '../auth/ProfilDropdown'; // Frissített útvonal, ha a ProfilDropdown-t betetted az auth mappába
-import './Navbar.css'; // <--- EZ A LÉNYEG, ITT IMPORTÁLJUK A DEDIKÁLT CSS-T
+import ProfilDropdown from '../auth/ProfilDropdown'; 
+import './Navbar.css'; 
 
 export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateProfile, onOpenFavorites, onOpenMyList }) {
   const [searchActive, setSearchActive] = useState(false);
@@ -20,15 +20,11 @@ export default function Navbar({ scrolled, user, onOpenAuth, onLogout, onUpdateP
   const searchRef = useRef(null); 
 
 
-  // Globális görgetés: minden normál oldalváltáskor a tetejére ugrik
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
 
-  // === ÁLTALÁNOS GÖRDÍTŐ FÜGGVÉNY ===
-  // Ezt használjuk minden navbar linknél. Ha már ott vagyunk, felgörget finoman!
 
   const handleNavLinkClick = (path, e) => {
     if (location.pathname === path) {

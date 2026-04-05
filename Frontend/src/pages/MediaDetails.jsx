@@ -10,7 +10,6 @@ export default function MediaDetails({ type, openStreaming, openTrailer, user, o
     
     const [status, setStatus] = useState({ favorite: false, listed: false, reviewed: false });
 
-    // Oldal tetejére ugrás betöltéskor
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [id]);
@@ -85,11 +84,9 @@ export default function MediaDetails({ type, openStreaming, openTrailer, user, o
                     
                     <p className="adatlap-plot">{item.leiras}</p>
                     <p className="adatlap-director"><strong>Rendező:</strong> {item.rendezo}</p>
-                    
-                    {/* === ÁTALAKÍTOTT GOMB ELRENDEZÉS === */}
+
                     <div className="adatlap-actions" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '15px' }}>
-                        
-                        {/* 1. SOR: Fő gombok + Vissza */}
+
                         <div className="actions-left">
                             <button className="btn-main-action" onClick={() => openStreaming(item)}>
                                 <i className="fas fa-play"></i> Megnézem
@@ -114,7 +111,6 @@ export default function MediaDetails({ type, openStreaming, openTrailer, user, o
                             </button>
                         </div>
 
-                        {/* 2. SOR: Kedvencek és Saját lista (Csak bejelentkezve) */}
                         {user && (
                             <div className="actions-left">
                                 <button 
@@ -135,7 +131,6 @@ export default function MediaDetails({ type, openStreaming, openTrailer, user, o
                         )}
                         
                     </div>
-                    {/* =================================== */}
 
                 </div>
             </div>

@@ -7,12 +7,10 @@ const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRe
     const [newComment, setNewComment] = useState("");
     const [rating, setRating] = useState(10); 
     const [loading, setLoading] = useState(false);
-    
-    // Törlés modal
+
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [reviewToDelete, setReviewToDelete] = useState(null);
 
-    // Jelentés modal
     const [reportModalOpen, setReportModalOpen] = useState(false);
     const [reviewToReport, setReviewToReport] = useState(null);
     const [reportReason, setReportReason] = useState("Kéretlen tartalom (Spam)");
@@ -135,8 +133,7 @@ const ReviewsSidebar = ({ isOpen, onClose, movie, user, onShowNotification, onRe
             </div>
 
             <ConfirmModal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={executeDelete} title="Vélemény törlése" message="Biztosan törölni szeretnéd ezt a véleményt?" />
-            
-            {/* ÚJ, PRÉMIUM JELENTÉS MODAL */}
+
             {reportModalOpen && (
                 <div className="premium-report-overlay" onClick={() => setReportModalOpen(false)}>
                     <div className="premium-report-card" onClick={e => e.stopPropagation()}>

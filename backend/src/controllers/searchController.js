@@ -34,7 +34,7 @@ exports.globalSearch = async (req, res) => {
             LIMIT 20;
         `;
 
-        // 6 darab kérdőjel van a WHERE részben, tehát 6-szor kell átadni a keresett szót!
+        
         const [results] = await db.query(query, [
             searchQuery, 
             searchQuery, 
@@ -51,13 +51,13 @@ exports.globalSearch = async (req, res) => {
     }
 };
 
-// --- ELŐZMÉNYEK MENTÉSE (JAVÍTOTT TÁBLANÉVVEL) ---
+
 exports.saveSearchHistory = async (req, res) => {
     const { userId, searchTerm } = req.body;
     if (!userId || !searchTerm) return res.status(400).json({ message: "Hiányzó adatok!" });
 
     try {
-        // Átírtuk a tábla és oszlopneveket a magyar verzióra:
+     
         await db.query(
             'INSERT INTO keresesi_elozmenyek (felhasznalo_id, keresett_szoveg, kereses_ideje) VALUES (?, ?, NOW())', 
             [userId, searchTerm]

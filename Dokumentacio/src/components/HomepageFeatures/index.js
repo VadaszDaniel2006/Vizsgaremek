@@ -2,11 +2,10 @@ import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
 
-// Itt definiáljuk a 3 oszlop tartalmát
 const FeatureList = [
   {
     title: 'Filmek & Sorozatok',
-    // Kép helyett emojit használunk, hogy ne kelljen fájlokkal bajlódni
+  
     emoji: '🎬', 
     description: (
       <>
@@ -41,7 +40,6 @@ function Feature({emoji, title, description}) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        {/* Itt jelenítjük meg az emojit jó nagyban */}
         <span style={{fontSize: '4rem', display: 'block', marginBottom: '1rem'}} role="img" aria-label={title}>
           {emoji}
         </span>

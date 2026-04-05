@@ -42,9 +42,7 @@ export default function AuthModal({ onClose, onLogin }) {
     setFavoriteCategories(newCategories);
   };
 
-  // --- ÚJ LOGIKA: Egykattintásos jelszóküldés ---
   const handleDirectForgotPassword = async () => {
-      // 1. Ellenőrizzük, hogy be van-e írva valami az email mezőbe
       if (!email || !email.includes('@')) {
           setError('Kérlek, előbb írd be a regisztrált email címedet a fenti mezőbe!');
           return;
@@ -54,7 +52,6 @@ export default function AuthModal({ onClose, onLogin }) {
       setLoading(true);
 
       try {
-          // JAVÍTVA: Port 5000-re átírva!
           const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -100,7 +97,6 @@ export default function AuthModal({ onClose, onLogin }) {
     }
 
     try {
-        // JAVÍTVA: Port 5000-re átírva!
         const API_URL = 'http://localhost:5000/api/auth';
 
         if (isRegister) {
@@ -207,7 +203,6 @@ export default function AuthModal({ onClose, onLogin }) {
             </button>
           </div>
 
-          {/* ELFELEJTETT JELSZÓ GOMB - Csak bejelentkezésnél */}
           {!isRegister && (
               <div style={{ textAlign: 'right', marginTop: '-10px', marginBottom: '15px' }}>
                   <span 

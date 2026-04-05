@@ -2,14 +2,12 @@ import { Builder, By, until } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 
 async function adminTesztek() {
-    // 1. Lépés: Némító beállítások a Chrome-nak
     let options = new chrome.Options();
-    options.addArguments('--log-level=3'); // Csak a kritikus hibákat írja ki
+    options.addArguments('--log-level=3'); 
     options.addArguments('--silent');
     options.addArguments('--disable-logging');
-    options.excludeSwitches('enable-logging'); // Eltünteti a "DevTools listening" üzenetet
+    options.excludeSwitches('enable-logging'); 
 
-    // 2. Lépés: Driver létrehozása a némított beállításokkal
     let driver = await new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)
@@ -19,8 +17,7 @@ async function adminTesztek() {
         await driver.manage().window().maximize();
         
         console.log("--- ADMIN TESZTEK (6-13) ---");
-        
-        // Belépés Adminnal
+
         await driver.get('http://localhost:8090/');
         await driver.wait(until.elementLocated(By.css('.btn-login')), 5000).click();
         await driver.sleep(1000); 
@@ -36,46 +33,38 @@ async function adminTesztek() {
             return loginBtns.length === 0;
         }, 8000);
 
-        // 6. TESZT: Admin dashboard betöltése
         await driver.get('http://localhost:8090/admin');
         let header = await driver.wait(until.elementLocated(By.css('.neo-header h1')), 5000).getText();
         if(header.includes('Rendszervezérlő')) console.log("✅ 6. Admin Dashboard betöltés: OK");
 
-        // 7. TESZT: Felhasználók fül és táblázat ellenőrzése
         await driver.findElement(By.xpath("//div[contains(@class, 'neo-tab') and contains(., 'Felhasználók')]")).click();
         await driver.sleep(1000);
         let userTable = await driver.findElement(By.css('.neo-table')).isDisplayed();
         if(userTable) console.log("✅ 7. Felhasználók fül és táblázat megjelenítése: OK");
 
-        // 8. TESZT: Jelentések fül
         await driver.findElement(By.xpath("//div[contains(@class, 'neo-tab') and contains(., 'Jelentések')]")).click();
         await driver.sleep(1000);
         console.log("✅ 8. Jelentések fülre váltás: OK");
 
-        // 9. TESZT: Üzenetek fül
         await driver.findElement(By.xpath("//div[contains(@class, 'neo-tab') and contains(., 'Üzenetek')]")).click();
         await driver.sleep(1000);
         console.log("✅ 9. Üzenetek fülre váltás: OK");
 
-        // 10. TESZT: Tartalom Kezelése fül
         await driver.findElement(By.xpath("//div[contains(@class, 'neo-tab') and contains(., 'Tartalom Kezelése')]")).click();
         await driver.sleep(1000);
         let subTabs = await driver.findElement(By.css('.neo-sub-tabs')).isDisplayed();
         if(subTabs) console.log("✅ 10. Tartalom Kezelése fül és al-menük megjelenése: OK");
 
-        // 11. TESZT: Új Feltöltés fül
         await driver.findElement(By.xpath("//div[contains(@class, 'neo-tab') and contains(., 'Új Feltöltés')]")).click();
         await driver.sleep(1000);
         console.log("✅ 11. Új Feltöltés fülre váltás: OK");
 
-        // 12. TESZT: Új film feltöltése - Üres validáció
         let submitGomb = await driver.findElement(By.css('button[type="submit"].neo-btn-primary'));
         await submitGomb.click();
         await driver.sleep(1000);
         let isFormStillThere = await driver.findElement(By.css('.neo-form-grid')).isDisplayed();
         if(isFormStillThere) console.log("✅ 12. Új tartalom validáció (Üres küldés blokkolva): OK");
 
-        // 13. TESZT: Visszatérés a Főoldalra gomb
         await driver.findElement(By.css('.neo-btn-exit')).click();
         await driver.wait(until.urlIs('http://localhost:8090/'), 5000);
         console.log("✅ 13. Kilépés a Főoldalra gomb működése: OK");

@@ -1,9 +1,9 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer'); // --- ÚJ IMPORT ---
+const nodemailer = require('nodemailer'); 
 
-// --- REGISZTRÁCIÓ ---
+
 exports.register = async (req, res) => {
     const { name, email, password, username, favoriteCategories } = req.body;
 
@@ -45,7 +45,7 @@ exports.register = async (req, res) => {
     }
 };
 
-// --- BEJELENTKEZÉS ---
+
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -86,7 +86,7 @@ exports.login = async (req, res) => {
     }
 };
 
-// --- PROFIL FRISSÍTÉSE ---
+
 exports.updateProfile = async (req, res) => {
     const userId = req.user.id;
     const userRole = req.user.role; 
@@ -179,7 +179,6 @@ exports.getMe = async (req, res) => {
     }
 };
 
-// --- ÚJ: ELFELEJTETT JELSZÓ ---
 exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
 

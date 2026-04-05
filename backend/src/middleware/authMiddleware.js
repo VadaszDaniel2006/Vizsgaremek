@@ -18,11 +18,11 @@ const protect = (req, res, next) => {
 
 const admin = (req, res, next) => {
     if (req.user && req.user.role === 'admin') {
-        next(); // Ha admin, mehet tovább
+        next(); 
     } else {
         res.status(403).json({ message: 'Hozzáférés megtagadva! Csak adminisztrátoroknak.' });
     }
 };
 
-// Ne felejtsd el exportálni mindkettőt!
+
 module.exports = { protect, admin };

@@ -92,10 +92,9 @@ export default function Top50Page({ type, user, openStreaming, openTrailer, open
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // === GÖRGETÉS JAVÍTÁSA ===
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [type]); // A [type] miatt akkor is felgörget, ha a "Top 50 Film"-ről átváltasz a "Top 50 Sorozat"-ra
+    }, [type]);
 
     useEffect(() => {
         const fetchTop50 = async () => {

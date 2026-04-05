@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// --- Új, mappásított importok ---
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Sidebar from './components/layout/Sidebar';
@@ -18,21 +17,17 @@ import Toast from './components/ui/Toast';
 import ConfirmModal from './components/ui/ConfirmModal';
 import AdminDashboard from './components/ui/AdminDashboard'; 
 
-// --- Oldalak (Pages) ---
 import Search from './pages/Search';
 import MediaDetails from './pages/MediaDetails'; 
 import Top50Page from './pages/Top50Page';
 import WeeklyPick from './pages/WeeklyPick';
 import CinemaMap from './pages/CinemaMap';
 
-// --- Új Footerhez tartozó oldalak importálása ---
 import Aszf from './pages/Aszf';
 import Adatvedelem from './pages/Adatvedelem';
 import Sugokozpont from './pages/Sugokozpont';
 import Kapcsolat from './pages/Kapcsolat';
 
-
-// --- Globális CSS ---
 import './App.css'; 
 
 function App() {
@@ -109,7 +104,6 @@ function App() {
   useEffect(() => { if (featuredMovies.length === 0) return; const interval = setInterval(() => { setCurrentSlide((prev) => (prev + 1) % featuredMovies.length); }, 8000); return () => clearInterval(interval); }, [featuredMovies]);
   useEffect(() => { window.onscroll = () => setScrolled(window.pageYOffset > 50); return () => (window.onscroll = null); }, []);
 
-  // --- GÖRGETÉS LETILTÁSA OLDALSÁVOK ÉS MODALOK NYITVA TARTÁSAKOR ---
   useEffect(() => {
       if (isSidebarOpen || reviewsSidebarOpen || authModalOpen || profileModalOpen || showLogoutConfirm) {
           document.body.style.overflow = 'hidden';
@@ -192,11 +186,10 @@ function App() {
   };
 
   const openReviews = (movie) => { setReviewMovie(movie); setReviewsSidebarOpen(true); };
-  
-  // --- JAVÍTOTT OPENTRAILER FÜGGVÉNY ---
+
   const openTrailer = (url, title) => {
       let videoId = url;
-      // Okosan kiszedjük az azonosítót a különféle Youtube formátumokból
+
       if (url && url.includes('v=')) {
           videoId = url.split('v=')[1].substring(0, 11);
       } else if (url && url.includes('youtu.be/')) {
@@ -402,8 +395,7 @@ function App() {
             <Route path="/mozik-terkep" element={<CinemaMap />} />
             <Route path="/kereses" element={<Search />} />
             <Route path="/admin" element={<AdminDashboard refreshApp={() => fetchAllData(user ? user.id : '')} />} />
-            
-            {/* --- ÚJ: A Footer menüpontjainak útvonalai --- */}
+
             <Route path="/aszf" element={<Aszf />} />
             <Route path="/adatvedelem" element={<Adatvedelem />} />
             <Route path="/sugokozpont" element={<Sugokozpont />} />
@@ -411,7 +403,6 @@ function App() {
             
         </Routes>
 
-        {/* Footer komponens itt kerül meghívásra az összes oldal alján */}
         <Footer />
 
         <ModalManager trailerModal={trailerModal} closeTrailer={closeTrailer} infoModal={infoModal} closeInfo={closeInfo} streamingModal={streamingModal} closeStreaming={closeStreaming} openStreaming={openStreaming} />

@@ -142,7 +142,7 @@ exports.deleteMedia = async (req, res) => {
         await db.query('DELETE FROM sajat_lista_elemek WHERE media_id = ?', [id]); 
         await db.query('DELETE FROM media_platformok WHERE media_id = ?', [id]); 
         await db.query('DELETE FROM media_mozik WHERE media_id = ?', [id]); 
-        // A megtekintések törlése innen sikeresen eltávolítva!
+     
         await db.query('DELETE FROM media WHERE id = ?', [id]);
         res.json({ message: 'Tartalom sikeresen törölve.' });
     } catch (error) { 

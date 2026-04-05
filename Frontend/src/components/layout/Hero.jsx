@@ -3,7 +3,6 @@ import './Hero.css';
 
 export default function Hero({ movies, currentSlide, setCurrentSlide, onOpenTrailer, onOpenInfo, onOpenStreaming }) {
   
-  // Automatikus léptetés logika
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % movies.length);

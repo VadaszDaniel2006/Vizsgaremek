@@ -1,12 +1,10 @@
 const contactController = require('../../src/controllers/contactController');
 const db = require('../../src/config/db');
 
-// Adatbázis mockolása
 jest.mock('../../src/config/db');
 
 describe('Contact Controller', () => {
 
-    // A konzol hibák elrejtése a teszt futása alatt, hogy tiszta maradjon a kimenet
     beforeAll(() => {
         jest.spyOn(console, 'error').mockImplementation(() => {});
         jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -18,7 +16,7 @@ describe('Contact Controller', () => {
 
     describe('sendMessage', () => {
         it('400-as hibát dob, ha hiányoznak a kötelező mezők', async () => {
-            const req = { body: { nev: 'Teszt', email: 'teszt@test.com' } }; // Hiányzik a tema és uzenet
+            const req = { body: { nev: 'Teszt', email: 'teszt@test.com' } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
             await contactController.sendMessage(req, res);
@@ -27,7 +25,7 @@ describe('Contact Controller', () => {
         });
 
         it('404-es hibát dob, ha nem létezik a felhasználó (név vagy email nem egyezik)', async () => {
-            // A SELECT query üres tömböt ad vissza (nincs találat)
+ 
             db.query.mockResolvedValueOnce([[]]);
 
             const req = { 
@@ -43,9 +41,9 @@ describe('Contact Controller', () => {
         });
 
         it('201-es kóddal sikeresen elmenti az üzenetet, ha a felhasználó létezik', async () => {
-            // 1. query (SELECT): találatot ad vissza (létezik a felhasználó, ID-ja 5)
+
             db.query.mockResolvedValueOnce([[{ id: 5 }]]);
-            // 2. query (INSERT): sikeres beszúrás (beszúrt elem ID-ja 10)
+
             db.query.mockResolvedValueOnce([{ insertId: 10 }]);
 
             const req = { 
@@ -59,7 +57,7 @@ describe('Contact Controller', () => {
         });
 
         it('500-as hibát dob adatbázis hiba esetén', async () => {
-            // A DB hívás elszáll
+
             db.query.mockRejectedValueOnce(new Error('DB hiba'));
 
             const req = { 

@@ -3,17 +3,14 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { protect } = require('../middleware/authMiddleware'); 
 
-// Felhasználók kezelése
 router.get('/users', adminController.getAllUsers);
 router.delete('/users/:id', adminController.deleteUser);
 router.put('/users/:id', adminController.updateUser);
 
-// Kommentek kezelése
 router.get('/reported-reviews', protect, adminController.getReportedReviews);
 router.put('/reported-reviews/:id/dismiss', protect, adminController.dismissReport);
-router.delete('/reported-reviews/:id', protect, adminController.deleteReportedReview); // <--- ÚJ TÖRLŐ VÉGPONT
+router.delete('/reported-reviews/:id', protect, adminController.deleteReportedReview); 
 
-// Tartalom (Filmek/Sorozatok) kezelése
 router.post('/media', protect, adminController.addMedia);           
 router.get('/media', protect, adminController.getAllMedia);         
 router.put('/media/:id', protect, adminController.updateMedia);     

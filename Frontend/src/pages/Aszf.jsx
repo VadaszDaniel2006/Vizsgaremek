@@ -2,7 +2,6 @@ import React from 'react';
 
 export default function Aszf() {
   return (
-    // A padding-top értéke 70px-ről 130px-re lett növelve
     <div className="page-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '110px 20px 60px', color: '#d1d5db', lineHeight: '1.8', fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ color: '#ffffff', borderBottom: '2px solid #374151', paddingBottom: '15px', marginBottom: '30px', fontSize: '2.5rem' }}>Általános Szerződési Feltételek (ÁSZF)</h1>
       <p style={{ marginBottom: '40px', fontStyle: 'italic', color: '#9ca3af' }}>Hatályba lépés dátuma: {new Date().getFullYear()}. március 1. A jelen ÁSZF visszavonásig, illetve a módosítások közzétételéig érvényes.</p>

@@ -1,7 +1,6 @@
 const axios = require('axios');
 const db = require('../config/db'); 
 
-// 📅 Dátum és JELENLEGI IDŐ formázások
 const getBudapestDateObj = () => new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Budapest' }));
 
 const getTodayDate = () => {
@@ -18,7 +17,6 @@ const getDisplayDate = () => {
     return `Ma (${parts[1]}.${parts[2]}.)`;
 };
 
-// ⏳ IDŐ SZŰRŐ (Csak a jövőbeli vetítéseket tartjuk meg)
 const isFutureTime = (timeStr) => {
     const tzDate = getBudapestDateObj();
     const currentTotalMins = tzDate.getHours() * 60 + tzDate.getMinutes();
@@ -31,7 +29,6 @@ const isFutureTime = (timeStr) => {
     return movieTotalMins >= (currentTotalMins - 15);
 };
 
-// 💡 CÍM NORMALIZÁLÓ
 const normalizeTitle = (text) => {
     if (!text) return "";
     let clean = text.toLowerCase()
@@ -46,9 +43,6 @@ const normalizeTitle = (text) => {
     return clean;
 };
 
-// ==========================================
-// 1. CINEMA CITY API (100% STABIL)
-// ==========================================
 const fetchCinemaCityIds = async () => {
     try {
         const url = `https://www.cinemacity.hu/hu/data-api-service/v1/quickbook/10102/cinemas/with-event/until/${getTodayDate()}`;
@@ -108,11 +102,7 @@ const scrapeCinemaCity = async (mozi, ccMap) => {
     } catch (error) { return {}; }
 };
 
-// ==========================================
-// KÖZPONTI FELDOLGOZÓ 
-// ==========================================
 const processCinemaData = async (mozi, movies, ccMap) => {
-    // CSAK A CINEMA CITY MOZIKAT DOLGOZZUK FEL!
     if (!mozi.url.toLowerCase().includes('cinemacity')) {
         return null; 
     }
@@ -165,7 +155,6 @@ const processCinemaData = async (mozi, movies, ccMap) => {
     return finalFormattedData;
 };
 
-// --- FŐ LOGIKA ---
 const runCinemaScraper = async () => {
     console.log('🚀 Robot: STABIL CINEMA CITY API ADATGYŰJTÉS elindítva...');
     const startTime = Date.now();

@@ -8,24 +8,20 @@ exports.sendMessage = async (req, res) => {
     }
 
     try {
-        // 1. ELLENŐRZÉS: Létezik-e ilyen felhasználó az adatbázisban?
-        // Ellenőrizzük az e-mail címet, és azt, hogy a megadott név egyezik-e a 'nev' vagy 'felhasznalonev' oszloppal
+       
         const [userCheck] = await db.query(
             'SELECT id FROM felhasznalok WHERE email = ? AND (felhasznalonev = ? OR nev = ?)',
             [email, nev, nev]
         );
 
-        // Ha nincs találat, azonnal megállítjuk a folyamatot és hibaüzenetet küldünk
         if (userCheck.length === 0) {
             return res.status(404).json({ 
                 message: 'Csak regisztrált fiókkal küldhető üzenet! A megadott név vagy e-mail cím nem egyezik a rendszerünkben lévőkkel.' 
             });
         }
 
-        // Ha megvan a felhasználó, kinyerjük a valódi ID-ját az adatbázisból
         const valodiFelhasznaloId = userCheck[0].id;
 
-        // 2. MENTÉS: Most már biztosan létezik a fiók, elmentjük az üzenetet az ő ID-jával
         const [result] = await db.query(
             'INSERT INTO kapcsolat_uzenetek (felhasznalo_id, nev, email, tema, uzenet) VALUES (?, ?, ?, ?, ?)',
             [valodiFelhasznaloId, nev, email, tema, uzenet]

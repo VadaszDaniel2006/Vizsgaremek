@@ -1,4 +1,3 @@
-/* ConfirmModal.css */
 .confirm-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
 .confirm-card { width: 100%; max-width: 400px; background: #161b22; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
 .confirm-icon { font-size: 3rem; color: #f39c12; margin-bottom: 15px; }

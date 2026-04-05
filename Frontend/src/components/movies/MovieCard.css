@@ -1,10 +1,8 @@
-/* MovieCard.css */
 .content-container { width: 100%; padding: 0 30px 60px 30px; }
 .more-movies-section h2, .content-container h2 { font-size: 2rem; margin-top: 50px; margin-bottom: 50px; text-align: center; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
 
 .movies-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px; width: 100%; align-items: stretch; }
 
-/* Kártya konténer és flex fixek */
 .movie-card-container { background: #131a38; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; display: flex; flex-direction: column; justify-content: space-between; height: 100%; border: 1px solid transparent; will-change: transform; backface-visibility: hidden; }
 .movie-card-container:hover { transform: translateY(-10px); z-index: 10; box-shadow: 0 15px 40px rgba(0,0,0,0.7); border-color: var(--primary); }
 
@@ -18,7 +16,6 @@
 .movie-card:hover .card-overlay { opacity: 1; }
 .card-overlay i { font-size: 3.5rem; color: white; filter: drop-shadow(0 0 10px var(--primary)); }
 
-/* Gombok és Ikonok a képen */
 .user-interactions { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: row !important; flex-wrap: nowrap !important; gap: 8px; z-index: 20; opacity: 0; transition: opacity 0.3s ease; min-height: 32px; }
 .movie-card:hover .user-interactions { opacity: 1; }
 .btn-fav, .btn-add-list, .btn-icon { background-color: rgba(0, 0, 0, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.3); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; font-size: 14px; backdrop-filter: blur(4px); }
@@ -26,13 +23,11 @@
 .btn-add-list:hover { background-color: white; color: black; transform: scale(1.1); }
 .series-badge { position: absolute; top: 8px; right: 8px; background: var(--primary); padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white; }
 
-/* Szöveges rész */
 .card-details { padding: 15px !important; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; min-height: 85px !important; }
 div.movie-card-container div.card-details h4 { font-family: 'Inter', sans-serif !important; font-size: 16px !important; line-height: 1.2 !important; margin: 0 0 8px 0 !important; color: white !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; font-weight: 700 !important; letter-spacing: normal !important; }
 .card-meta { display: flex; justify-content: space-between; font-size: 14px !important; color: #aaa; line-height: 1 !important;}
 .card-meta i { color: #f5c518; margin-right: 4px; }
 
-/* Kártya alján lévő gombok */
 .card-buttons { padding: 12px; display: flex; gap: 10px; margin-top: auto; background: #0f152b; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 100; align-items: center; width: 100%; flex-shrink: 0; }
 .card-buttons button { flex: 1; border: none; padding: 0 10px !important; height: 40px !important; border-radius: 6px; font-size: 14px !important; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; }
 .btn-card-play { background: var(--primary); color: white; }
@@ -40,12 +35,10 @@ div.movie-card-container div.card-details h4 { font-family: 'Inter', sans-serif 
 .btn-card-info { background: rgba(255,255,255,0.1); color: white; }
 .btn-card-info:hover { background: rgba(255,255,255,0.25); color: white; }
 
-/* Globális kiegészítés a Top 50 és egyedi gombok egymás mellé rendezéséhez szűk grid esetén is */
 .user-interactions, .top50-icons-group, .top50-action-row {
     flex-wrap: nowrap !important;
 }
 
-/* Felugró ablakok (Modal) biztosítása a rétegrend tetején, hogy sose legyenek láthatatlanok */
 [class*="modal-overlay"], .modal-overlay, div[class*="modal"] {
     z-index: 99999 !important;
     visibility: visible !important;

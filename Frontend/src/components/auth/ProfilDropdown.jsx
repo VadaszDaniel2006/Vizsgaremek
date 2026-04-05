@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- EZT NE FELEJTSD EL!
+import { useNavigate } from 'react-router-dom';
 import './ProfilDropdown.css';
 
-// SZÓTÁR A MAGYARÍTÁSHOZ
 const CATEGORY_NAMES = {
   action: 'Akció', comedy: 'Vígjáték', drama: 'Dráma', scifi: 'Sci-Fi',
   horror: 'Horror', romance: 'Romantikus', animation: 'Animáció',
@@ -12,9 +11,8 @@ const CATEGORY_NAMES = {
 export default function ProfilDropdown({ user, onLogout, onOpenProfile, onOpenFavorites, onOpenMyList }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate(); // <--- EZ KELL A NAVIGÁLÁSHOZ
+  const navigate = useNavigate();
 
-  // Kattintás kívülre (bezárja a menüt)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,8 +25,7 @@ export default function ProfilDropdown({ user, onLogout, onOpenProfile, onOpenFa
 
   return (
     <div className="profil-container" ref={dropdownRef}>
-      
-      {/* GOMB */}
+
       <div className="profil-btn" onClick={() => setIsOpen(!isOpen)}>
         <div className="profil-avatar-small">
           <img 
@@ -42,11 +39,9 @@ export default function ProfilDropdown({ user, onLogout, onOpenProfile, onOpenFa
         <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
       </div>
 
-      {/* LENYÍLÓ MENÜ */}
       {isOpen && (
         <div className="profil-menu">
-          
-          {/* Fejléc */}
+
           <div className="profil-header">
             <div className="profil-avatar-large">
                <img 
@@ -57,7 +52,7 @@ export default function ProfilDropdown({ user, onLogout, onOpenProfile, onOpenFa
             <div className="profil-info">
                 <h4>{user?.name}</h4>
                 <p>@{user?.username}</p>
-                {/* Admin jelvény */}
+
                 {user?.role === 'admin' && (
                     <span style={{background: '#e74c3c', color: 'white', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', marginLeft: '5px'}}>
                         ADMIN
@@ -74,10 +69,9 @@ export default function ProfilDropdown({ user, onLogout, onOpenProfile, onOpenFa
             </div>
           </div>
 
-          {/* Menüpontok */}
+
           <div className="profil-menu-items">
-            
-            {/* --- ÚJ ADMIN GOMB --- */}
+
             {user?.role === 'admin' && (
                 <button 
                     className="menu-item" 
@@ -90,7 +84,7 @@ export default function ProfilDropdown({ user, onLogout, onOpenProfile, onOpenFa
                     <i className="fas fa-shield-alt" style={{color: '#e74c3c'}}></i> Admin Vezérlőpult
                 </button>
             )}
-            {/* --------------------- */}
+
 
             <button className="menu-item" onClick={() => { setIsOpen(false); if (onOpenProfile) onOpenProfile(); }}>
                 <i className="fas fa-edit"></i> Profil szerkesztése
