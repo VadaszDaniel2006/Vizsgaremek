@@ -23,10 +23,10 @@ import Top50Page from './pages/Top50Page';
 import WeeklyPick from './pages/WeeklyPick';
 import CinemaMap from './pages/CinemaMap';
 
-import Aszf from './pages/Aszf';
-import Adatvedelem from './pages/Adatvedelem';
-import Sugokozpont from './pages/Sugokozpont';
-import Kapcsolat from './pages/Kapcsolat';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Contact from './pages/Contact';
+import HelpCenter from './pages/HelpCenter';
 
 import './App.css'; 
 
@@ -396,10 +396,10 @@ function App() {
             <Route path="/kereses" element={<Search />} />
             <Route path="/admin" element={<AdminDashboard refreshApp={() => fetchAllData(user ? user.id : '')} />} />
 
-            <Route path="/aszf" element={<Aszf />} />
-            <Route path="/adatvedelem" element={<Adatvedelem />} />
-            <Route path="/sugokozpont" element={<Sugokozpont />} />
-            <Route path="/kapcsolat" element={<Kapcsolat />} />
+            <Route path="/aszf" element={<Terms />} />
+            <Route path="/adatvedelem" element={<Privacy />} />
+            <Route path="/sugokozpont" element={<HelpCenter />} />
+            <Route path="/kapcsolat" element={<Contact />} />
             
         </Routes>
 

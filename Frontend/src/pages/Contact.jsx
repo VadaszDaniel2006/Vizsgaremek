@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Kapcsolat() {
+export default function Contact() {
   const [formData, setFormData] = useState({ nev: '', email: '', tema: '', uzenet: '' });
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
