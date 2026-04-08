@@ -1,39 +1,61 @@
 ---
+id: csapat-es-feladatok
 sidebar_position: 2
-title: Tervezett Vállalások
-hide_table_of_contents: true
+title: Csapat és Feladatok
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+# Csapatmunka, Módszertan és Projektirányítás
 
-# 4. Tervezett vállalásaink és feladatkörök
+A MoziPont projekt sikerességét nem csupán a technológiai választások, hanem a fejlesztők közötti hatékony kommunikáció és a precíz feladatmegosztás határozta meg. Fejlesztési folyamatunk során az **Agilis módszertan** alapelveit követtük: a feladatokat heti sprintekre (iterációkra) bontottuk, lehetővé téve a folyamatos visszacsatolást és a rugalmas változtatásokat. 
 
-A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) feladatokat látott el, hogy a rendszer architektúrájának minden rétegét átlássuk és közösen fejlesszük.
+A párhuzamos munkavégzés során kiemelt figyelmet fordítottunk a **folyamatos integrációra**, hogy elkerüljük az átláthatatlan kódösszeakadások (merge conflicts) kialakulását. A kritikus moduloknál – mint például az API tervezés vagy az adatbázis-architektúra véglegesítése – **páros programozást (pair programming)** alkalmaztunk a hibalehetőségek minimalizálása érdekében.
 
-<Tabs>
-  <TabItem value="daniel" label="Vadász Dániel" default>
+## Feladatmegosztás és Full-Stack Felelősségek
 
-    ## Vadász Dániel – Frontend és Backend fejlesztés
+A fejlesztés során mindkét csapattag Full-Stack szemléletben dolgozott, így az adatbázis, a szerveroldali logika és a felhasználói felület kialakításában is egyenlő arányban vettek részt. A feladatok súlyozásánál Dániel felelt a rendszer alapjaiért és a legmagasabb technikai komplexitású mérnöki kihívásokért.
 
-    * **Node.js + Express.js alapok és API végpontok felépítése:** A szerveroldali alaparchitektúra és a routing (útválasztás) kialakítása, hogy az API gyors, megbízható és bővíthető legyen.
-    * **Felhasználói autentikáció és biztonság (Backend):** A biztonságos bejelentkezési és regisztrációs rendszer logikájának megírása JWT (JSON Web Token) technológia használatával.
-    * **Adatbázis műveletek (Backend):** A filmek, sorozatok és felhasználók alapvető adatainak rögzítése, módosítása és lekérdezése a MySQL adatbázisban.
-    * **Kezdőoldal és Heti ajánló UI (Frontend):** A főoldal felületének elkészítése, beleértve a random filmek és a kategória alapú "Heti ajánlók" megjelenítését a felhasználók számára.
-    * **Kereső modul felülete és logikája (Frontend & Backend):** A keresési funkciók végpontjainak megvalósítása a szerveren, valamint a keresőmező és az eredmények dinamikus megjelenítése a felhasználói felületen.
-    * **Jegyfoglalási UI (Frontend):** A jegyfoglalási folyamat felhasználói felületének, többek között az interaktív ülésválasztó (széktérkép) vizuális kialakítása.
+### Vadász Dániel – Rendszerarchitektúra, Biztonság és Core Logika
 
-  </TabItem>
-  <TabItem value="tamas" label="Palkovics Tamás">
+Dániel felelt a MoziPont technikai gerincének megalkotásáért. Feladatai közé tartoztak a legmagasabb biztonsági és algoritmikai ismereteket igénylő folyamatok, valamint a frontend alkalmazás logikai vázának kidolgozása.
 
-    ## Palkovics Tamás Tibor – Frontend és Backend fejlesztés
+* **RESTful API és Express.js Architektúra (Backend):** A teljes szerveroldali váz megtervezése MVC minta alapján. Az API végpontok (endpoints) és a middleware-rendszer optimalizálása.
+* **Kriptográfia és Autentikáció (Backend):** A biztonsági protokollok kidolgozása: **Bcrypt** jelszótitkosítás és a státuszmentes **JWT** alapú munkamenet-kezelés implementálása.
+* **Adatbányászat és Scraper Robot (Backend):** A projekt legösszetettebb modulja, a `cinemaScraper.js` fejlesztése, amely külső forrásokból automatikusan kinyeri és tisztítja a moziadatokat.
+* **Frontend Architektúra és State Management (Frontend):** A React környezet felállítása, a globális állapotkezelés (**Context API**) és a komplex kliensoldali útválasztás (Routing) kidolgozása.
+* **Keresőmotor és Ajánló Logika (Frontend):** A valós időben működő aszinkron keresési funkciók és a backend-alapú személyre szabott ajánlórendszer integrációja.
+* **E2E Automatizált Tesztelés (QA):** A teljes szoftver életciklus ellenőrzése **Selenium Webdriver** segítségével, szimulálva a komplex felhasználói interakciókat.
 
-    * **Mozik és vetítések kezelése (Backend):** A moziműsorok, vetítési időpontok és a mozik adatainak lekérdezéséhez szükséges szerveroldali logika és API végpontok fejlesztése.
-    * **Interaktív mozitérkép és közelség (Frontend):** A hazai mozik elhelyezkedésének vizuális megjelenítése térképen, illetve a felhasználóhoz közeli mozik listázásának frontend integrációja.
-    * **Személyre szabott ajánlások és Top listák (Backend & Frontend):** A felhasználói preferenciák alapján történő filmajánló logika kidolgozása, valamint a "Top 50 / Top 100" filmek lekérdezése és a felületen történő esztétikus megjelenítése.
-    * **Értékelések és vélemények kezelése (Backend & Frontend):** A filmekhez tartozó felhasználói vélemények elmentésének logikája, és az értékelések frissítésének frontend implementációja.
-    * **Adminisztrációs felület (Frontend & Backend):** Az admin vezérlőpult funkcióinak bővítése (filmek/sorozatok adatainak frissítése, adatbázis karbantartása, feltöltések), és a hozzá tartozó jogosultságkezelés.
-    * **Foglalási visszaigazolások (Backend & Frontend):** A sikeres jegyfoglalás utáni háttérfolyamatok lekezelése, és a részletes visszaigazolások megjelenítése a felhasználónak.
+### Palkovics Tamás Tibor – Adatintegráció, UI Fejlesztés és Felhasználói Funkciók
 
-  </TabItem>
-</Tabs>
+Tamás felelt az adatbázis strukturális felépítéséért, a vizuális megjelenés oroszlánrészéért és az adminisztrációs felületek interaktív komponenseiért.
+
+* **Adatbázis Relációk és Normalizáció (Backend):** A MySQL séma (**ER diagram**) megtervezése, az adatok közötti logikai kapcsolatok és idegen kulcsok (Foreign Keys) kialakítása.
+* **Közösségi Motor és Értékelések (Backend):** Az értékelések leadásáért, a pontszámok aggregálásáért és a moderációs rendszerért felelős API végpontok megírása.
+* **Jest Egységtesztelés (Backend):** A szerveroldali modulok és az adatbázis-műveletek stabilitásának ellenőrzése automatizált egységtesztekkel.
+* **UI Komponensek és Dizájn (Frontend):** Az alkalmazás vizuális elemeinek és legtöbb aloldalának (Toplista, Profil, Admin) megalkotása a **Material UI** könyvtár segítségével.
+* **Geolokáció és Interaktív Térkép (Frontend):** A **Leaflet.js** könyvtár beépítése, a mozihelyszínek koordináta-alapú kezelése és az interaktív markerek programozása.
+* **Adminisztrációs Vezérlőpult (Frontend):** A rendszergazdai interfész teljes körű vizuális és funkcionális megvalósítása (Tartalomkezelő űrlapok, jelentések kezelése).
+
+---
+
+## Időmenedzsment és Gantt-diagram
+
+A vizsgaidőszak kihívásait szem előtt tartva egy szigorú, mérföldkövekre (milestones) épülő ütemtervet hoztunk létre. Az alábbi ábra szemlélteti a MoziPont fejlesztési folyamatát:
+
+![Gantt-diagram a MoziPont feladatainak ütemezéséről](/img/gantt.png)
+
+---
+
+## Felhasznált programok és eszközök
+
+* **Microsoft Office (Word, PowerPoint):** A Word programot a projekt teljes dokumentációjának elkészítésére használtuk, a PowerPoint segítségével pedig a vizsgaremek bemutatása készült el.
+* **Figma:** A webalkalmazás felhasználói felületének megtervezésére, a vázlatok és vizuális elrendezések elkészítésére.
+* **Canva & Inkscape:** A Canva-t az oldal logójának gyors elkészítésére, míg az Inkscape-t a vektorgrafikus vizuális elemek finomítására alkalmaztuk.
+* **Google Drive:** A nagyobb méretű fájlok megosztására és biztonságos tárolására a projekt kezdeti szakaszában.
+* **Vtk Moodle:** A projekt különböző szakaszait és mérföldköveit ide töltöttük fel a folyamatos tanári nyomon követés érdekében.
+* **Messenger & Discord:** Gyors egyeztetésekre, valamint összetettebb problémák közös megbeszélésére, képernyőmegosztásra és közös kódolásra használtuk.
+* **GitHub:** A projekt teljes forráskódjának folyamatos feltöltésére, tárolására és verziókövetésére.
+* **Visual Studio Code:** A projekt teljes forráskódját ebben a fejlesztőkörnyezetben készítettük el.
+* **Docker Desktop:** Segítségével az adatbázist konténerizált környezetben futtattuk, biztosítva az azonos fejlesztői környezetet.
+* **Postman:** A backend végpontok tesztelésére és ellenőrzésére.
+* **Material UI:** A komponensgyűjteményt az egységes, modern felhasználói felület kialakításához alkalmaztuk.

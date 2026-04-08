@@ -15,12 +15,12 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Moziműsor & Jegyfoglalás',
+    title: 'Moziműsor',
     emoji: '🎫',
     description: (
       <>
-        Keress a közeli mozik aktuális kínálatában. Nézd meg a vetítési időpontokat,
-        válaszd ki a legjobb széket és foglald le a jegyedet online.
+        Keresd meg a hozzád legközelebb eső mozikat az interaktív térképen! Nézd meg a naprakész vetítési időpontokat, 
+        mentsd el a kedvenc filmjeidet a saját listádra, és tervezd meg a következő moziélményed.
       </>
     ),
   },

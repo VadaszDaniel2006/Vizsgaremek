@@ -1,6 +1,5 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 
-/** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'MoziPont', 
   tagline: 'Mozis filmek és sorozatok webalkalmazása',
@@ -23,7 +22,6 @@ const config = {
   presets: [
     [
       'classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
           sidebarPath: './sidebars.js',
@@ -41,7 +39,6 @@ const config = {
   ],
 
   themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       colorMode: {
         defaultMode: 'dark',
@@ -79,7 +76,7 @@ const config = {
             title: 'Navigáció',
             items: [
               { label: 'Kezdőlap', to: '/' },
-              { label: 'Dokumentáció', to: '/docs/bevezetes' },
+              { label: 'Dokumentáció', to: '/docs/01-bevezetes' },
               { label: 'Fejlesztési Napló', to: '/naplo' },
             ],
           },
@@ -90,7 +87,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} MoziPont Vizsgaremek. Készítette: Palkovics Tamás Tibor, Vadasz Daniel.`, 
+        copyright: `Copyright © ${new Date().getFullYear()} MoziPont Vizsgaremek. Készítette: Palkovics Tamás Tibor, Vadász Dániel.`, 
       },
       prism: {
         theme: prismThemes.github,
