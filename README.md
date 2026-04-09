@@ -1,119 +1,93 @@
-# Vizsgaremek – Mozis filmek és sorozatok webalkalmazása
+# 🎬 MoziPont – Vizsgaremek
 
-**Projekt neve:** Mozipont  
-**Résztvevők:** Palkovics Tamás Tibor és Vadász Dániel  
+**Szoftverfejlesztő és -tesztelő záróvizsga remek** **Résztvevők:** Palkovics Tamás Tibor és Vadász Dániel
 
----
-
-## Tartalomjegyzék
-1. [Vizsgaremek célkitűzése](#1-vizsgaremek-célkitűzése)
-2. [Feladat leírása és bemutatása](#2-feladat-leírása-és-bemutatása)
-3. [A fejlesztés menete és a projekt háttere](#3-a-fejlesztés-menete-és-a-projekt-háttere)
-4. [Tervezett vállalásaink és feladatkörök](#4-tervezett-vállalásaink-és-feladatkörök)
-   - [Vadász Dániel – Frontend és Backend fejlesztés](#vadász-dániel--frontend-és-backend-fejlesztés)
-   - [Palkovics Tamás Tibor – Frontend és Backend fejlesztés](#palkovics-tamás-tibor--frontend-és-backend-fejlesztés)
-5. [Közös munkafolyamatok](#5-közös-munkafolyamatok)
-6. [Felhasznált programok és eszközök](#6-felhasznált-programok-és-eszközök)
-7. [Fejlesztési környezet](#7-fejlesztési-környezet)
+A MoziPont egy komplex, Full-Stack webalkalmazás, amely egyetlen letisztult felületen integrálja a globális filmes információszerzést és a lokális szolgáltatásokat (hazai moziműsorok és térkép), miközben erős, személyre szabott közösségi élményt nyújt.
 
 ---
 
-## 1. Vizsgaremek célkitűzése
-
-Mozis filmek és sorozatok bemutatására, véleményezésére és a felhasználói ízlés alapján történő ajánlására szolgáló komplex webes alkalmazás (Mozipont) készítése. 
-
-A téma kiválasztását elsősorban a közös érdeklődési körünk inspirálta, hiszen mindketten szívesen töltjük a szabadidőnket a filmek és sorozatok világában. Célunk egy olyan átlátható felület létrehozása volt, amely nemcsak informál, hanem segíti is a felhasználókat a tájékozódásban.
-
----
-
-## 2. Feladat leírása és bemutatása
-
-Az alkalmazás segítségével a látogatók részletes leírásokat olvashatnak a különböző művekről, megtekinthetik az előzeteseket (trailereket), és hatékonyan kereshetnek a filmek és sorozatok között. Emellett saját listát készíthetnek, és elmenthetik a kedvenceiket. A platformon helyet kaptak heti ajánlók, egy „Top 50” film és sorozat oldal, valamint egy interaktív mozitérkép is, amely megmutatja a hazai filmszínházak elhelyezkedését. 
-
-A fejlesztés megkezdésekor fontosnak tartottuk, hogy a piacon lévő megoldásokhoz képest valami pluszt nyújtsunk. Hiányoltuk azokat az alkalmazásokat, amelyek egyszerre kezelik az információszerzést és a személyre szabott igényeket. Rendszerünk egyik legfontosabb újítása, hogy a felhasználók által kedvelt kategóriák alapján képes személyre szabott ajánlásokat kínálni. Ezáltal mindenki könnyebben fedezhet fel olyan műveket, amelyek valóban illeszkednek az ízléséhez.
-
-Összességében a projekt nem csupán a technikai tudásunkat demonstrálja, hanem a mozgóképkultúra iránti elkötelezettségünket is. Bízunk benne, hogy webalkalmazásunk a jövőben hasznos eszközzé válik a kikapcsolódni vágyók számára, és hozzájárul a filmes közösségi élet élénkítéséhez.
+## 📑 Tartalomjegyzék
+1. [A projekt célkitűzése](#1-a-projekt-célkitűzése)
+2. [Fő funkciók és modulok](#2-fő-funkciók-és-modulok)
+3. [Technológiai Stack](#3-technológiai-stack)
+4. [Csapatmunka és Feladatkörök](#4-csapatmunka-és-feladatkörök)
+5. [Adatbázis architektúra](#5-adatbázis-architektúra)
+6. [Szoftvertesztelés (QA)](#6-szoftvertesztelés-qa)
+7. [Fejlesztési eszközök](#7-fejlesztési-eszközök)
+8. [Környezet és Futtatás](#8-környezet-és-futtatás)
 
 ---
 
-## 3. A fejlesztés menete és a projekt háttere
+## 1. A projekt célkitűzése
+A téma kiválasztását a közös érdeklődési körünk inspirálta. A jelenlegi filmes portálok (pl. IMDb, Port.hu) használata során számos felhasználói fájdalompontot azonosítottunk: töredezett információk, elavult felületek és a személyre szabhatóság hiánya.
 
-A projekt megvalósítását a szoros és összehangolt csapatmunka alapozta meg. A feladatok – beleértve a felhasználói felület és a szerveroldali logika fejlesztését – tudatos megosztása lehetővé tette az erőforrások optimális kihasználását. A rendszeres konzultációk és a közös problémamegoldás révén hatékonyan kezeltük az akadályokat, miközben mindkét területen jelentős új tapasztalatokkal gazdagodtunk.
+Célunk egy olyan modern, Single Page Application (SPA) alapú platform megalkotása volt, amely megoldást kínál ezekre a problémákra. A MoziPont nem csupán informál, hanem intelligens ajánlórendszerével segít a tartalomfelfedezésben, miközben a hazai mozik vetítési időpontjait is naprakészen tartja.
 
-A fejlesztés ideje alatt a kommunikációs készségeink és az empatikus hozzáállásunk is sokat fejlődött. Megtanultuk, hogy a nyílt párbeszéd és a konstruktív visszajelzés elengedhetetlen a minőségi munkavégzéshez. 
+## 2. Fő funkciók és modulok
+* **Személyre szabott élmény:** Intelligens ajánlórendszer, amely a felhasználó által kedvelt kategóriák (pl. Sci-Fi, Thriller) alapján súlyozza a kezdőoldali tartalmakat.
+* **Közösségi interakciók:** Valós idejű, 1-10 közötti értékelési rendszer és szöveges vélemények írása. Az átlagpontszámokat a rendszer azonnal, triggerelés nélkül újraszámolja.
+* **Interaktív Mozitérkép (Geolokáció):** A hazai mozik (Cinema City, Kultik, Art mozik) vizuális megjelenítése a térképen, pontos vetítési időpontokkal integrálva.
+* **Saját gyűjtemények:** "Saját lista" funkció a jövőben megtekinteni kívánt tartalmak mentésére.
+* **Automatizált adatgyűjtés (Web Scraper):** Háttérben futó, ütemezett robot, amely külső szolgáltatóktól nyeri ki és frissíti a moziműsorokat.
+* **Robusztus Admin Vezérlőpult:** Szerepkör-alapú (RBAC) hozzáférés a tartalmak kezeléséhez (CRUD), a felhasználók menedzseléséhez, a moderációhoz (jelentett kommentek) és a hibajegyek (ticketek) kezeléséhez.
 
-Az időmenedzsment terén a szigorú tervezést és a határidők következetes betartását tartottuk szem előtt. A részletes ütemterv segített abban, hogy elkerüljük a vizsgaidőszak végi kapkodást, és minden fejlesztési fázist nyugodt körülmények között zárhassunk le. Szervezettségünknek köszönhetően minden funkciót időben sikerült implementálnunk. Ebben nagy segítségünkre volt egy Gantt-diagram, amelynek segítségével előre meg tudtuk tervezni a különböző munkafolyamatok időigényét.
+## 3. Technológiai Stack
+A rendszert szigorúan rétegezett, mikro-szolgáltatás (microservices) szemléletű architektúrában építettük fel.
 
----
+**Frontend (Kliensoldal):**
+* React.js (Vite környezetben)
+* CSS Grid / Flexbox (egyedi, reszponzív dizájn) & Material UI (komponensekhez)
+* Leaflet.js (Interaktív térkép modul)
+* Context API (Állapotkezelés)
 
-## 4. Tervezett vállalásaink és feladatkörök
+**Backend (Szerveroldal):**
+* Node.js & Express.js (RESTful API, MVC minta alapján)
+* JWT (JSON Web Token) & Bcrypt (Autentikáció és Kriptográfia)
+* Puppeteer & Cheerio (Automatizált Web Scraping)
+* Node-cron (Feladatok ütemezése)
 
-A fejlesztés során mindkét csapattag Full-stack (Frontend és Backend) feladatokat látott el, hogy a rendszer architektúrájának minden rétegét átlássuk és közösen fejlesszük.
+**Adatbázis & Infrastruktúra:**
+* MySQL (Mélyen normalizált relációs adatbázis)
+* Docker & Docker Compose (Konténerizáció)
 
-### Vadász Dániel – Frontend és Backend fejlesztés
-* **Node.js + Express.js alapok és API végpontok felépítése:** A szerveroldali alaparchitektúra és a routing (útválasztás) kialakítása, hogy az API gyors, megbízható és bővíthető legyen.
-* **Felhasználói autentikáció és biztonság (Backend):** A biztonságos bejelentkezési és regisztrációs rendszer logikájának megírása JWT (JSON Web Token) technológia használatával.
-* **Adatbázis műveletek (Backend):** A filmek, sorozatok és felhasználók alapvető adatainak rögzítése, módosítása és lekérdezése a MySQL adatbázisban.
-* **Kezdőoldal és Heti ajánló UI (Frontend):** A főoldal felületének elkészítése, beleértve a random filmek és a kategória alapú "Heti ajánlók" megjelenítését a felhasználók számára.
-* **Kereső modul felülete és logikája (Frontend & Backend):** A keresési funkciók végpontjainak megvalósítása a szerveren, valamint a keresőmező és az eredmények dinamikus megjelenítése a felhasználói felületen.
-* **Jegyfoglalási UI (Frontend):** A jegyfoglalási folyamat felhasználói felületének, többek között az interaktív ülésválasztó (széktérkép) vizuális kialakítása.
+## 4. Csapatmunka és Feladatkörök
+A fejlesztés során az Agilis módszertant követtük, heti sprintekkel és folyamatos integrációval (CI). A komplexebb moduloknál páros programozást (pair programming) alkalmaztunk. Mindkét csapattag Full-Stack szemléletben dolgozott.
 
-### Palkovics Tamás Tibor – Frontend és Backend fejlesztés
-* **Mozik és vetítések kezelése (Backend):** A moziműsorok, vetítési időpontok és a mozik adatainak lekérdezéséhez szükséges szerveroldali logika és API végpontok fejlesztése.
-* **Interaktív mozitérkép és közelség (Frontend):** A hazai mozik elhelyezkedésének vizuális megjelenítése térképen, illetve a felhasználóhoz közeli mozik listázásának frontend integrációja.
-* **Személyre szabott ajánlások és Top listák (Backend & Frontend):** A felhasználói preferenciák alapján történő filmajánló logika kidolgozása, valamint a "Top 50 / Top 100" filmek lekérdezése és a felületen történő esztétikus megjelenítése.
-* **Értékelések és vélemények kezelése (Backend & Frontend):** A filmekhez tartozó felhasználói vélemények elmentésének logikája, és az értékelések frissítésének frontend implementációja.
-* **Adminisztrációs felület (Frontend & Backend):** Az admin vezérlőpult funkcióinak bővítése (filmek/sorozatok adatainak frissítése, adatbázis karbantartása, feltöltések), és a hozzá tartozó jogosultságkezelés.
-* **Foglalási visszaigazolások (Backend & Frontend):** A sikeres jegyfoglalás utáni háttérfolyamatok lekezelése, és a részletes visszaigazolások megjelenítése a felhasználónak.
+### Vadász Dániel
+* **Rendszerarchitektúra & Biztonság:** RESTful API váz megtervezése, JWT/Bcrypt alapú autentikáció implementálása.
+* **Core Logika & Scraper:** A cinemaScraper.js adatbányász robot és a keresőmotor aszinkron logikájának fejlesztése.
+* **Frontend State Management:** A React környezet felállítása, globális állapotkezelés, kliensoldali útválasztás.
+* **QA:** End-to-End (E2E) automatizált tesztelés kiépítése Selenium Webdriver segítségével.
 
----
+### Palkovics Tamás Tibor
+* **Adatbázis & Relációk:** A MySQL ER diagram megtervezése, az adatbázis normalizációja.
+* **Közösségi motor & UI:** Az értékelési/moderációs rendszer végpontjainak megírása, a felhasználói felület (Hero slider, profil) kialakítása.
+* **Admin & Geolokáció:** Az adminisztrációs vezérlőpult teljes körű fejlesztése és a Leaflet.js mozitérkép integrációja.
+* **QA:** Szerveroldali automatizált egységtesztek írása Jest keretrendszerrel.
 
-## 5. Közös munkafolyamatok
+## 5. Adatbázis architektúra
+A rendszer alapját egy 3NF (Harmadik Normálforma) szabályai szerint optimalizált, 16 táblából álló MySQL adatbázis adja. A tervezés két fő logikai blokkra oszlik:
 
-* **Adatbázis vázának megtervezése:** Közös munka a MySQL adatbázis struktúrájának és a táblák kapcsolatainak (relációinak) megtervezésében, a hatékony adattárolás érdekében.
-* **REST API specifikáció kialakítása:** A kommunikációs csatornák, végpontok és adatszerkezetek közös definiálása a frontend és a backend zökkenőmentes együttműködéséhez.
-* **Tesztek írása (Jest) és hibajavítás:** A rendszer kritikus funkcióinak közös tesztelése, a felmerülő hibák (bugok) elhárítása és a felhasználói élmény finomhangolása.
+* **Felhasználók és Interakciók:** Felhasználói adatok, hash-elt jelszavak, jogosultságok, értékelések, saját listák és személyes kategória-preferenciák N:M kapcsolatokkal.
+* **Média és Mozik:** Filmek/sorozatok közös media entitásban való tárolása, műfajok, streaming platformok, és a mozik vetítési időpontjai (időbeli és térbeli koordinátákkal).
 
----
+## 6. Szoftvertesztelés (QA)
+A magas fokú rendelkezésre állás és hibamentes élmény érdekében többlépcsős tesztelést alkalmaztunk:
 
-## 6. Felhasznált programok és eszközök
+* **Manuális API tesztelés:** Postman segítségével a végpontok és a middleware-ek (pl. jogosultság-ellenőrzés) validálása.
+* **Backend Egységtesztelés (Unit Tests):** A kritikus üzleti logikák (pl. authController hibakezelése) automatizált ellenőrzése Jest segítségével, mockolt adatbázis kapcsolatokkal.
+* **Frontend End-to-End Tesztelés (E2E):** Selenium Webdriver alapú, automatizált UI tesztek. 30 darab teszteset szimulálja a felhasználói interakciókat (regisztráció, navigáció, admin funkciók, térkép betöltés) Google Chrome környezetben.
 
-* **Microsoft Office (Word, PowerPoint):** A Word programot a projekt teljes dokumentációjának elkészítésére használtuk, a PowerPoint segítségével pedig a vizsgaremek bemutatása készült el.
-* **Figma:** A webalkalmazás felhasználói felületének megtervezésére, a vázlatok és vizuális elrendezések elkészítésére.
-* **Canva & Inkscape:** A Canva-t az oldal logójának gyors elkészítésére, míg az Inkscape-t a vektorgrafikus vizuális elemek finomítására alkalmaztuk.
-* **Google Drive:** A nagyobb méretű fájlok megosztására és biztonságos tárolására a projekt kezdeti szakaszában.
-* **Vtk Moodle:** A projekt különböző szakaszait és mérföldköveit ide töltöttük fel a folyamatos tanári nyomon követés érdekében.
-* **Messenger & Discord:** Gyors egyeztetésekre, valamint összetettebb problémák közös megbeszélésére, képernyőmegosztásra és közös kódolásra használtuk.
-* **GitHub:** A projekt teljes forráskódjának folyamatos feltöltésére, tárolására és verziókövetésére.
-* **Visual Studio Code:** A projekt teljes forráskódját ebben a fejlesztőkörnyezetben készítettük el.
-* **Docker Desktop:** Segítségével az adatbázist konténerizált környezetben futtattuk, biztosítva az azonos fejlesztői környezetet.
-* **Postman:** A backend végpontok tesztelésére és ellenőrzésére.
-* **Material UI:** A komponensgyűjteményt az egységes, modern felhasználói felület kialakításához alkalmaztuk.
+## 7. Fejlesztési eszközök
+* **Tervezés & Dizájn:** Figma, Canva, Inkscape
+* **Kódolás & Verziókövetés:** Visual Studio Code, Git & GitHub
+* **Adatbázis & DevOps:** Docker Desktop, phpMyAdmin
+* **Projektmenedzsment:** Vtk Moodle, Discord, Google Drive, Microsoft Office
 
----
+## 8. Környezet és Futtatás
+A platform telepítésének és futtatásának leegyszerűsítésére a teljes architektúrát Docker konténerekbe csomagoltuk. Az érzékeny adatokat a biztonsági standardoknak megfelelően lokális `.env` fájl kezeli.
 
-## 7. Fejlesztési környezet
+**A rendszer indítása:** A gyökérkönyvtárban elhelyezett saját inicializáló szkriptünk (`indito.js`) egyetlen paranccsal elindítja a teljes rendszert (ellenőrzi a hálózatot, felhúzza az adatbázist, majd az API-t és a klienst):
 
-**Frontend:**
-* HTML, CSS, JavaScript
-* React
-* Geolocation API
-* Material UI
-
-**Backend:**
-* Node.js
-* Express.js
-* REST API architektúra
-* JWT (JSON Web Token) alapú autentikáció
-
-**Külső API-k:**
-* **YouTube Data API:** Trailerek és videó metaadatok lekéréséhez.
-
-**Adatbázis:**
-* **MySQL:** Mozik, vetítések, foglalások, felhasználók, értékelések és kedvencek relációs tárolása (Docker konténerben futtatva).
-
-**A fejlesztési környezet futtatásához szükséges fájlok azonnali letöltése:**
-*(A linkekre kattintva a böngésző azonnal letölti a fájlokat a gépedre.)*
-
-* 🐳 [**docker-compose.yml letöltése**](https://drive.google.com/uc?export=download&id=1k7W3RL-XSPnvj9A0XEA-P4rnAczEk_Dv) 
-* 💾 [**mozipont_beta.sql adatbázis letöltése**](https://drive.google.com/uc?export=download&id=1tWgIfjjUGtWU673Oeg25P-wvTmsYVLav)
+```bash
+node indito.js
