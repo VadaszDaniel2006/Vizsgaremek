@@ -27,11 +27,32 @@ Az `npx jest` parancs kiadásával a tesztek pár másodperc alatt lefutnak, a t
 
 ![Sikeresen lefutott Jest backend egységtesztek a terminálban](/img/jest-terminal.png)
 
+**A Backend tesztek futtatásához:**
+```bash
+cd backend
+npm test
+```
+
 ---
 
 ## 2. Frontend End-to-End (E2E) Tesztelés
 
 Bár az egységtesztek kiválóak a belső logika ellenőrzésére, a felhasználó a böngészőben lévő felülettel (UI) találkozik. Ennek komplex (End-to-End) ellenőrzésére a kliens `/selenium_tests` mappájában egy automatizált **Selenium Webdriver** alapú tesztkörnyezetet építettünk fel.
+
+**A Frontend tesztek futtatásához szükséges lépések:**
+
+Első indításkor:
+```bash
+cd Frontend
+npm install selenium-webdriver
+npm run test:all
+```
+
+További futtatások esetén:
+```bash
+cd Frontend
+npm run test:all
+```
 
 A Selenium úgy funkcionál, mint egy fáradhatatlan, hihetetlenül gyors emberi tesztelő. Futáskor a szkript programozottan megnyitja a Google Chrome böngészőt, "kattint" a gombokon, szöveget gépel az input mezőkbe (pl. kereső, regisztráció), és JavaScript `assert` függvényekkel ellenőrzi, hogy a művelet hatására a megfelelő oldal töltődött-e be, vagy megjelent-e a várt Toast hibaüzenet a képernyőn.
 

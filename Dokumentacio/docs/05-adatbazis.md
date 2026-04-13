@@ -14,6 +14,17 @@ A rendszer összesen 16 összefüggő táblából áll.
 
 ![Adatbázis táblák listája a phpMyAdminban](/img/db-tablak.png)
 
+## Az Adatbázis Elérése
+
+A rendszer indítása után az adatbázis az alábbi címeken érhető el:
+
+**Web Interface (phpMyAdmin):**
+- 🌐 URL: `http://localhost:8082`
+- 👤 Felhasználónév: `root`
+- 🔐 Jelszó: `rootpw`
+
+A phpMyAdmin felületén keresztül megtekinthetők és szerkeszthetők az összes táblák, valamint futtathatók SQL lekérdezések az adatbázis kezeléséhez.
+
 ## Az Adatbázis Relációs Modellje (ER Diagram)
 
 A könnyebb megérthetőség érdekében a komplex Entitás-Kapcsolat (Entity-Relationship) modellt két fő logikai blokkra osztottuk: a felhasználókat és interakciókat kezelő részre, valamint a médiatartalmakat és moziműsorokat kezelő részre. Ezeket számos N:M (több-a-többhöz) kapcsolótábla köti össze.

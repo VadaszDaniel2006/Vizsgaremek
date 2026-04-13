@@ -8,6 +8,12 @@ title: Frontend és Felület
 
 A MoziPont kliensoldali felülete egy villámgyors, komponensalapú **React** alkalmazás (Single Page Application), amelyet a legmodernebb **Vite** fejlesztői környezettel építettünk fel. A szoftver fejlesztése során a letisztultságra és a teljesítményre fókuszáltunk. Szándékosan kerültük a "nehéz", túlzottan felfújt külső UI keretrendszerek (mint a Bootstrap vagy a Material UI) használatát. Helyette a teljes vizuális megjelenést egyedi, jól strukturált CSS fájlokkal és CSS Grid / Flexbox rácsrendszerekkel alakítottuk ki, ami tökéletes reszponzivitást biztosít asztali géptől a mobilkijelzőkig.
 
+## Webalkalmazás Elérése
+
+A rendszer indítása után a weboldal az alábbi címen érhető el:
+
+🌐 **URL:** `http://localhost:8090`
+
 ## Kezdőoldal, Navigáció és Hero Section
 
 Az alkalmazásba lépve a felhasználót egy vizuálisan megkapó, dinamikus kezdőoldal fogadja. A képernyő felső harmadát egy automatikusan lapozódó **Hero Slider** uralja, amely a platform kiemelt, vagy legújabb tartalmait reklámozza óriási, nagy felbontású borítóképekkel és azonnali "Megnézem" gombokkal.
