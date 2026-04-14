@@ -87,7 +87,9 @@ A magas fokú rendelkezésre állás és hibamentes élmény érdekében többl�
 ## 8. Környezet és Futtatás
 A platform telepítésének és futtatásának leegyszerűsítésére a teljes architektúrát Docker konténerekbe csomagoltuk. Az érzékeny adatokat a biztonsági standardoknak megfelelően lokális `.env` fájl kezeli.
 
-**A rendszer indítása:** A gyökérkönyvtárban elhelyezett saját inicializáló szkriptünk (`indito.js`) egyetlen paranccsal elindítja a teljes rendszert (ellenőrzi a hálózatot, felhúzza az adatbázist, majd az API-t és a klienst):
+**A rendszer indítása:** A gyökérkönyvtárban elhelyezett saját inicializáló szkriptünk (`indito.js`) egyetlen paranccsal elindítja a teljes rendszert (ellenőrzi a hálózatot, felhúzza az adatbázist, majd az API-t és a klienst)
+Fontos: A szkript sikeres lefutásának előfeltétele, hogy a Docker Desktop már fusson a háttérben.
+A rendszer elindításához futtasd az alábbi parancsot a projekt gyökérkönyvtárában megnyitott terminálban:
 
 ```bash
 node indito.js
