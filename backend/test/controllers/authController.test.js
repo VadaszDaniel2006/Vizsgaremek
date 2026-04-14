@@ -52,7 +52,7 @@ describe('Auth Controller', () => {
 
         it('400-as hibát dob, ha hiányzik adat a regisztrációkor', async () => {
             const req = {
-                body: { name: 'Teszt Elek', email: 'teszt@elek.hu' } // Direkt hiányzik a password és username
+                body: { name: 'Teszt Elek', email: 'teszt@elek.hu' } 
             };
             const res = {
                 status: jest.fn().mockReturnThis(),
@@ -63,7 +63,7 @@ describe('Auth Controller', () => {
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ message: 'Minden mező kitöltése kötelező!' });
-            expect(db.query).not.toHaveBeenCalled(); // DB lekérdezésig el se juthat
+            expect(db.query).not.toHaveBeenCalled(); 
         });
 
         it('400-as hibát dob, ha az email már foglalt', async () => {

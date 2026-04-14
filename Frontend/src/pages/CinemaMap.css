@@ -25,7 +25,6 @@
 .kartya h3 { font-size: 1.3rem; margin-bottom: 10px; }
 .kartya p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; }
 
-/* Térkép extrák (Leaflet felülírások) */
 .leaflet-popup-close-button { width: 28px !important; height: 28px !important; font-size: 20px !important; color: #ef4444 !important; top: -10px !important; right: -10px !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: white !important; border-radius: 50% !important; text-decoration: none !important; z-index: 1000 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important; transition: 0.2s !important; }
 .leaflet-popup-close-button:hover { background-color: #ef4444 !important; color: white !important; transform: scale(1.1); }
 .leaflet-popup-content-wrapper { padding-top: 10px !important; }

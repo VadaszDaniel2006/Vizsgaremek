@@ -19,7 +19,6 @@
 .auth-footer span:hover { text-decoration: underline; }
 .auth-error { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #e74c3c; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem; text-align: center; }
 
-/* Jelszó mező szem ikonja */
 .pw-input-wrapper { position: relative; display: flex; width: 100%; align-items: center; }
 .pw-input-wrapper input { width: 100%; padding-right: 45px !important; }
 .pw-toggle-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem; z-index: 10; transition: 0.2s; padding: 0; display: flex; align-items: center; justify-content: center; }

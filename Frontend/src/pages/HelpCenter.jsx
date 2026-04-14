@@ -30,10 +30,10 @@ export default function HelpCenter() {
       </div>
 
       <div style={{ backgroundColor: '#111827', padding: '25px', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '20px' }}>
-        <h2 style={{ color: '#ffffff', fontSize: '1.3rem', marginBottom: '10px' }}>Mi a különbség a "Kedvelt filmek" és a "Saját Listák" között?</h2>
-        <p style={{ margin: 0 }}>A "Kedvelés" (Szív ikon) egy gyors reakció: ezzel jelzed, hogy a film elnyerte a tetszésedet, és hozzáadod a "Kedvelt filmek" listádhoz. Ezzel szemben a "Saját Listák" (pl. "Megnézem", "Kedvenc horrorjaim") funkcióval te magad rendszerezheted a tartalmakat, mintha egy könyvjelző mappát hoznál létre magadnak későbbi megtekintésre.</p>
+        <h2 style={{ color: '#ffffff', fontSize: '1.3rem', marginBottom: '10px' }}>Mi a különbség a "Kedvenceim" és a "Saját lista" között?</h2>
+        <p style={{ margin: 0 }}>A "Kedvenceim" a szív ikonra kattintott filmek és sorozatok gyűjteménye. A "Saját lista" pedig azoké a filmeké és sorozatoké, amelyeket később szeretnél megnézni. Tehát a "Kedvenceim" a kedvenc tartalmaidat tartalmazza, a "Saját lista" pedig a későbbi megtekintésre félretett tartalmakat.</p>
       </div>
-
+      
       <div style={{ backgroundColor: '#111827', padding: '25px', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '20px' }}>
         <h2 style={{ color: '#ffffff', fontSize: '1.3rem', marginBottom: '10px' }}>Milyen eszközökön és böngészőkön működik tökéletesen az oldal?</h2>
         <p style={{ margin: 0 }}>A MoziPont egy reszponzív webalkalmazás, ami azt jelenti, hogy asztali számítógépen, laptopon, tableten és mobiltelefonon is tökéletesen jelenik meg. A legoptimálisabb élmény és a Mozi Térkép hibátlan működése érdekében a Google Chrome, Mozilla Firefox, Safari, vagy Microsoft Edge legfrissebb verzióinak használatát javasoljuk.</p>

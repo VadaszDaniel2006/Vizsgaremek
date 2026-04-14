@@ -23,7 +23,6 @@
 .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .user-menu { display: flex; align-items: center; gap: 15px; }
 
-/* TÖKÉLETES MODAL / NEO MODAL */
 .neo-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10000; display: flex; justify-content: center; align-items: center; padding-top: 100px; padding-bottom: 30px; }
 .neo-modal-content { background: var(--modal-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 100%; max-width: 800px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); animation: neoFadeUp 0.3s ease-out; max-height: calc(100vh - 150px); overflow-y: auto; }
 .neo-modal-content.small { max-width: 450px; }
@@ -39,7 +38,6 @@
 @keyframes neoFadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes neoFadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* MODERN GÖRGETŐSÁV A MODALOKHOZ ÉS A MOZIK LISTÁJÁHOZ */
 .modal-content::-webkit-scrollbar { width: 6px; }
 .modal-content::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; margin: 10px 0; }
 .modal-content::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), #2c3bb7); border-radius: 10px; }
@@ -50,7 +48,6 @@
 .modern-scrollbar::-webkit-scrollbar-thumb:hover { background: #2c3bb7; }
 .modern-scrollbar { scrollbar-width: thin; scrollbar-color: #3e50ff rgba(255, 255, 255, 0.05); }
 
-/* PRÉMIUM KOMMENT JELENTÉSE MODAL */
 .premium-report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 10005; display: flex; justify-content: center; align-items: center; animation: fadeIn 0.2s ease-out; padding: 20px; }
 .premium-report-card { background: linear-gradient(145deg, #161b2e 0%, #0b0f2b 100%); width: 100%; max-width: 460px; padding: 40px 30px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 30px rgba(239, 68, 68, 0.05); text-align: center; position: relative; overflow: hidden; }
 .premium-report-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, transparent, #ef4444, transparent); }

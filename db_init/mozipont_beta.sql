@@ -246,7 +246,7 @@ CREATE TABLE `kedvencek` (
   KEY `media_id` (`media_id`),
   CONSTRAINT `fk_kedvencek_felhasznalo` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalok` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_kedvencek_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,7 +255,6 @@ CREATE TABLE `kedvencek` (
 
 LOCK TABLES `kedvencek` WRITE;
 /*!40000 ALTER TABLE `kedvencek` DISABLE KEYS */;
-INSERT INTO `kedvencek` VALUES (90,20,'2026-03-12 20:42:50',3);
 INSERT INTO `kedvencek` VALUES (91,20,'2026-03-12 20:43:01',38);
 INSERT INTO `kedvencek` VALUES (92,20,'2026-03-12 20:43:52',1011);
 INSERT INTO `kedvencek` VALUES (93,20,'2026-03-12 20:57:11',1015);
@@ -277,6 +276,7 @@ INSERT INTO `kedvencek` VALUES (123,28,'2026-04-05 15:19:45',20);
 INSERT INTO `kedvencek` VALUES (124,29,'2026-04-14 09:53:32',44);
 INSERT INTO `kedvencek` VALUES (125,29,'2026-04-14 10:01:00',10);
 INSERT INTO `kedvencek` VALUES (126,29,'2026-04-14 10:01:14',1025);
+INSERT INTO `kedvencek` VALUES (127,20,'2026-04-14 13:35:25',3);
 /*!40000 ALTER TABLE `kedvencek` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -436,7 +436,7 @@ CREATE TABLE `media_mozik` (
   KEY `mozi_id` (`mozi_id`),
   CONSTRAINT `fk_media_mozik_media` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_media_mozik_mozi` FOREIGN KEY (`mozi_id`) REFERENCES `mozik` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14643 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14709 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -445,44 +445,38 @@ CREATE TABLE `media_mozik` (
 
 LOCK TABLES `media_mozik` WRITE;
 /*!40000 ALTER TABLE `media_mozik` DISABLE KEYS */;
-INSERT INTO `media_mozik` VALUES (14605,2,1,'Ma (04.14.)|13:20, 15:10, 16:30, 18:20, 19:45, 21:30');
-INSERT INTO `media_mozik` VALUES (14606,38,1,'Ma (04.14.)|16:00');
-INSERT INTO `media_mozik` VALUES (14607,2,2,'Ma (04.14.)|13:30, 15:15, 16:45, 18:30, 19:15, 20:00, 22:15');
-INSERT INTO `media_mozik` VALUES (14608,36,2,'Ma (04.14.)|22:30');
-INSERT INTO `media_mozik` VALUES (14609,38,2,'Ma (04.14.)|13:15, 16:00');
-INSERT INTO `media_mozik` VALUES (14610,2,3,'Ma (04.14.)|12:50, 13:50, 15:30, 16:00, 17:00, 18:40, 19:10, 20:00');
-INSERT INTO `media_mozik` VALUES (14611,36,3,'Ma (04.14.)|22:30');
-INSERT INTO `media_mozik` VALUES (14612,38,3,'Ma (04.14.)|13:15, 18:00');
-INSERT INTO `media_mozik` VALUES (14613,2,6,'Ma (04.14.)|13:30, 16:40, 19:15, 19:45');
-INSERT INTO `media_mozik` VALUES (14614,38,6,'Ma (04.14.)|13:30, 17:10');
-INSERT INTO `media_mozik` VALUES (14615,2,9,'Ma (04.14.)|13:10, 16:20, 19:30');
-INSERT INTO `media_mozik` VALUES (14616,38,9,'Ma (04.14.)|15:00, 18:10');
-INSERT INTO `media_mozik` VALUES (14617,2,10,'Ma (04.14.)|13:10, 14:50, 16:20, 18:00, 19:30');
-INSERT INTO `media_mozik` VALUES (14618,38,10,'Ma (04.14.)|13:00, 16:00');
-INSERT INTO `media_mozik` VALUES (14619,2,12,'Ma (04.14.)|13:30, 16:40, 19:15, 19:45');
-INSERT INTO `media_mozik` VALUES (14620,38,12,'Ma (04.14.)|13:15, 15:45');
-INSERT INTO `media_mozik` VALUES (14621,2,13,'Ma (04.14.)|13:10, 16:20, 19:30');
-INSERT INTO `media_mozik` VALUES (14622,38,13,'Ma (04.14.)|17:00');
-INSERT INTO `media_mozik` VALUES (14623,2,18,'Ma (04.14.)|15:15, 16:30, 18:00, 19:00, 19:30, 20:30');
-INSERT INTO `media_mozik` VALUES (14624,2,19,'Ma (04.14.)|13:20, 16:30, 18:10, 19:30');
-INSERT INTO `media_mozik` VALUES (14625,38,19,'Ma (04.14.)|17:30');
-INSERT INTO `media_mozik` VALUES (14626,2,20,'Ma (04.14.)|16:30, 19:30');
-INSERT INTO `media_mozik` VALUES (14627,36,20,'Ma (04.14.)|22:30');
-INSERT INTO `media_mozik` VALUES (14628,38,20,'Ma (04.14.)|15:10');
-INSERT INTO `media_mozik` VALUES (14629,2,26,'Ma (04.14.)|13:10, 14:50, 16:20, 18:00, 19:30');
-INSERT INTO `media_mozik` VALUES (14630,38,26,'Ma (04.14.)|14:40, 18:10');
-INSERT INTO `media_mozik` VALUES (14631,2,27,'Ma (04.14.)|19:15');
-INSERT INTO `media_mozik` VALUES (14632,38,27,'Ma (04.14.)|13:15');
-INSERT INTO `media_mozik` VALUES (14633,2,28,'Ma (04.14.)|19:15');
-INSERT INTO `media_mozik` VALUES (14634,38,28,'Ma (04.14.)|13:15');
-INSERT INTO `media_mozik` VALUES (14635,2,29,'Ma (04.14.)|19:15');
-INSERT INTO `media_mozik` VALUES (14636,38,29,'Ma (04.14.)|13:15');
-INSERT INTO `media_mozik` VALUES (14637,2,30,'Ma (04.14.)|16:30, 19:30');
-INSERT INTO `media_mozik` VALUES (14638,38,30,'Ma (04.14.)|15:30');
-INSERT INTO `media_mozik` VALUES (14639,2,31,'Ma (04.14.)|16:30, 19:30');
-INSERT INTO `media_mozik` VALUES (14640,38,31,'Ma (04.14.)|15:10');
-INSERT INTO `media_mozik` VALUES (14641,2,32,'Ma (04.14.)|19:15');
-INSERT INTO `media_mozik` VALUES (14642,38,32,'Ma (04.14.)|13:15');
+INSERT INTO `media_mozik` VALUES (14677,2,1,'Ma (04.14.)|16:30, 18:20, 19:45, 21:30');
+INSERT INTO `media_mozik` VALUES (14678,38,1,'Ma (04.14.)|16:00');
+INSERT INTO `media_mozik` VALUES (14679,2,2,'Ma (04.14.)|16:45, 18:30, 19:15, 20:00, 22:15');
+INSERT INTO `media_mozik` VALUES (14680,36,2,'Ma (04.14.)|22:30');
+INSERT INTO `media_mozik` VALUES (14681,38,2,'Ma (04.14.)|16:00');
+INSERT INTO `media_mozik` VALUES (14682,2,3,'Ma (04.14.)|15:30, 16:00, 17:00, 18:40, 19:10, 19:30, 20:00, 21:15');
+INSERT INTO `media_mozik` VALUES (14683,36,3,'Ma (04.14.)|22:30');
+INSERT INTO `media_mozik` VALUES (14684,38,3,'Ma (04.14.)|18:00');
+INSERT INTO `media_mozik` VALUES (14685,2,6,'Ma (04.14.)|16:40, 19:15, 19:45');
+INSERT INTO `media_mozik` VALUES (14686,38,6,'Ma (04.14.)|17:10');
+INSERT INTO `media_mozik` VALUES (14687,2,9,'Ma (04.14.)|16:20, 19:30');
+INSERT INTO `media_mozik` VALUES (14688,38,9,'Ma (04.14.)|18:10');
+INSERT INTO `media_mozik` VALUES (14689,2,10,'Ma (04.14.)|16:20, 18:00, 19:30');
+INSERT INTO `media_mozik` VALUES (14690,38,10,'Ma (04.14.)|16:00');
+INSERT INTO `media_mozik` VALUES (14691,2,12,'Ma (04.14.)|16:40, 19:15, 19:45');
+INSERT INTO `media_mozik` VALUES (14692,38,12,'Ma (04.14.)|15:45');
+INSERT INTO `media_mozik` VALUES (14693,2,13,'Ma (04.14.)|16:20, 19:30');
+INSERT INTO `media_mozik` VALUES (14694,38,13,'Ma (04.14.)|17:00');
+INSERT INTO `media_mozik` VALUES (14695,2,18,'Ma (04.14.)|16:30, 18:00, 19:00, 19:30, 20:30');
+INSERT INTO `media_mozik` VALUES (14696,2,19,'Ma (04.14.)|16:30, 18:10, 19:30');
+INSERT INTO `media_mozik` VALUES (14697,38,19,'Ma (04.14.)|17:30');
+INSERT INTO `media_mozik` VALUES (14698,2,20,'Ma (04.14.)|16:30, 19:30');
+INSERT INTO `media_mozik` VALUES (14699,36,20,'Ma (04.14.)|22:30');
+INSERT INTO `media_mozik` VALUES (14700,2,26,'Ma (04.14.)|16:20, 18:00, 19:30');
+INSERT INTO `media_mozik` VALUES (14701,38,26,'Ma (04.14.)|18:10');
+INSERT INTO `media_mozik` VALUES (14702,2,27,'Ma (04.14.)|19:15');
+INSERT INTO `media_mozik` VALUES (14703,2,28,'Ma (04.14.)|19:15');
+INSERT INTO `media_mozik` VALUES (14704,2,29,'Ma (04.14.)|19:15');
+INSERT INTO `media_mozik` VALUES (14705,2,30,'Ma (04.14.)|16:30, 19:30');
+INSERT INTO `media_mozik` VALUES (14706,38,30,'Ma (04.14.)|15:30');
+INSERT INTO `media_mozik` VALUES (14707,2,31,'Ma (04.14.)|16:30, 19:30');
+INSERT INTO `media_mozik` VALUES (14708,2,32,'Ma (04.14.)|19:15');
 /*!40000 ALTER TABLE `media_mozik` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1011,4 +1005,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-14 11:17:23
+-- Dump completed on 2026-04-14 13:49:06

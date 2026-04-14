@@ -12,6 +12,12 @@ Egy ekkora adathalmazzal dolgozó platform hosszú távú üzemeltetése és tar
 
 Az Admin Vezérlőpult szigorúan védett útvonalon (Protected Route) helyezkedik el. A hozzáférést egy Role-Based Access Control (RBAC) mechanizmus szabályozza: a felület kizárólag azokból a profilokból érhető el, ahol a sikeres bejelentkezéskor kapott JWT tokenben, és a mögöttes MySQL adatbázisban a felhasználó `jogosultsag` mezője `admin` értékre van állítva. Jogosulatlan kérés esetén a szerver 403 Forbidden hibát dob, a React Router pedig automatikusan visszairányítja a felhasználót a főoldalra.
 
+:::info Alapértelmezett Admin Fiók
+A felület és a rendszergazdai funkciók kipróbálásához egy előre beállított adminisztrátori fiók áll rendelkezésre az alábbi belépési adatokkal:
+- **E-mail:** `admin@admin.com`
+- **Jelszó:** `admin1`
+:::
+
 A felület dizájnja letisztult, egy bal oldali fix navigációs sávra épül, amellyel a rendszergazdák négy fő modul (Felhasználók, Tartalom, Jelentések, Üzenetek) között válthatnak.
 
 ## 1. Felhasználók Kezelése
