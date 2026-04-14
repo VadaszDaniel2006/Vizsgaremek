@@ -16,7 +16,7 @@ export default function HelpCenter() {
 
       <div style={{ backgroundColor: '#111827', padding: '25px', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '20px' }}>
         <h2 style={{ color: '#ffffff', fontSize: '1.3rem', marginBottom: '10px' }}>Hogyan működik a Kezdőoldali személyre szabott filmajánló?</h2>
-        <p style={{ margin: 0 }}>Regisztrált felhasználóként a profilodban kiválaszthatod a kedvenc műfajaidat. Algoritmusunk ezeket az adatokat (kiegészítve azzal, hogy miket kedveltél vagy tettél listára az oldalon) használja fel arra, hogy a Kezdőoldaladra lépve azonnal a te ízlésednek megfelelő, ráadásul magasra értékelt filmeket dobjon be. Két felhasználó kezdőlapja így sosem ugyanolyan!</p>
+        <p style={{ margin: 0 }}>Regisztrált felhasználóként a profilodban kiválaszthatod a kedvenc műfajaidat. Algoritmusunk ezeket az adatokat használja fel arra, hogy a Kezdőoldaladra lépve azonnal a te ízlésednek megfelelő filmeket dobjon be. Két felhasználó kezdőlapja így sosem ugyanolyan!</p>
       </div>
 
       <div style={{ backgroundColor: '#111827', padding: '25px', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '20px' }}>
@@ -31,7 +31,7 @@ export default function HelpCenter() {
 
       <div style={{ backgroundColor: '#111827', padding: '25px', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '20px' }}>
         <h2 style={{ color: '#ffffff', fontSize: '1.3rem', marginBottom: '10px' }}>Mi a különbség a "Kedvelt filmek" és a "Saját Listák" között?</h2>
-        <p style={{ margin: 0 }}>A "Kedvelés" (Szív ikon) egy gyors reakció: ezzel jelzed az algoritmusunknak és a Top 50-es ranglistának, hogy a film elnyerte a tetszésedet. Ezzel szemben a "Saját Listák" (pl. "Megnézem", "Kedvenc horrorjaim") funkcióval te magad rendszerezheted a tartalmakat, mintha egy könyvjelző mappát hoznál létre magadnak későbbi megtekintésre.</p>
+        <p style={{ margin: 0 }}>A "Kedvelés" (Szív ikon) egy gyors reakció: ezzel jelzed, hogy a film elnyerte a tetszésedet, és hozzáadod a "Kedvelt filmek" listádhoz. Ezzel szemben a "Saját Listák" (pl. "Megnézem", "Kedvenc horrorjaim") funkcióval te magad rendszerezheted a tartalmakat, mintha egy könyvjelző mappát hoznál létre magadnak későbbi megtekintésre.</p>
       </div>
 
       <div style={{ backgroundColor: '#111827', padding: '25px', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '20px' }}>
