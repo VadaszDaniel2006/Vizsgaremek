@@ -85,11 +85,25 @@ A magas fokú rendelkezésre állás és hibamentes élmény érdekében többl�
 * **Projektmenedzsment:** Vtk Moodle, Discord, Google Drive, Microsoft Office
 
 ## 8. Környezet és Futtatás
-A platform telepítésének és futtatásának leegyszerűsítésére a teljes architektúrát Docker konténerekbe csomagoltuk. Az érzékeny adatokat a biztonsági standardoknak megfelelően lokális `.env` fájl kezeli.
 
-**A rendszer indítása:** A gyökérkönyvtárban elhelyezett saját inicializáló szkriptünk (`indito.js`) egyetlen paranccsal elindítja a teljes rendszert (ellenőrzi a hálózatot, felhúzza az adatbázist, majd az API-t és a klienst)
-Fontos: A szkript sikeres lefutásának előfeltétele, hogy a Docker Desktop már fusson a háttérben.
-A rendszer elindításához futtasd az alábbi parancsot a projekt gyökérkönyvtárában megnyitott terminálban:
+A platform telepítésének és futtatásának leegyszerűsítésére a teljes architektúrát Docker konténerekbe csomagoltuk. Az érzékeny adatokat a biztonsági standardoknak megfelelően egy lokális `.env` fájl kezeli.
+
+### 🚀 A rendszer indítása
+
+A gyökérkönyvtárban elhelyezett saját inicializáló szkriptünk (`indito.js`) egyetlen paranccsal elindítja a teljes rendszert. 
+
+**A szkript automatikusan elvégzi a következőket:**
+- 🌐 Ellenőrzi a hálózatot
+- 🗄️ Felhúzza az adatbázist
+- ⚙️ Elindítja az API-t
+- 💻 Elindítja a klienst
+
+> ⚠️ **Fontos előfeltétel:** A szkript sikeres lefutásához elengedhetetlen, hogy a **Docker Desktop** már fusson a háttérben!
+
+**A futtatás lépései:**
+
+1. Nyiss meg egy terminált a projekt gyökérkönyvtárában.
+2. Futtasd az alábbi parancsot:
 
 ```bash
 node indito.js
