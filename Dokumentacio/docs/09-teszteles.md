@@ -28,6 +28,15 @@ Az `npx jest` parancs kiadásával a tesztek pár másodperc alatt lefutnak, a t
 ![Sikeresen lefutott Jest backend egységtesztek a terminálban](/img/jest-terminal.png)
 
 **A Backend tesztek futtatásához:**
+
+Első indításkor:
+```bash
+cd backend
+npm install --save-dev jest
+npm test
+```
+
+További futtatások esetén:
 ```bash
 cd backend
 npm test
